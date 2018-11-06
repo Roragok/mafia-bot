@@ -9,9 +9,8 @@
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
 
 module.exports = (robot) ->
-  robot.hear /@mafiabot lynch /i, (res) ->
-    console.log(res);
-    res.send "I will reply hello privately!"
+  robot.hear /@mafiabot lynch/i, (res) ->
+    res.reply "Lynch Life!"
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
