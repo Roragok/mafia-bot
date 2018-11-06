@@ -1,1 +1,1 @@
-web: bin/hubot -a discourse-adapter
+web: bin/hubot -a campfire
