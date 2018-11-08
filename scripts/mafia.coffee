@@ -39,27 +39,25 @@ module.exports = (robot) ->
     docClient.scan params, (err, data) ->
       for item in data.Items
         response += "|" + item['title'] + "| " + item['status'] + "|"
-      res.send(printVote(response))
+      res.reply(printVote(response))
 
   robot.hear /@mafiabot vc/i, (res) ->
     response = ''
     docClient.scan params, (err, data) ->
       for item in data.Items
         response += "|" + item['title'] + "| " + item['status'] + "|"
-      res.send(printVote(response))
+      res.reply(printVote(response))
 
 
 
 printVote = (votes) ->
-  response = "\n# Vote Count"
+  response = "\n\n# Vote Count"
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
   response += votes
   response += "\n\n ##  Not Voting"
   response += "\n --- \n"
-
-  console.log response
 
   return response
 
