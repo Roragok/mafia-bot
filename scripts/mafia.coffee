@@ -19,7 +19,7 @@ AWS.config.update({
 docClient = new AWS.DynamoDB.DocumentClient();
 
 params = {
-    TableName: "namafia",
+    TableName: "mafia-game",
 };
 
 module.exports = (robot) ->
