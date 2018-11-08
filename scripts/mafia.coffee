@@ -42,10 +42,10 @@ module.exports = (robot) ->
     res.send(response)
 
   robot.hear /@mafiabot vc/i, (res) ->
-    response = votecount()
-    console.log("RETURNEDDDD")
-    console.log response
-    res.send(response)
+    docClient.scan params, (err, data) ->
+      for item in data.Items
+        response += "|" + item['title'] + "| " + item['status'] + "|"
+      res.send(printVote(response))
 
 
 
@@ -55,10 +55,7 @@ votecount = ->
     for item in data.Items
       response += "|" + item['title'] + "| " + item['status'] + "|"
     output = printVote response
-  console.log output
-  console.log "RIPS!@111123"
   output = output
-  console.log output
   return output
 
 
@@ -72,8 +69,6 @@ printVote = (votes) ->
   response += "\n --- \n"
 
   return response
-
-
 
 
 
