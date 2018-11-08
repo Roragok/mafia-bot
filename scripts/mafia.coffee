@@ -52,22 +52,23 @@ votecount = ->
     for item in data.Items
       response += "|" + item['title'] + "| " + item['status'] + "|"
     output = printVote response
+    console.log output
+  console.log "HELLO123123123"
+  console.log output
   output = ouput
 
 
 
 printVote = (votes) ->
-    response = "\n# Vote Count"
-    response += "\n --- \n"
-    response += "| Player  | Lynches  | \n"
-    response += "|---|---|\n"
-    response += votes
-    response += "\n\n ##  Not Voting"
-    response += "\n --- \n"
+  response = "\n# Vote Count"
+  response += "\n --- \n"
+  response += "| Player  | Lynches  | \n"
+  response += "|---|---|\n"
+  response += votes
+  response += "\n\n ##  Not Voting"
+  response += "\n --- \n"
 
-    console.log response
-
-    return response
+  return response
 
 
 
