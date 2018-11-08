@@ -39,9 +39,11 @@ module.exports = (robot) ->
 
   robot.hear /@mafiabot votecount/i, (res) ->
     response = votecount(res)
+    res.send(response)
 
   robot.hear /@mafiabot vc/i, (res) ->
     response = votecount(res)
+    res.send(response)
 
 
 
@@ -53,12 +55,16 @@ votecount = (res) ->
   response += "|---|---|\n"
 
   docClient.scan(params, onScan)
-  
+
+  response += "\n\n ##  Not Voting"
+  response += "\n --- \n"
+
   onScan = (err, data) ->
     for item in data.Items
       data_response += "|" + item['title'] + "| " + item['status'] + "|"
     response += data_response
-    res.send(response)
+
+
 
 
 
