@@ -49,7 +49,10 @@ module.exports = (robot) ->
       res.send(printVote(response))
 
   robot.hear /@mafiabot addgame/i, (res) ->
-    console.log res.message.topic_id
+    console.log("TESTEST")
+    console.log res.message
+
+    console.log res.TextMessage
     query = params
     # query.Item = {
     #        game_id: 'haskey',
