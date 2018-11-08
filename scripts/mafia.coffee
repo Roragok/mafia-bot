@@ -50,11 +50,7 @@ onScan -> (err, data)
         console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
     else
         console.log("Scan succeeded.");
-        data.Items.forEach(function(item) {
-           console.log(item);
-             #res.send(data.Items)
-
-        });
+        
 
         if (typeof data.LastEvaluatedKey != "undefined")
             console.log("Scanning for more...");
