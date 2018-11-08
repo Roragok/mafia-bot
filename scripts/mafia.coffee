@@ -46,8 +46,8 @@ votecount = (res) ->
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
-  docClient.scan(params, onScan)
-  response = 'voutecount'
+  response += docClient.scan(params, onScan)
+
 
 onScan = (err, data) ->
 
