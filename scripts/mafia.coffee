@@ -23,6 +23,7 @@ params = {
 };
 
 response = '';
+data_response = ''
 
 module.exports = (robot) ->
   robot.hear /private hello/i, (res) ->
@@ -46,24 +47,23 @@ module.exports = (robot) ->
 
 
 votecount = (res) ->
-
+  docClient.scan(params, onScan)
   response = "\n# Vote Count"
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
-  console.log docClient.scan(params, onScan)
+  response += data_response
+
 
 
 
 
 onScan = (err, data) ->
-  result = ''
-  temp = ''
   for item in data.Items
-    result += "|" + item['title'] + "| " + item['status'] + "|"
+    data_response += "|" + item['title'] + "| " + item['status'] + "|"
 
-  console.log result
-  temp = "| 1 | 2 |"
+
+
 
 
 
