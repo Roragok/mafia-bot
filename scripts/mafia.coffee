@@ -52,7 +52,7 @@ votecount = ->
     for item in data.Items
       response += "|" + item['title'] + "| " + item['status'] + "|"
     output = printVote response
-output = ouput
+  output = ouput
 
 
 
@@ -66,7 +66,7 @@ printVote = (votes) ->
     response += "\n --- \n"
 
     console.log response
-    
+
     return response
 
 
