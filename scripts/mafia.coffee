@@ -42,11 +42,11 @@ module.exports = (robot) ->
 
 
 votecount = (res) ->
-  console.log("Getting All Games");
-  docClient.scan(params, onScan);
 
-onScan -> (err, data)
-  response = 'test';
+  response = 'voutecount'
+
+onScan = (err, data) ->
+  response = 'test'
 
 
 
