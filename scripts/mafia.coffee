@@ -40,6 +40,10 @@ module.exports = (robot) ->
     response = votecount(res)
     res.send(response)
 
+  robot.hear /@mafiabot vc/i, (res) ->
+    response = votecount(res)
+    res.send(response)
+
 
 votecount = (res) ->
   response = "\n# Vote Count"
@@ -52,8 +56,7 @@ votecount = (res) ->
 onScan = (err, data) ->
 
   for item in data.Items
-    item = JSON.parse item
-    response += "|" + item.title + "| " + item.status + "|\n"
+    response += "|" + item['title'] + "| " + item['status'] + "|\n"
 
 
 
