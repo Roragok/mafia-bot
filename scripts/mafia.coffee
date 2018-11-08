@@ -38,50 +38,36 @@ module.exports = (robot) ->
     res.reply "Unlynched."
 
   robot.hear /@mafiabot votecount/i, (res) ->
-    response = votecount(res)
+    response = votecount()
     res.send(response)
 
   robot.hear /@mafiabot vc/i, (res) ->
-    response = votecount res
+    response = votecount()
     res.send(response)
 
 
 
-votecount = (res) ->
-
-  response = "\n# Vote Count"
-  response += "\n --- \n"
-  response += "| Player  | Lynches  | \n"
-  response += "|---|---|\n"
-
+votecount = ->
   docClient.scan params, (err, data) ->
-    console.log "HELLO"
     for item in data.Items
       response += "|" + item['title'] + "| " + item['status'] + "|"
-      console.log response
-
-
-  #response += getVotes()
-  response += "\n\n ##  Not Voting"
-  response += "\n --- \n"
+    output = printVote response
+output = ouput
 
 
 
+printVote = (votes) ->
+    response = "\n# Vote Count"
+    response += "\n --- \n"
+    response += "| Player  | Lynches  | \n"
+    response += "|---|---|\n"
+    response += votes
+    response += "\n\n ##  Not Voting"
+    response += "\n --- \n"
 
-getVotes =  ->
-  items= 'test234'
-  temp = docClient.scan(params, onScan)
-  console.log temp
-  result = items
-
-
-onScan = (err, data) ->
-  for item in data.Items
-    data_response += "|" + item['title'] + "| " + item['status'] + "|"
-
-  return data_response
-
-
+    console.log response
+    
+    return response
 
 
 
