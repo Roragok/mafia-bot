@@ -51,7 +51,7 @@ votecount = (res) ->
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
-  docClient.scan(params, onScan)
+  console.log docClient.scan(params, onScan)
 
 
 
