@@ -8,6 +8,22 @@
 #
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
 
+
+AWS = require 'aws-sdk'
+
+AWS.config.update({
+  region: "us-east-1",
+  endpoint: "https://dynamodb.us-east-1.amazonaws.com"
+});
+
+var docClient = new AWS.DynamoDB.DocumentClient();
+
+var params = {
+    TableName: "namafia",
+};
+
+var response = '';
+
 module.exports = (robot) ->
   robot.hear /private hello/i, (res) ->
     res.envelope.pm = true
@@ -19,6 +35,48 @@ module.exports = (robot) ->
 
   robot.hear /@mafiabot unlynch/i, (res) ->
     res.reply "Unlynched."
+
+  robot.hear /@mafiabot votecount/i, (res) ->
+    response = voutecount(res)
+    res.post(response)
+
+
+votecount = (res) ->
+  console.log("Getting All Games");
+  docClient.scan(params, onScan);
+
+onScan -> (err, data)
+    if (err)
+        console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+    else
+        console.log("Scan succeeded.");
+        data.Items.forEach(function(item) {
+           console.log(item);
+             #res.send(data.Items)
+
+        });
+
+        if (typeof data.LastEvaluatedKey != "undefined")
+            console.log("Scanning for more...");
+            params.ExclusiveStartKey = data.LastEvaluatedKey;
+            docClient.scan(params, onScan);
+
+    response = 'test';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   #
