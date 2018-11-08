@@ -46,7 +46,7 @@ module.exports = (robot) ->
 
 
 votecount = (res) ->
-  console log docClient.scan(params, onScan)
+  console.log docClient.scan(params, onScan)
   response = "\n# Vote Count"
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
