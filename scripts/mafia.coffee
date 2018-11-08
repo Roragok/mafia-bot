@@ -56,6 +56,12 @@ votecount = (res) ->
 onScan = (err, data) ->
 
   for item in data.Items
+    console.log item
+    console.log item.title
+    console.log item['status']
+
+    console.log JSON.parse item 
+
     response += "|" + item['title'] + "| " + item['status'] + "|\n"
 
 
