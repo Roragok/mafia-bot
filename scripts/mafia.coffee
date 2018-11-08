@@ -51,7 +51,8 @@ votecount = (res) ->
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
-  response +=  docClient.scan(params, onScan)
+  docClient.scan(params, onScan)
+
 
 
 
@@ -61,6 +62,7 @@ onScan = (err, data) ->
   for item in data.Items
     result += "|" + item['title'] + "| " + item['status'] + "|"
 
+  console.log result
   temp = "| 1 | 2 |"
 
 
