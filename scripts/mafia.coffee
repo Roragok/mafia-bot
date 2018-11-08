@@ -58,7 +58,7 @@ votecount = (res) ->
   response += "\n\n ##  Not Voting"
   response += "\n --- \n"
 
-getVotes ->
+getVotes =  ->
   docClient.scan(params, onScan)
   onScan = (err, data) ->
     for item in data.Items
