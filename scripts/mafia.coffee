@@ -59,12 +59,11 @@ module.exports = (robot) ->
            status: false,
            title: res.message.title
     }
-    console.log query
-    # docClient.put query, (err, data) ->
-    #   if err
-    #     console.log err
-    #   else
-    #     console.log data
+    docClient.put query, (err, data) ->
+      if err
+        console.log err
+      else
+        console.log data
 
 
 
