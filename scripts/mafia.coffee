@@ -38,11 +38,11 @@ module.exports = (robot) ->
 
   robot.hear /@mafiabot votecount/i, (res) ->
     response = votecount(res)
-    res.reply(response)
+    res.send(response)
 
 
 votecount = (res) ->
-  response = "# Vote Count"
+  response = "\n# Vote Count"
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
@@ -53,6 +53,7 @@ onScan = (err, data) ->
 
   for item in data.Items
     console.log item
+    console.log JSON.stringify item
     response += "|" + item.title + "| " + item.status + "|\n"
 
 
