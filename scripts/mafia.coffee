@@ -55,11 +55,11 @@ votecount = (res) ->
   response += "|---|---|\n"
 
   console.log res
-  docClient.scan(params, (err, data) = ->
+  docClient.scan params, (err, data) ->
     for item in data.Items
       data_response += "|" + item['title'] + "| " + item['status'] + "|"
       console.log item
-    );
+      
   response += getVotes()
   response += "\n\n ##  Not Voting"
   response += "\n --- \n"
