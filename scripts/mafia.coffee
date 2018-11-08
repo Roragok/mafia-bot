@@ -29,12 +29,13 @@ module.exports = (robot) ->
 
 
   robot.hear /@mafiabot lynch/i, (res) ->
-    res.reply "Lynch Recored, but not really."
+    res.reply "Lynch Recorded, but not really."
 
   robot.hear /@mafiabot unlynch/i, (res) ->
     res.reply "Unlynched."
 
   robot.hear /@mafiabot votecount/i, (res) ->
+    response = ''
     docClient.scan params, (err, data) ->
       for item in data.Items
         response += "|" + item['title'] + "| " + item['status'] + "|"
@@ -57,6 +58,8 @@ printVote = (votes) ->
   response += votes
   response += "\n\n ##  Not Voting"
   response += "\n --- \n"
+
+  console.log response
 
   return response
 
