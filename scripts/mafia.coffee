@@ -54,20 +54,30 @@ votecount = (res) ->
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
 
-  response += getVotes(res)
+  console.log res
+  docClient.scan(params, (err, data) = ->
+    for item in data.Items
+      data_response += "|" + item['title'] + "| " + item['status'] + "|"
+      console.log item
+    );
+  response += getVotes()
   response += "\n\n ##  Not Voting"
   response += "\n --- \n"
 
 
-getVotes =  (res) ->
+getVotes =  ->
   items= 'test234'
-  docClient.scan(params, onScan)
-  onScan = (err, data) ->
-    for item in data.Items
-      console.log item
-      res.send("test123")
-      data_response += "|" + item['title'] + "| " + item['status'] + "|"
+  temp = docClient.scan(params, onScan)
+  console.log temp
   result = items
+
+
+onScan = (err, data) ->
+  for item in data.Items
+    data_response += "|" + item['title'] + "| " + item['status'] + "|"
+
+  return data_response
+
 
 
 
