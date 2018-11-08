@@ -38,7 +38,7 @@ module.exports = (robot) ->
 
   robot.hear /@mafiabot votecount/i, (res) ->
     response = votecount(res)
-    res.post(response)
+    res.reply(response)
 
 
 votecount = (res) ->
@@ -49,9 +49,7 @@ onScan = (err, data) ->
 
   for item in data.Items
     console.log item
-
-  response = 'test'
-
+    response += "<b>" + item.title + "</b>"
 
 
 
