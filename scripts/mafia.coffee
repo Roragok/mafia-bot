@@ -55,7 +55,10 @@ votecount = ->
     for item in data.Items
       response += "|" + item['title'] + "| " + item['status'] + "|"
     output = printVote response
+  console.log output
+  console.log "RIPS!@111123"
   output = output
+  console.log output
   return output
 
 
