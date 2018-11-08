@@ -49,21 +49,17 @@ module.exports = (robot) ->
       res.send(printVote(response))
 
   robot.hear /@mafiabot addgame/i, (res) ->
-    console.log("TESTEST")
-    console.log res.message.user.id
-    console.log res.message.TextMessage
-    console.log res.message.room
-    console.log("RRRIPS")
+    dt = new Date("today");
+
     query = params
-    # query.Item = {
-    #        game_id: 'haskey',
-    #        game_start: 1,
-    #        game_end: true,
-    #        game_url: [1, 'two', false],
-    #        status: { foo: 'bar'},
-    #        title: null
-    # }
-    #
+    query.Item = {
+           game_id: res.message.room,
+           game_start: dt.getTime(),
+           game_url: "https://namafia.com/t"+res.message.title+ "/" + res.message.room,
+           status: false,
+           title: res.message.title
+    }
+    console.log query
     # docClient.put query, (err, data) ->
     #   if err
     #     console.log err
