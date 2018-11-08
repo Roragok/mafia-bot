@@ -45,7 +45,7 @@ module.exports = (robot) ->
     response = ''
     docClient.scan params, (err, data) ->
       for item in data.Items
-        response += "|" + item['title'] + "| " + item['status'] + "|"
+        response += "|" + item['title'] + "| " + item['status'] + "|\n"
       res.send(printVote(response))
 
   robot.hear /@mafiabot addgame/i, (res) ->
@@ -55,7 +55,7 @@ module.exports = (robot) ->
     query.Item = {
            game_id: res.message.room,
            game_start: dt.getTime(),
-           game_url: "https://namafia.com/t"+res.message.title+ "/" + res.message.room,
+           game_url: "https://namafia.com/t/"+res.message.title+ "/" + res.message.room,
            status: false,
            title: res.message.title
     }
