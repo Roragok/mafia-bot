@@ -48,11 +48,18 @@ module.exports = (robot) ->
 
 
 votecount = ->
+  output = ""
   docClient.scan params, (err, data) ->
     for item in data.Items
       response += "|" + item['title'] + "| " + item['status'] + "|"
     output = printVote response
+    console.log output
+
+  console.log "HELLO123123123"
+  console.log output
+  output = output
   return output
+
 
 printVote = (votes) ->
   response = "\n# Vote Count"
