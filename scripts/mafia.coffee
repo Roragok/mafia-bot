@@ -22,9 +22,6 @@ params = {
     TableName: "namafia",
 };
 
-response = '';
-data_response = ''
-
 module.exports = (robot) ->
   robot.hear /private hello/i, (res) ->
     res.envelope.pm = true
@@ -38,25 +35,18 @@ module.exports = (robot) ->
     res.reply "Unlynched."
 
   robot.hear /@mafiabot votecount/i, (res) ->
-    response = votecount()
-    res.send(response)
-
-  robot.hear /@mafiabot vc/i, (res) ->
     docClient.scan params, (err, data) ->
       for item in data.Items
         response += "|" + item['title'] + "| " + item['status'] + "|"
       res.send(printVote(response))
 
+  robot.hear /@mafiabot vc/i, (res) ->
+    response = ''
+    docClient.scan params, (err, data) ->
+      for item in data.Items
+        response += "|" + item['title'] + "| " + item['status'] + "|"
+      res.send(printVote(response))
 
-
-votecount = ->
-  output = ""
-  docClient.scan params, (err, data) ->
-    for item in data.Items
-      response += "|" + item['title'] + "| " + item['status'] + "|"
-    output = printVote response
-  output = output
-  return output
 
 
 printVote = (votes) ->
