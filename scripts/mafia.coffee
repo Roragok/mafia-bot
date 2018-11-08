@@ -37,16 +37,22 @@ module.exports = (robot) ->
     res.reply "Unlynched."
 
   robot.hear /@mafiabot votecount/i, (res) ->
-    response = voutecount(res)
+    response = votecount(res)
     res.post(response)
 
 
 votecount = (res) ->
-
+  docClient.scan(params, onScan)
   response = 'voutecount'
 
 onScan = (err, data) ->
+
+  for item in data.Items
+    console.log item
+
   response = 'test'
+
+
 
 
 
