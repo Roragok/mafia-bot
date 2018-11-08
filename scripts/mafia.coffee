@@ -48,6 +48,25 @@ module.exports = (robot) ->
         response += "|" + item['title'] + "| " + item['status'] + "|"
       res.send(printVote(response))
 
+  robot.hear /@mafiabot addgame/i, (res) ->
+    console.log res
+    query = params
+    # query.Item = {
+    #        game_id: 'haskey',
+    #        game_start: 1,
+    #        game_end: true,
+    #        game_url: [1, 'two', false],
+    #        status: { foo: 'bar'},
+    #        title: null
+    # }
+    #
+    # docClient.put query, (err, data) ->
+    #   if err
+    #     console.log err
+    #   else
+    #     console.log data
+
+
 
 
 printVote = (votes) ->
