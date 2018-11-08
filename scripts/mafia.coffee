@@ -50,9 +50,7 @@ module.exports = (robot) ->
 
   robot.hear /@mafiabot addgame/i, (res) ->
     console.log("TESTEST")
-    console.log res.message
-
-    console.log res.TextMessage
+    console.log res.message.TextMessage.room
     query = params
     # query.Item = {
     #        game_id: 'haskey',
