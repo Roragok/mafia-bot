@@ -42,6 +42,10 @@ module.exports = (robot) ->
 
 
 votecount = (res) ->
+  response = "# Vote Count"
+  response += "\n --- \n"
+  response += "| Player  | Lynches  | \n"
+  response += "|---|---|\n"
   docClient.scan(params, onScan)
   response = 'voutecount'
 
@@ -49,7 +53,7 @@ onScan = (err, data) ->
 
   for item in data.Items
     console.log item
-    response += "<b>" + item.title + "</b>"
+    response += "|" + item.title + "| " + item.status + "|\n"
 
 
 
