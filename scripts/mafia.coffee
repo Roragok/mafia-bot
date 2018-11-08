@@ -49,7 +49,7 @@ module.exports = (robot) ->
       res.send(printVote(response))
 
   robot.hear /@mafiabot addgame/i, (res) ->
-    dt = new Date("today");
+    dt = new Date();
 
     query = params
     query.Item = {
