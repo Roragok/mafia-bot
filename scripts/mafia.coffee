@@ -16,13 +16,13 @@ AWS.config.update({
   endpoint: "https://dynamodb.us-east-1.amazonaws.com"
 });
 
-var docClient = new AWS.DynamoDB.DocumentClient();
+docClient = new AWS.DynamoDB.DocumentClient();
 
-var params = {
+params = {
     TableName: "namafia",
 };
 
-var response = '';
+response = '';
 
 module.exports = (robot) ->
   robot.hear /private hello/i, (res) ->
