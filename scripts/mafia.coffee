@@ -105,7 +105,7 @@ getZeused = (playerName) ->
   return response
 
 # Check if thread came from is an active or past game.
-ifGame = (threadId) ->
+isGame = (threadId) ->
   status = false
   query = params
   query.KeyConditionExpression = "#game_id = :game_id"
