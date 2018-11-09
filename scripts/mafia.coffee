@@ -61,7 +61,7 @@ module.exports = (robot) ->
   # TEST COMMAND - WILL BE START GAME
   robot.hear /@mafiabot addgame/i, (res) ->
     dt = new Date();
-
+    query = {}
     query.TableName = "mafia-game"
     query.Item = {
            game_id: res.message.room,
@@ -117,6 +117,7 @@ getZeused = (playerName) ->
 isGame = (threadId) ->
 
   # Build Query
+  checkGame = {}
   checkGame.TableName = "mafia-game"
   checkGame.KeyConditionExpression = "game_id = :game_id"
   checkGame.ExpressionAttributeValues = {
@@ -127,6 +128,7 @@ isGame = (threadId) ->
 
 # Check if thread came from is an active or past game.
 getVotes = (threadId) ->
+  votes = {}
   votes.TableName = "mafia-game"
   result = docClient.scan(votes).promise()
 
