@@ -109,7 +109,7 @@ isGame = (threadId) ->
   status = false
   query = params
   query.KeyConditionExpression = "game_id = :game_id"
-  query.ExpressionAttributeNames = {
+  query.ExpressionAttributeValues = {
     ":game_id": threadId
   }
   console.log query
