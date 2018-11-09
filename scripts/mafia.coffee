@@ -82,9 +82,8 @@ printVote = (votes) ->
   return response
 
 getZeused = (playerName) ->
-  response = '
-    :zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus:
-    \`\`\`
+  response = ":zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus:\n
+    ```
         _(                        )
        (                          _)
       (_                       __))
@@ -97,10 +96,18 @@ getZeused = (playerName) ->
        _/ /
       /__/
      //
-    /\'
-    \`\`\`'
+    /'
+    ```\n"
   response += playerName + " is struck down by his god\n"
 
   response+= ':zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus:'
 
   return response
+
+# Check if thread came from is an active or past game.
+ifGame = (threadId) ->
+  return true
+
+# Check if the person who sent the command is a host or moderator.
+isHost = (threadID) ->
+  return true
