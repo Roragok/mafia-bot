@@ -61,8 +61,8 @@ module.exports = (robot) ->
   # TEST COMMAND - WILL BE START GAME
   robot.hear /@mafiabot addgame/i, (res) ->
     dt = new Date();
-
-    query = params
+    query = param
+    query.TableName: "mafia-game"
     query.Item = {
            game_id: res.message.room,
            game_start: dt.getTime(),
@@ -127,6 +127,9 @@ isGame = (threadId) ->
 
 # Check if thread came from is an active or past game.
 getVotes = (threadId) ->
+  params = {
+      TableName: "mafia-game",
+  };
   result = docClient.scan(params).promise()
 
 # Check if the person who sent the command is a host or moderator.
