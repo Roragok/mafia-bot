@@ -116,7 +116,7 @@ isGame = (threadId) ->
   }
 
   result = docClient.query(checkGame).promise()
-  return result.then data ->
+  return result.then(data) ->
     console.log "YIKES"
     if (data.Count > 0)
       status = true
