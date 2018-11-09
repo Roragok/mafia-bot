@@ -82,22 +82,20 @@ printVote = (votes) ->
   return response
 
 getZeused = (playerName) ->
-  response = ":zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus:\n
-    ```
-        _(                        )
-       (                          _)
-      (_                       __))
-        ((                _____)
-          (_________)----\'
-             _/  /
-            /  _/
-          _/  /
-         / __/
-       _/ /
-      /__/
-     //
-    /'
-    ```\n"
+  response = ":zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus:\n"
+  response += "\_\(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp)\n
+       \(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\_\)\n
+      \(\_&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\_\_\)\)\n
+      &nbsp;\(\(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\_\_\_\_\_\)\n
+      &nbsp;&nbsp;&nbsp;&nbsp;\(\_\_\_\_\_\_\_\_\_\)\-\-\-\-\'\n
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\_\/&nbsp;&nbsp;\/\n
+      &nbsp;&nbsp;&nbsp;&nbsp;\/&nbsp;&nbsp;&nbsp;\_\/\n
+      &nbsp;&nbsp;&nbsp;&nbsp;\_\/&nbsp;&nbsp;\/\n
+      &nbsp;&nbsp;&nbsp;\/&nbsp;\_\_\/\n
+      &nbsp;\_\/&nbsp;&nbsp;\/\n
+      \/\_\_\/\n
+     \/\/\n
+    \/\'\n"
   response += playerName + " is struck down by his god\n"
 
   response+= ':zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus:'
