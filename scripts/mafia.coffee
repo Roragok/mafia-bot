@@ -106,21 +106,21 @@ getZeused = (playerName) ->
 
 # Check if thread came from is an active or past game.
 isGame = (threadId) ->
-  # status = false
-  # query = params
-  # query.KeyConditionExpression = "game_id = :game_id"
-  # query.ExpressionAttributeValues = {
-  #   ":game_id": threadId
-  # }
-  # console.log query
-  # docClient.query query, (err, data) ->
-  #   if err
-  #     console.log err
-  #   else
-  #     status = true
-  #     console.log status
-  #
-  # console.log status
+  status = false
+  checkGame = params
+  checkGame.KeyConditionExpression = "game_id = :game_id"
+  checkGame.ExpressionAttributeValues = {
+    ":game_id": threadId
+  }
+  console.log checkGame
+  docClient.query checkGame, (err, data) ->
+    if err
+      console.log err
+    else
+      status = true
+      console.log status
+
+  console.log status
   return true
 
 # Check if the person who sent the command is a host or moderator.
