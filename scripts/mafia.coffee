@@ -115,7 +115,7 @@ isGame = (threadId) ->
   query.ExpressionAttributeNames = {
     "#game_id": threadId
   }
-  docClient.get query, (err, data) ->
+  docClient.query query, (err, data) ->
     if err
       console.log err
     else
