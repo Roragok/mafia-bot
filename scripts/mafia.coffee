@@ -23,10 +23,12 @@ params = {
 };
 
 module.exports = (robot) ->
-  robot.hear /private hello/i, (res) ->
-    res.envelope.pm = true
-    res.send "I will reply hello privately!"
+  # robot.hear /private hello/i, (res) ->
+  #   res.envelope.pm = true
+  #   res.send "I will reply hello privately!"
 
+  robot.hear /@mafiabot unlynch/i, (res) ->
+    res.reply "Unlynched."
 
   robot.respond /lynch (.*)/i, (res) ->
     result = isGame(res.message.room)
@@ -36,21 +38,23 @@ module.exports = (robot) ->
       else
         res.send "Not an Active Game."
 
-  robot.hear /@mafiabot unlynch/i, (res) ->
-    res.reply "Unlynched."
 
   robot.respond /votecount/i, (res) ->
     response = ''
-    docClient.scan params, (err, data) ->
+
+    result = getVotes(res.message.room)
+    result.then (data) ->
       for item in data.Items
-        response += "|" + item['title'] + "| " + item['status'] + "|\n"
+      response += "|" + item['title'] + "| " + item['status'] + "|\n"
       res.send(printVote(response))
 
   robot.hear /@mafiabot vc/i, (res) ->
     response = ''
-    docClient.scan params, (err, data) ->
+
+    result = getVotes(res.message.room)
+    result.then (data) ->
       for item in data.Items
-        response += "|" + item['title'] + "| " + item['status'] + "|\n"
+      response += "|" + item['title'] + "| " + item['status'] + "|\n"
       res.send(printVote(response))
 
   robot.hear /@mafiabot addgame/i, (res) ->
@@ -117,6 +121,10 @@ isGame = (threadId) ->
   }
 
   result = docClient.query(checkGame).promise()
+
+# Check if thread came from is an active or past game.
+getVotes = (threadId) ->
+  result = docClient.scan(params).promise()
 
 # Check if the person who sent the command is a host or moderator.
 isHost = (threadID) ->
