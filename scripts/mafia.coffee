@@ -116,14 +116,7 @@ isGame = (threadId) ->
   }
 
   result = docClient.query(checkGame).promise()
-  return result.then(data) ->
-    console.log "YIKES"
-    if (data.Count > 0)
-      status = true
-    else
-      status = false
-  console.log "YIKES"
-  console.log status
+  console.log result 
   return status
 
 # Check if the person who sent the command is a host or moderator.
