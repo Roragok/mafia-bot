@@ -108,13 +108,11 @@ getZeused = (playerName) ->
 isGame = (threadId) ->
   status = false
   query = params
-  query.KeyConditionExpression = "#game_id = :game_id"
+  query.KeyConditionExpression = "game_id = :game_id"
   query.ExpressionAttributeNames = {
-    "#game_id": "game_id"
+    ":game_id": threadId
   }
-  query.ExpressionAttributeNames = {
-    "#game_id": threadId
-  }
+  console.log query
   docClient.query query, (err, data) ->
     if err
       console.log err
