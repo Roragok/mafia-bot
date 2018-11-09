@@ -115,6 +115,9 @@ isGame = (threadId) ->
   }
 
   result = docClient.query(checkGame).promise()
+
+  result.then (data) ->
+    console.log(data)
   console.log result
   console.log "TEST"
 
