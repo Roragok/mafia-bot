@@ -29,10 +29,12 @@ module.exports = (robot) ->
 
 
   robot.respond /lynch (.*)/i, (res) ->
-    if isGame(res.message.room)
-      res.send "Lynched: " + res.match[1]
-    else
-      res.send "Not an Active Game."
+    result = isGame(res.message.room)
+    result.then (data) ->
+      if (data.Count > 0 )
+        res.send "Lynched: " + res.match[1]
+      else
+        res.send "Not an Active Game."
 
   robot.hear /@mafiabot unlynch/i, (res) ->
     res.reply "Unlynched."
@@ -106,7 +108,7 @@ getZeused = (playerName) ->
 
 # Check if thread came from is an active or past game.
 isGame = (threadId) ->
-  console.log "test123"
+
   # Build Query
   checkGame = params
   checkGame.KeyConditionExpression = "game_id = :game_id"
@@ -115,11 +117,6 @@ isGame = (threadId) ->
   }
 
   result = docClient.query(checkGame).promise()
-
-  result.then (data) ->
-    console.log(data)
-  console.log result
-  console.log "TEST"
 
 # Check if the person who sent the command is a host or moderator.
 isHost = (threadID) ->
