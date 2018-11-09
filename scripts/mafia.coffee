@@ -105,19 +105,18 @@ getZeused = (playerName) ->
   return response
 
 # Check if thread came from is an active or past game.
-async isGame = (threadId) ->
-  status = "123"
+isGame = (threadId) ->
+  return new Promise (resolve, reject) ->
 
-  # Build Query
-  checkGame = params
-  checkGame.KeyConditionExpression = "game_id = :game_id"
-  checkGame.ExpressionAttributeValues = {
-    ":game_id": threadId
-  }
+    # Build Query
+    checkGame = params
+    checkGame.KeyConditionExpression = "game_id = :game_id"
+    checkGame.ExpressionAttributeValues = {
+      ":game_id": threadId
+    }
 
-  result = await docClient.query(checkGame).promise()
-  console.log result
-  return status
+    result = docClient.query(checkGame).promise()
+    console.log result
 
 # Check if the person who sent the command is a host or moderator.
 isHost = (threadID) ->
