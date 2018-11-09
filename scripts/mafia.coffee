@@ -105,7 +105,7 @@ getZeused = (playerName) ->
   return response
 
 # Check if thread came from is an active or past game.
-isGame = (threadId) ->
+async isGame = (threadId) ->
   status = "123"
 
   # Build Query
