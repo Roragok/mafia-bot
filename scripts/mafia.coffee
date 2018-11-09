@@ -66,6 +66,7 @@ module.exports = (robot) ->
         console.log data
 
   robot.respond /zeus (.*)\s/i, (res) ->
+    console.log res.match
     res.send(getZeused(res.match[1]))
 
 printVote = (votes) ->
