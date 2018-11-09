@@ -119,8 +119,8 @@ isGame = (threadId) ->
     else
       status = true
       console.log data
-      for game in data.Items.
-          console.log game
+      for game in data.Items
+        console.log game
 
 
   console.log status
