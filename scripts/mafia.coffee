@@ -115,8 +115,8 @@ isGame = (threadId) ->
     ":game_id": threadId
   }
 
-  result = docClient.query(checkGame).promise()
-  console.log result 
+  result = await docClient.query(checkGame).promise()
+  console.log result
   return status
 
 # Check if the person who sent the command is a host or moderator.
