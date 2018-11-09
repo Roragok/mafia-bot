@@ -34,11 +34,11 @@ module.exports = (robot) ->
   robot.hear /@mafiabot unlynch/i, (res) ->
     res.reply "Unlynched."
 
-  robot.response /votecount/i, (res) ->
+  robot.respond /votecount/i, (res) ->
     response = ''
     docClient.scan params, (err, data) ->
       for item in data.Items
-        response += "|" + item['title'] + "| " + item['status'] + "|"
+        response += "|" + item['title'] + "| " + item['status'] + "|\n"
       res.send(printVote(response))
 
   robot.hear /@mafiabot vc/i, (res) ->
@@ -65,7 +65,7 @@ module.exports = (robot) ->
       else
         console.log data
 
-  robot.response /zeus (.*)\s/i, (res) ->
+  robot.respond /zeus (.*)\s/i, (res) ->
     res.send(getZeused(res.match[1]))
 
 printVote = (votes) ->
