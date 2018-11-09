@@ -106,23 +106,23 @@ getZeused = (playerName) ->
 
 # Check if thread came from is an active or past game.
 isGame = (threadId) ->
-  status = false
+  status = "123"
+
+  # Build Query
   checkGame = params
   checkGame.KeyConditionExpression = "game_id = :game_id"
   checkGame.ExpressionAttributeValues = {
     ":game_id": threadId
   }
-  console.log checkGame
-  docClient.query checkGame, (err, data) ->
-    if err
-      console.log err
-    else
+
+  result = docClient.query(checkGame).promise()
+  return result.then data ->
+    console.log "YIKES"
+    if (data.Count > 0)
       status = true
-      console.log data
-      for game in data.Items
-        console.log game
-
-
+    else
+      status = false
+  console.log "YIKES"
   console.log status
   return status
 
