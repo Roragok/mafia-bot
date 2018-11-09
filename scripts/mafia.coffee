@@ -27,9 +27,11 @@ module.exports = (robot) ->
   #   res.envelope.pm = true
   #   res.send "I will reply hello privately!"
 
+  # UNLYNCH COMMAND
   robot.hear /@mafiabot unlynch/i, (res) ->
     res.reply "Unlynched."
 
+  # LYNCH COMMAND
   robot.respond /lynch (.*)/i, (res) ->
     result = isGame(res.message.room)
     result.then (data) ->
@@ -38,25 +40,25 @@ module.exports = (robot) ->
       else
         res.send "Not an Active Game."
 
-
+  # VOTE COUNT COMMAND
   robot.respond /votecount/i, (res) ->
     response = ''
-
     result = getVotes(res.message.room)
     result.then (data) ->
       for item in data.Items
-      response += "|" + item['title'] + "| " + item['status'] + "|\n"
+        response += "|" + item['title'] + "| " + item['status'] + "|\n"
       res.send(printVote(response))
 
+  # VOTE COUNT ALIAS
   robot.hear /@mafiabot vc/i, (res) ->
     response = ''
-
     result = getVotes(res.message.room)
     result.then (data) ->
       for item in data.Items
-      response += "|" + item['title'] + "| " + item['status'] + "|\n"
+        response += "|" + item['title'] + "| " + item['status'] + "|\n"
       res.send(printVote(response))
 
+  # TEST COMMAND - WILL BE START GAME
   robot.hear /@mafiabot addgame/i, (res) ->
     dt = new Date();
 
@@ -74,6 +76,7 @@ module.exports = (robot) ->
       else
         console.log data
 
+  # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
     res.send(getZeused(res.match[1]))
 
