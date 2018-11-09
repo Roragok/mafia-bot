@@ -118,10 +118,13 @@ isGame = (threadId) ->
       console.log err
     else
       status = true
-      console.log status
+      console.log data
+      for game in data.Items.
+          console.log game
+
 
   console.log status
-  return true
+  return status
 
 # Check if the person who sent the command is a host or moderator.
 isHost = (threadID) ->
