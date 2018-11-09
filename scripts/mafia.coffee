@@ -127,9 +127,9 @@ isGame = (threadId) ->
 
 # Check if thread came from is an active or past game.
 getVotes = (threadId) ->
-  params = {
-      TableName: "mafia-game",
-  };
+  params = '';
+  params.TableName = "mafia-game"
+
   result = docClient.scan(params).promise()
 
 # Check if the person who sent the command is a host or moderator.
