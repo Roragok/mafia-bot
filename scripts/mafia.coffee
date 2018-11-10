@@ -59,10 +59,12 @@ module.exports = (robot) ->
   # VOTE COUNT ALIAS
   robot.hear /@mafiabot vc/i, (res) ->
     response = ''
-    result = getVotes(res.message.room)
+    result = getDay(res.message.room)
     result.then (data) ->
       for item in data.Items
-        response += "|" + item['day_title'] + "| " + item['status'] + "|\n"
+        for player in item.alive_players
+          if item["votes"][player]
+            response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
       res.send(printVote(response))
 
   # TEST COMMAND - WILL BE START GAME
