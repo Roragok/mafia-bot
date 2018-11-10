@@ -143,11 +143,17 @@ updateLynch(day_id, voter, lynch) ->
   dt = new Date();
   query = {}
   query.TableName = "mafia-day"
-  query.Key = { "day_id": day_id  }
-  query.UpdateExpression: "set votes.:u.vote = :l, votes.:u.vote_time = :t"
-  query.ExpressionAttributeValues = { ":u":voter,":l":lynch, ":t":dt.getTime() }
+  query.Key = {
+    "day_id": day_id
+  }
+  query.UpdateExpression = "set votes.:u.vote = :l, votes.:u.vote_time = :t"
+  query.ExpressionAttributeValues = {
+    ":u":voter,
+    ":l":lynch,
+    ":t":dt.getTime()
+  }
 
-  console.log("Updating the item...");
+
   docClient.update query, (err, data) ->
     if err
       console.log err
