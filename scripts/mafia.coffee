@@ -148,13 +148,11 @@ updateLynch(day_id, voter, lynch) ->
   query.ExpressionAttributeValues = { ":u":voter,":l":lynch, ":t":dt.getTime() }
 
   console.log("Updating the item...");
-  docClient.update(query, function(err, data) {
-    if (err) {
-        console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
-    } else {
-        console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-    }
-});
+  docClient.put query, (err, data) ->
+    if err
+      console.log err
+    else
+      console.log data
 
 
 
