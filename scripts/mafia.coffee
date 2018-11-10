@@ -35,7 +35,7 @@ module.exports = (robot) ->
     result = getDay(day_id)
     result.then (data) ->
       if (data.Count > 0 )
-        valid = isLynch(data.Items, voter)
+        valid = isUnLynch(data.Items, voter)
         if (valid)
           unLynch(day_id, voter)
 
@@ -165,6 +165,18 @@ isLynch = (game, user, target) ->
   else
    return false
 
+isUnLynch = (game, user) ->
+
+  # False means the day is not over.
+  if game[0].status is false
+    # Then we check if user and target are both alive players
+    if user in game[0].alive_players
+      return true
+    else
+      return false
+  else
+   return false
+
 updateLynch = (day_id, voter, lynch) ->
 
   # Get timestamp of Vote
@@ -189,7 +201,7 @@ updateLynch = (day_id, voter, lynch) ->
       console.log data
 
 unLynch = (day_id, voter) ->
-
+  console.log("TEST")
   # Get timestamp of Vote
   dt = new Date();
 
@@ -199,9 +211,8 @@ unLynch = (day_id, voter) ->
   query.Key = {
     "day_id": day_id
   }
-  query.UpdateExpression = "set votes."+voter+".vote = :l, votes."+voter+".vote_time = :t"
+  query.UpdateExpression = "set votes."+voter+".vote = null, votes."+voter+".vote_time = :t"
   query.ExpressionAttributeValues = {
-    ":l":"null",
     ":t":dt.getTime()
   }
 
