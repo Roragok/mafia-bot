@@ -106,13 +106,15 @@ module.exports = (robot) ->
   robot.respond /zeus (.*)/i, (res) ->
     res.send(getZeused(res.match[1]))
 
-printVote = (votes) ->
+printVote = (votes, notVoting) ->
   response = "# Vote Count"
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
   response += votes
   response += "\n ##  Not Voting"
+  response += "\n --- \n"
+  response += notVoting
   response += "\n --- \n"
   response += uuidv1()
 
