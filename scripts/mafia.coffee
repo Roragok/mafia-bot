@@ -41,8 +41,8 @@ module.exports = (robot) ->
     result = getDay(day_id)
     result.then (data) ->
       if (data.Count > 0 )
-        lynch = isLynch(data.Items , voter, lynch)
-        if (lynch)
+        valid = isLynch(data.Items , voter, lynch)
+        if (valid)
           updateLynch(day_id, voter, lynch)
 
   # VOTE COUNT COMMAND
@@ -51,7 +51,8 @@ module.exports = (robot) ->
     result = getVotes(res.message.room)
     result.then (data) ->
       for item in data.Items
-        response += "|" + item['title'] + "| " + item['status'] + "|\n"
+        for voters in item.votes
+        response += "|" + voters['voter'] + "| " + voters['vote'] + "|\n"
       res.send(printVote(response))
 
   # VOTE COUNT ALIAS
@@ -161,14 +162,11 @@ updateLynch = (day_id, voter, lynch) ->
     ":t":dt.getTime()
   }
 
-
   docClient.update query, (err, data) ->
     if err
       console.log err
     else
       console.log data
-
-
 
 # Check if thread came from is an active or past game.
 getVotes = (threadId) ->
