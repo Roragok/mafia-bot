@@ -148,7 +148,7 @@ updateLynch(day_id, voter, lynch) ->
   query.ExpressionAttributeValues = { ":u":voter,":l":lynch, ":t":dt.getTime() }
 
   console.log("Updating the item...");
-  docClient.put query, (err, data) ->
+  docClient.update query, (err, data) ->
     if err
       console.log err
     else
