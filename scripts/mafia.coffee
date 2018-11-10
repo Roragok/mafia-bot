@@ -138,7 +138,7 @@ isLynch = (game, user, target) ->
   else
     return false
 
-updateLynch(day_id, voter, lynch) ->
+updateLynch = (day_id, voter, lynch) ->
 
   dt = new Date();
   query = {}
