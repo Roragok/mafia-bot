@@ -33,10 +33,14 @@ module.exports = (robot) ->
 
   # LYNCH COMMAND
   robot.respond /lynch (.*)/i, (res) ->
+
+    console.log res
     result = isGame(res.message.room)
     result.then (data) ->
       if (data.Count > 0 )
-        res.send "Lynched: " + res.match[1]
+        lynch = isLynch(data.Items)
+        if !(lynch)
+          res.send "Not a valid target"
       else
         res.send "Not an Active Game."
 
@@ -125,6 +129,13 @@ isGame = (threadId) ->
   }
 
   result = docClient.query(checkGame).promise()
+
+isLynch = (lynchTarget) ->
+
+  console.log lynchTarget
+  return true;
+
+
 
 # Check if thread came from is an active or past game.
 getVotes = (threadId) ->
