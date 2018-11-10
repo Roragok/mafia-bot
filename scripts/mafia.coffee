@@ -131,15 +131,16 @@ getDay = (threadId) ->
 
 
 isLynch = (game, user, target) ->
-  console.log game
-  console.log game.alive_players
+  console.log game[0]
+  console.log game[0].alive_players
 
-  if user and target in game.alive_players
-    console.log "TEST?"
-    return true
-  else
-    consoel.log "WELP"
-    return false
+  for item in game
+    if user and target in item.alive_players
+      console.log "TEST?"
+      return true
+    else
+      consoel.log "WELP"
+      return false
 
 
 # Check if thread came from is an active or past game.
