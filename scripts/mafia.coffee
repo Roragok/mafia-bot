@@ -52,7 +52,7 @@ module.exports = (robot) ->
     result.then (data) ->
       for item in data.Items
         for voters in item.votes
-        response += "|" + voters['voter'] + "| " + voters['vote'] + "|\n"
+          response += "|" + voters['voter'] + "| " + voters['vote'] + "|\n"
       res.send(printVote(response))
 
   # VOTE COUNT ALIAS
