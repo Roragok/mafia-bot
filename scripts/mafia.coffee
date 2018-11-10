@@ -48,11 +48,12 @@ module.exports = (robot) ->
   # VOTE COUNT COMMAND
   robot.respond /votecount/i, (res) ->
     response = ''
-    result = getVotes(res.message.room)
+    result = getDay(res.message.room)
     result.then (data) ->
       for item in data.Items
-        console.log item['votes']
+        console.log item.votes
         for voters in item['votes']
+          console.log voters
           response += "|" + voters['voter'] + "| " + voters['vote'] + "|\n"
       res.send(printVote(response))
 
