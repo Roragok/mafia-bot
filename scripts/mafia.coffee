@@ -51,13 +51,9 @@ module.exports = (robot) ->
     result = getDay(res.message.room)
     result.then (data) ->
       for item in data.Items
-
-        voters = JSON.stringify item.votes    
-
-        for votes in voters
-          console.log "AM I HERE!!!"
-          console.log votes
-          response += "|" + votes['voter'] + "| " + votes['vote'] + "|\n"
+        for player in item.alive_players
+          if item[player]
+            response += "|" + item[player]['voter'] + "| " + item[player]['vote'] + "|\n"
       res.send(printVote(response))
 
   # VOTE COUNT ALIAS
