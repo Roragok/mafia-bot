@@ -34,8 +34,8 @@ module.exports = (robot) ->
   # LYNCH COMMAND
   robot.respond /lynch (.*)/i, (res) ->
 
-    user =  res.user
-    console.log user
+    user =  res.envelope.suer.username
+    console.log res
     result = getDay(res.message.room)
     result.then (data) ->
       if (data.Count > 0 )
@@ -132,9 +132,14 @@ getDay = (threadId) ->
 
 isLynch = (game, user, target) ->
   console.log game
+  console.log game.alive_players
+  console.log user
   console.log target
-  return true;
-
+  # if user and target in game.alive_players
+  #   return true
+  # else
+  #   return false
+  return true
 
 
 # Check if thread came from is an active or past game.
