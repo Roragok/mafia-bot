@@ -52,8 +52,8 @@ module.exports = (robot) ->
     result.then (data) ->
       for item in data.Items
         for player in item.alive_players
-          if item[player]
-            response += "|" + item[player]['voter'] + "| " + item[player]['vote'] + "|\n"
+          if item["votes"][player]
+            response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
       res.send(printVote(response))
 
   # VOTE COUNT ALIAS
