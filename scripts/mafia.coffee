@@ -134,13 +134,12 @@ isLynch = (game, user, target) ->
   console.log game[0]
   console.log game[0].alive_players
 
-  for item in game
-    if user and target in item.alive_players
-      console.log "TEST?"
-      return true
-    else
-      consoel.log "WELP"
-      return false
+  if user and target in game[0].alive_players
+    console.log "help"
+    return true
+  else
+    console.log "yup"
+    return false
 
 
 # Check if thread came from is an active or past game.
