@@ -31,13 +31,13 @@ module.exports = (robot) ->
   robot.respond /unlynch/i, (res) ->
     voter =  res.envelope.user.username
     day_id = res.message.room
-  
+
     result = getDay(day_id)
     result.then (data) ->
       if (data.Count > 0 )
         valid = isLynch(data.Items, voter)
         if (valid)
-          unLynch(day_id, voter, lynch)
+          unLynch(day_id, voter)
 
   # LYNCH COMMAND
   robot.respond /lynch (.*)/i, (res) ->
@@ -56,6 +56,7 @@ module.exports = (robot) ->
   # VOTE COUNT COMMAND
   robot.respond /votecount/i, (res) ->
     response = ''
+    notVoting = ''
     result = getDay(res.message.room)
     result.then (data) ->
       for item in data.Items
@@ -72,6 +73,7 @@ module.exports = (robot) ->
   # VOTE COUNT ALIAS
   robot.hear /@mafiabot vc/i, (res) ->
     response = ''
+    notVoting = ''
     result = getDay(res.message.room)
     result.then (data) ->
       for item in data.Items
