@@ -34,8 +34,8 @@ module.exports = (robot) ->
   # LYNCH COMMAND
   robot.respond /lynch (.*)/i, (res) ->
 
-    user =  res.envelope.suer.username
-    console.log res
+    user =  res.envelope.user.username
+  
     result = getDay(res.message.room)
     result.then (data) ->
       if (data.Count > 0 )
