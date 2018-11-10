@@ -37,13 +37,13 @@ module.exports = (robot) ->
     voter =  res.envelope.user.username
     lynch = res.match[1]
     day_id = res.message.room
-
-    result = getDay(day_id)
-    result.then (data) ->
-      if (data.Count > 0 )
-        valid = isLynch(data.Items , voter, lynch)
-        if (valid)
-          updateLynch(day_id, voter, lynch)
+    if voter isnt lynch
+      result = getDay(day_id)
+      result.then (data) ->
+        if (data.Count > 0 )
+          valid = isLynch(data.Items , voter, lynch)
+          if (valid)
+            updateLynch(day_id, voter, lynch)
 
   # VOTE COUNT COMMAND
   robot.respond /votecount/i, (res) ->
@@ -63,7 +63,7 @@ module.exports = (robot) ->
     result = getVotes(res.message.room)
     result.then (data) ->
       for item in data.Items
-        response += "|" + item['title'] + "| " + item['status'] + "|\n"
+        response += "|" + item['day_title'] + "| " + item['status'] + "|\n"
       res.send(printVote(response))
 
   # TEST COMMAND - WILL BE START GAME
@@ -173,7 +173,7 @@ updateLynch = (day_id, voter, lynch) ->
 # Check if thread came from is an active or past game.
 getVotes = (threadId) ->
   votes = {}
-  votes.TableName = "mafia-game"
+  votes.TableName = "mafia-day"
   result = docClient.scan(votes).promise()
 
 # Check if the person who sent the command is a host or moderator.
