@@ -28,8 +28,16 @@ module.exports = (robot) ->
   #   res.send "I will reply hello privately!"
 
   # UNLYNCH COMMAND
-  robot.hear /@mafiabot unlynch/i, (res) ->
-    res.reply "Unlynched."
+  robot.respond /unlynch/i, (res) ->
+    voter =  res.envelope.user.username
+    day_id = res.message.room
+  
+    result = getDay(day_id)
+    result.then (data) ->
+      if (data.Count > 0 )
+        valid = isLynch(data.Items, voter)
+        if (valid)
+          unLynch(day_id, voter, lynch)
 
   # LYNCH COMMAND
   robot.respond /lynch (.*)/i, (res) ->
@@ -53,8 +61,13 @@ module.exports = (robot) ->
       for item in data.Items
         for player in item.alive_players
           if item["votes"][player]
-            response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
-      res.send(printVote(response))
+            if item["votes"][player]['vote'] is "null"
+              notVoting += player + "\n"
+            else
+              response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
+          else
+            notVoting += player + "\n"
+      res.send(printVote(response, notVoting))
 
   # VOTE COUNT ALIAS
   robot.hear /@mafiabot vc/i, (res) ->
@@ -65,7 +78,9 @@ module.exports = (robot) ->
         for player in item.alive_players
           if item["votes"][player]
             response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
-      res.send(printVote(response))
+          else
+            notVoting += player + "\n"
+      res.send(printVote(response, notVoting))
 
   # TEST COMMAND - WILL BE START GAME
   robot.hear /@mafiabot addgame/i, (res) ->
@@ -162,6 +177,29 @@ updateLynch = (day_id, voter, lynch) ->
   query.UpdateExpression = "set votes."+voter+".vote = :l, votes."+voter+".vote_time = :t"
   query.ExpressionAttributeValues = {
     ":l":lynch,
+    ":t":dt.getTime()
+  }
+
+  docClient.update query, (err, data) ->
+    if err
+      console.log err
+    else
+      console.log data
+
+unLynch = (day_id, voter) ->
+
+  # Get timestamp of Vote
+  dt = new Date();
+
+  # Build new Query
+  query = {}
+  query.TableName = "mafia-day"
+  query.Key = {
+    "day_id": day_id
+  }
+  query.UpdateExpression = "set votes."+voter+".vote = :l, votes."+voter+".vote_time = :t"
+  query.ExpressionAttributeValues = {
+    ":l":"null",
     ":t":dt.getTime()
   }
 
