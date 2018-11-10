@@ -133,22 +133,30 @@ getDay = (threadId) ->
 
 
 isLynch = (game, user, target) ->
-  if user and target in game[0].alive_players
-    return true
+
+  # False means the day is not over.
+  if game[0].status is false
+    # Then we check if user and target are both alive players
+    if user and target in game[0].alive_players
+      return true
+    else
+      return false
   else
-    return false
+   return false
 
 updateLynch = (day_id, voter, lynch) ->
 
+  # Get timestamp of Vote
   dt = new Date();
+
+  # Build new Query
   query = {}
   query.TableName = "mafia-day"
   query.Key = {
     "day_id": day_id
   }
-  query.UpdateExpression = "set votes.:u.vote = :l, votes.:u.vote_time = :t"
+  query.UpdateExpression = "set votes."+voter+".vote = :l, votes."+voter+".vote_time = :t"
   query.ExpressionAttributeValues = {
-    ":u":voter,
     ":l":lynch,
     ":t":dt.getTime()
   }
