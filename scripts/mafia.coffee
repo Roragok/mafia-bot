@@ -34,14 +34,16 @@ module.exports = (robot) ->
   # LYNCH COMMAND
   robot.respond /lynch (.*)/i, (res) ->
 
-    user =  res.envelope.user.username
+    voter =  res.envelope.user.username
+    lynch = res.match[1]
+    day_id = res.message.room
 
-    result = getDay(res.message.room)
+    result = getDay(day_id)
     result.then (data) ->
       if (data.Count > 0 )
-        lynch = isLynch(data.Items , user, res.match[1])
-        if !(lynch)
-          res.send "Not a valid target"
+        lynch = isLynch(data.Items , voter, lynch)
+        if (lynch)
+          updateLynch(day_id, voter, lynch)
 
   # VOTE COUNT COMMAND
   robot.respond /votecount/i, (res) ->
@@ -131,15 +133,29 @@ getDay = (threadId) ->
 
 
 isLynch = (game, user, target) ->
-  console.log game[0]
-  console.log game[0].alive_players
-
   if user and target in game[0].alive_players
-    console.log "help"
     return true
   else
-    console.log "yup"
     return false
+
+updateLynch(day_id, voter, lynch) ->
+
+  dt = new Date();
+  query = {}
+  query.TableName = "mafia-day"
+  query.Key = { "day_id": day_id  }
+  query.UpdateExpression: "set votes.:u.vote = :l, votes.:u.vote_time = :t"
+  query.ExpressionAttributeValues = { ":u":voter,":l":lynch, ":t":dt.getTime() }
+
+  console.log("Updating the item...");
+  docClient.update(query, function(err, data) {
+    if (err) {
+        console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+    }
+});
+
 
 
 # Check if thread came from is an active or past game.
