@@ -34,15 +34,13 @@ module.exports = (robot) ->
   # LYNCH COMMAND
   robot.respond /lynch (.*)/i, (res) ->
 
-    console.log res
-    result = isGame(res.message.room)
+    user =  res.user.username
+    result = getDay(res.message.room)
     result.then (data) ->
       if (data.Count > 0 )
-        lynch = isLynch(data.Items)
+        lynch = isLynch(data.Items , user, res.match[1])
         if !(lynch)
           res.send "Not a valid target"
-      else
-        res.send "Not an Active Game."
 
   # VOTE COUNT COMMAND
   robot.respond /votecount/i, (res) ->
@@ -118,21 +116,23 @@ getZeused = (playerName) ->
   return response
 
 # Check if thread came from is an active or past game.
-isGame = (threadId) ->
+getDay = (threadId) ->
 
   # Build Query
   checkGame = {}
-  checkGame.TableName = "mafia-game"
-  checkGame.KeyConditionExpression = "game_id = :game_id"
+  checkGame.TableName = "mafia-day"
+  checkGame.KeyConditionExpression = "day_id = :day_id"
   checkGame.ExpressionAttributeValues = {
-    ":game_id": threadId
+    ":day_id": threadId
   }
 
   result = docClient.query(checkGame).promise()
 
-isLynch = (lynchTarget) ->
 
-  console.log lynchTarget
+isLynch = (game, user, target) ->
+  console.log game
+  console.log target
+  console.log user
   return true;
 
 
