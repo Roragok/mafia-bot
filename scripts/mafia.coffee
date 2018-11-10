@@ -51,7 +51,8 @@ module.exports = (robot) ->
     result = getVotes(res.message.room)
     result.then (data) ->
       for item in data.Items
-        console.log item['votes']
+        console.log item
+        console.log item.votes
         for voters in item['votes']
           response += "|" + voters['voter'] + "| " + voters['vote'] + "|\n"
       res.send(printVote(response))
