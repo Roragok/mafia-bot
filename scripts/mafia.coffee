@@ -51,11 +51,11 @@ module.exports = (robot) ->
     result = getDay(res.message.room)
     result.then (data) ->
       for item in data.Items
-        console.log item.votes
-        console.log JSON.parse item.votes
-        voters = JSON.parse item.votes
+
+        console.log JSON.stringify item.votes
+        console.log item.votes[0]
         
-        for votes in voters
+        for votes in item.votes
           console.log votes
           response += "|" + votes['voter'] + "| " + votes['vote'] + "|\n"
       res.send(printVote(response))
