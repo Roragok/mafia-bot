@@ -52,10 +52,10 @@ module.exports = (robot) ->
     result.then (data) ->
       for item in data.Items
 
-        console.log JSON.stringify item.votes
-        console.log item.votes[0]
-        
-        for votes in item.votes
+        voters = JSON.stringify item.votes    
+
+        for votes in voters
+          console.log "AM I HERE!!!"
           console.log votes
           response += "|" + votes['voter'] + "| " + votes['vote'] + "|\n"
       res.send(printVote(response))
