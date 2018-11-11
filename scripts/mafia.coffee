@@ -71,7 +71,7 @@ module.exports = (robot) ->
       res.send(printVote(response, notVoting))
 
   # VOTE COUNT ALIAS
-  robot.hear /@mafiabot vc/i, (res) ->
+  robot.respond /vc/i, (res) ->
     response = ''
     notVoting = ''
     result = getDay(res.message.room)
@@ -127,7 +127,7 @@ module.exports = (robot) ->
           unSignGame
 
   # Show Signed Players
-  robot.respond /signlist/i, (res) ->
+  robot.respond /slist/i, (res) ->
     result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
@@ -307,7 +307,8 @@ hostGame = (host, title, threadId) ->
 signGame = (user, threadId, players) ->
 
   if players
-    players.push user
+    if user not in players
+      players.push user
   else
     players = []
     players.push user
