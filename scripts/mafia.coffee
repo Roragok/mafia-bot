@@ -292,11 +292,12 @@ hostGame = (host, title, threadId) ->
       console.log data
 
 signGame = (user, threadId, players) ->
-  console.log players
-  if players not null
+
+  if not players
     players.push user
   else
-    players = [user]
+    players = []
+    players.push user
   # Build new Query
   query = {}
   query.TableName = "mafia-game"
