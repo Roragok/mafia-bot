@@ -157,13 +157,11 @@ printVote = (votes, notVoting) ->
 
 printSignedPlayers = (signed) ->
 
-  response = "# Vote Count"
+  response = "#  Signed Players"
   response += "\n --- \n"
-  response += "| Signed Players | \n"
-  response += "|---|\n"
 
   for player in signed
-    response += "|" + player + "|\n"
+    response += player + "|\n"
 
   response += "\n --- \n"
   response += uuidv1()
@@ -331,9 +329,12 @@ signGame = (user, threadId, players) ->
 
 unSignGame = (user, threadId, players) ->
   index = null
+  console.log players
   index = players.indexOf(user)
+  console.log index
   if index
-    players.splice(index, 1)
+    console.log players
+    players  = players.splice(index, 1)
 
   # Build new Query
   query = {}
