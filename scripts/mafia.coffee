@@ -62,7 +62,8 @@ module.exports = (robot) ->
       for item in data.Items
         for player in item.alive_players
           if item["votes"][player]
-            if item["votes"][player]['vote'] is "no vote"
+            console.log item["votes"][player]['vote']
+            if item["votes"][player]['vote'] is null
               notVoting += player + "\n"
             else
               response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
@@ -215,7 +216,7 @@ unLynch = (day_id, voter) ->
   }
   query.UpdateExpression = "set votes."+voter+".vote = :l, votes."+voter+".vote_time = :t"
   query.ExpressionAttributeValues = {
-    ":l": "no vote",
+    ":l": null,
     ":t":dt.getTime()
   }
 
