@@ -22,18 +22,6 @@ params = {
     TableName: "mafia-game",
 };
 
-checkGame = (threadId) ->
-  # Build Query
-  checkGame = {}
-  checkGame.TableName = "mafia-game"
-  checkGame.KeyConditionExpression = "game_id = :game_id"
-  checkGame.ExpressionAttributeValues = {
-    ":game_id": threadId
-  }
-
-  result = docClient.query(checkGame).promise()
-
-
 module.exports = (robot) ->
   # robot.hear /private hello/i, (res) ->
   #   res.envelope.pm = true
@@ -101,7 +89,7 @@ module.exports = (robot) ->
 
   # Host Game
   robot.respond /host/i, (res) ->
-    result = checkGame(res.message.room)
+    result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 0
         #Add Game if no matching #ID
@@ -110,7 +98,7 @@ module.exports = (robot) ->
 
   # Sign to Game Game
   robot.respond /sign/i, (res) ->
-    result = checkGame(res.message.room)
+    result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
@@ -119,7 +107,7 @@ module.exports = (robot) ->
 
   # Sign to Game Game
   robot.respond /\.s/i, (res) ->
-    result = checkGame(res.message.room)
+    result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
@@ -128,7 +116,7 @@ module.exports = (robot) ->
 
   # Sign to Game Game
   robot.respond /unsign/i, (res) ->
-    result = checkGame(res.message.room)
+    result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
@@ -140,7 +128,7 @@ module.exports = (robot) ->
 
   # Show Signed Players
   robot.respond /signlist/i, (res) ->
-    result = checkGame(res.message.room)
+    result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
@@ -212,6 +200,18 @@ getDay = (threadId) ->
   checkGame.KeyConditionExpression = "day_id = :day_id"
   checkGame.ExpressionAttributeValues = {
     ":day_id": threadId
+  }
+
+  result = docClient.query(checkGame).promise()
+
+getGame = (threadId) ->
+
+  # Build Query
+  checkGame = {}
+  checkGame.TableName = "mafia-game"
+  checkGame.KeyConditionExpression = "game_id = :game_id"
+  checkGame.ExpressionAttributeValues = {
+    ":game_id": threadId
   }
 
   result = docClient.query(checkGame).promise()
