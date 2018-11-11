@@ -87,27 +87,45 @@ module.exports = (robot) ->
             notVoting += player + "\n"
       res.send(printVote(response, notVoting))
 
-  # TEST COMMAND - WILL BE START GAME
-  robot.hear /@mafiabot addgame/i, (res) ->
-    dt = new Date();
-    query = {}
-    query.TableName = "mafia-game"
-    query.Item = {
-           game_id: res.message.room,
-           game_start: dt.getTime(),
-           game_url: "https://namafia.com/t/"+res.message.title+ "/" + res.message.room,
-           status: false,
-           title: res.message.title
-    }
-    docClient.put query, (err, data) ->
-      if err
-        console.log err
-      else
-        console.log data
+  # Host Game
+  robot.respond /host/i, (res) ->
+    result = checkGame(res.message.room)
+    result.then (data) ->
+      console.log data
+        if data.Count is 0
+          #Add Game if no matching #ID
+          hostGame(res.envelope.user.username, res.message.title, res.message.room)
+
+
+  # Sign to Game Game
+  robot.respond /sign/i, (res) ->
+    result = checkGame(res.message.room)
+    result.then (data) ->
+      console.log data
+        if data.Count is 1
+          for item in data.Items
+            # Add User to Signup
+            signGame(res.envelope.user.username, res.message.room, item.signed_players)
+
+  # Sign to Game Game
+  robot.respond /\.s/i, (res) ->
+    result = checkGame(res.message.room)
+    result.then (data) ->
+        if data.Count is 1
+          for item in data.Items
+            # Add User to Signup
+            signGame(res.envelope.user.username, res.message.room, item.signed_players)
+
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
     res.send(getZeused(res.match[1]))
+
+
+
+
+
+# Functions
 
 printVote = (votes, notVoting) ->
   response = "# Vote Count"
@@ -157,6 +175,17 @@ getDay = (threadId) ->
 
   result = docClient.query(checkGame).promise()
 
+checkGame = (threadId) ->
+
+    # Build Query
+    checkGame = {}
+    checkGame.TableName = "mafia-game"
+    checkGame.KeyConditionExpression = "game_id = :game_id"
+    checkGame.ExpressionAttributeValues = {
+      ":game_id": threadId
+    }
+
+    result = docClient.query(checkGame).promise()
 
 isLynch = (game, user, target) ->
 
@@ -206,7 +235,7 @@ updateLynch = (day_id, voter, lynch) ->
       console.log data
 
 unLynch = (day_id, voter) ->
-  console.log("TEST")
+
   # Get timestamp of Vote
   dt = new Date();
 
@@ -227,6 +256,43 @@ unLynch = (day_id, voter) ->
       console.log err
     else
       console.log data
+
+hostGame = (host, title, threadId) ->
+    dt = new Date();
+    query = {}
+    query.TableName = "mafia-game"
+    query.Item = {
+           game_id: threadId,
+           game_start: dt.getTime(),
+           game_url: "https://namafia.com/t/"+res.message.title+ "/" + threadId,
+           status: false,
+           title: title
+    }
+    docClient.put query, (err, data) ->
+      if err
+        console.log err
+      else
+        console.log data
+
+signGame = (user, threadId, players) ->
+    players.push user
+    # Build new Query
+    query = {}
+    query.TableName = "mafia-game"
+    query.Key = {
+      "game_id": threadId
+    }
+    query.UpdateExpression = "set signed_players = :p"
+    query.ExpressionAttributeValues = {
+      ":p":players,
+    }
+
+    docClient.update query, (err, data) ->
+      if err
+        console.log err
+      else
+        console.log data
+
 
 # Check if thread came from is an active or past game.
 getVotes = (threadId) ->
