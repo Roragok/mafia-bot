@@ -259,7 +259,7 @@ hostGame = (host, title, threadId) ->
   query.Item = {
          game_id: threadId,
          game_start: dt.getTime(),
-         game_url: "https://namafia.com/t/"+res.message.title+ "/" + threadId,
+         game_url: "https://namafia.com/t/" + title + "/" + threadId,
          status: false,
          title: title
   }
