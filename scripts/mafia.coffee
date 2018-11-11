@@ -114,6 +114,18 @@ module.exports = (robot) ->
           # Add User to Signup
           signGame(res.envelope.user.username, res.message.room, item.signed_players)
 
+# Sign to Game Game
+robot.respond /unsign/i, (res) ->
+  result = checkGame(res.message.room)
+  result.then (data) ->
+    if data.Count is 1
+      for item in data.Items
+        # Add User to Signup
+        unSignGame(res.envelope.user.username, res.message.room, item.signed_players)
+
+
+          unSignGame
+
   # Show Signed Players
   robot.respond /signlist/i, (res) ->
     result = checkGame(res.message.room)
@@ -293,11 +305,34 @@ hostGame = (host, title, threadId) ->
 
 signGame = (user, threadId, players) ->
 
-  if not players
+  if players
     players.push user
   else
     players = []
     players.push user
+  # Build new Query
+  query = {}
+  query.TableName = "mafia-game"
+  query.Key = {
+    "game_id": threadId
+  }
+  query.UpdateExpression = "set signed_players = :p"
+  query.ExpressionAttributeValues = {
+    ":p":players,
+  }
+
+  docClient.update query, (err, data) ->
+    if err
+      console.log err
+    else
+      console.log data
+
+unSignGame = (user, threadId, players) ->
+  index = null
+  index = players.indexOf(user)
+  if index
+    players.splice(index, 1)
+
   # Build new Query
   query = {}
   query.TableName = "mafia-game"
