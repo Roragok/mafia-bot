@@ -123,9 +123,6 @@ module.exports = (robot) ->
           # Add User to Signup
           unSignGame(res.envelope.user.username, res.message.room, item.signed_players)
 
-
-          unSignGame
-
   # Show Signed Players
   robot.respond /slist/i, (res) ->
     result = getGame(res.message.room)
