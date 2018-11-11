@@ -95,7 +95,6 @@ module.exports = (robot) ->
         #Add Game if no matching #ID
         hostGame(res.envelope.user.username, res.message.title, res.message.room)
 
-
   # Sign to Game Game
   robot.respond /sign/i, (res) ->
     result = getGame(res.message.room)
@@ -326,12 +325,10 @@ signGame = (user, threadId, players) ->
 
 unSignGame = (user, threadId, players) ->
   index = null
-  console.log players
   index = players.indexOf(user)
-  console.log index
-  if index
+  if index or index is 0
     console.log players
-    players  = players.splice(index, 1)
+    players.splice(index, 1)
 
   # Build new Query
   query = {}
