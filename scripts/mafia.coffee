@@ -261,7 +261,8 @@ hostGame = (host, title, threadId) ->
          game_start: dt.getTime(),
          game_url: "https://namafia.com/t/" + title + "/" + threadId,
          status: false,
-         title: title
+         title: title,
+         host: host
   }
   docClient.put query, (err, data) ->
     if err
