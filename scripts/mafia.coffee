@@ -62,7 +62,6 @@ module.exports = (robot) ->
       for item in data.Items
         for player in item.alive_players
           if item["votes"][player]
-            console.log item["votes"][player]['vote']
             if item["votes"][player]['vote'] is null
               notVoting += player + "\n"
             else
@@ -80,7 +79,10 @@ module.exports = (robot) ->
       for item in data.Items
         for player in item.alive_players
           if item["votes"][player]
-            response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
+            if item["votes"][player]['vote'] is null
+              notVoting += player + "\n"
+            else
+              response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
           else
             notVoting += player + "\n"
       res.send(printVote(response, notVoting))
