@@ -114,14 +114,14 @@ module.exports = (robot) ->
           # Add User to Signup
           signGame(res.envelope.user.username, res.message.room, item.signed_players)
 
-# Sign to Game Game
-robot.respond /unsign/i, (res) ->
-  result = checkGame(res.message.room)
-  result.then (data) ->
-    if data.Count is 1
-      for item in data.Items
-        # Add User to Signup
-        unSignGame(res.envelope.user.username, res.message.room, item.signed_players)
+  # Sign to Game Game
+  robot.respond /unsign/i, (res) ->
+    result = checkGame(res.message.room)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          unSignGame(res.envelope.user.username, res.message.room, item.signed_players)
 
 
           unSignGame
