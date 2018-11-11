@@ -22,6 +22,18 @@ params = {
     TableName: "mafia-game",
 };
 
+checkGame = (threadId) ->
+  # Build Query
+  checkGame = {}
+  checkGame.TableName = "mafia-game"
+  checkGame.KeyConditionExpression = "game_id = :game_id"
+  checkGame.ExpressionAttributeValues = {
+    ":game_id": threadId
+  }
+
+  result = docClient.query(checkGame).promise()
+
+
 module.exports = (robot) ->
   # robot.hear /private hello/i, (res) ->
   #   res.envelope.pm = true
@@ -200,17 +212,6 @@ getDay = (threadId) ->
   checkGame.KeyConditionExpression = "day_id = :day_id"
   checkGame.ExpressionAttributeValues = {
     ":day_id": threadId
-  }
-
-  result = docClient.query(checkGame).promise()
-
-checkGame = (threadId) ->
-  # Build Query
-  checkGame = {}
-  checkGame.TableName = "mafia-game"
-  checkGame.KeyConditionExpression = "game_id = :game_id"
-  checkGame.ExpressionAttributeValues = {
-    ":game_id": threadId
   }
 
   result = docClient.query(checkGame).promise()
