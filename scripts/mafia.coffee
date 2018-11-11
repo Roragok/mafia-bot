@@ -91,7 +91,6 @@ module.exports = (robot) ->
   robot.respond /host/i, (res) ->
     result = checkGame(res.message.room)
     result.then (data) ->
-      console.log data
       if data.Count is 0
         #Add Game if no matching #ID
         hostGame(res.envelope.user.username, res.message.title, res.message.room)
@@ -101,7 +100,6 @@ module.exports = (robot) ->
   robot.respond /sign/i, (res) ->
     result = checkGame(res.message.room)
     result.then (data) ->
-      console.log data
       if data.Count is 1
         for item in data.Items
           # Add User to Signup
@@ -116,6 +114,14 @@ module.exports = (robot) ->
           # Add User to Signup
           signGame(res.envelope.user.username, res.message.room, item.signed_players)
 
+  # Show Signed Players
+  robot.respond /signlist/i, (res) ->
+    result = checkGame(res.message.room)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          res.send(printSignedPlayers(item.signed_players))
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
@@ -132,6 +138,21 @@ printVote = (votes, notVoting) ->
   response += "\n ##  Not Voting"
   response += "\n --- \n"
   response += notVoting
+  response += "\n --- \n"
+  response += uuidv1()
+
+  return response
+
+printSignedPlayers = (signed) ->
+
+  response = "# Vote Count"
+  response += "\n --- \n"
+  response += "| Signed Players | \n"
+  response += "|---|\n"
+
+  for player in signed
+    response += "|" + player + "|\n"
+
   response += "\n --- \n"
   response += uuidv1()
 
@@ -290,11 +311,13 @@ signGame = (user, threadId, players) ->
       console.log data
 
 
+
+
 # Check if thread came from is an active or past game.
-getVotes = (threadId) ->
-  votes = {}
-  votes.TableName = "mafia-day"
-  result = docClient.scan(votes).promise()
+# getVotes = (threadId) ->
+#   votes = {}
+#   votes.TableName = "mafia-day"
+#   result = docClient.scan(votes).promise()
 
 # Check if the person who sent the command is a host or moderator.
 isHost = (threadID) ->
