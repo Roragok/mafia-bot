@@ -102,28 +102,24 @@ module.exports = (robot) ->
     result = checkGame(res.message.room)
     result.then (data) ->
       console.log data
-        if data.Count is 1
-          for item in data.Items
-            # Add User to Signup
-            signGame(res.envelope.user.username, res.message.room, item.signed_players)
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          signGame(res.envelope.user.username, res.message.room, item.signed_players)
 
   # Sign to Game Game
   robot.respond /\.s/i, (res) ->
     result = checkGame(res.message.room)
     result.then (data) ->
-        if data.Count is 1
-          for item in data.Items
-            # Add User to Signup
-            signGame(res.envelope.user.username, res.message.room, item.signed_players)
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          signGame(res.envelope.user.username, res.message.room, item.signed_players)
 
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
     res.send(getZeused(res.match[1]))
-
-
-
-
 
 # Functions
 
