@@ -159,7 +159,6 @@ module.exports = (robot) ->
     result.then (data) ->
           # If no days create day 1
       if data.Count is 0
-        console.log "AYYYYY"
         parent = getGame(parentId)
         parent.then (gameData) ->
           console.log gameData
@@ -244,10 +243,8 @@ getGame = (threadId) ->
   checkGame.TableName = "mafia-game"
   checkGame.KeyConditionExpression = "game_id = :game_id"
   checkGame.ExpressionAttributeValues = {
-    ":game_id": threadId
+    ":game_id": praseInt threadId
   }
-
-  console.log checkGame
   result = docClient.query(checkGame).promise()
 
 # Check if thread came from is an active or past game.
