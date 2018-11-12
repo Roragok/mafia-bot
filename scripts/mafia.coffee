@@ -163,7 +163,7 @@ module.exports = (robot) ->
         parent.then (gameData) ->
           console.log "HOW BOUT HERE?"
           if gameData.Count is 1
-            console.log "WE HERE BOYS?"
+            console.log gameData
             for item in gameData
               console.log item
               console.log host
