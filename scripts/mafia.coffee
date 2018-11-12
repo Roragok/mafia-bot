@@ -146,7 +146,7 @@ module.exports = (robot) ->
           res.send(printSignedPlayers(item.signed_players))
 
   # Start Day
-  robot.respons /startday (.*)/i, (res) ->
+  robot.respond /startday (.*)/i, (res) ->
     #Get Days
     parent = res.match[1]
     host =  res.envelope.user.username
