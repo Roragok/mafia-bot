@@ -159,8 +159,8 @@ module.exports = (robot) ->
       console.log data
       if data.Count is 0
         parent = getGame(parentId)
-        console.log parent
         parent.then (gameData) ->
+          console.log gameData
           if gameData.Count > 0
             startGame(host, title, threadId, gameData.signed_players, parentId)
       # Else get last day and create new day
@@ -243,7 +243,7 @@ getGame = (threadId) ->
   checkGame.ExpressionAttributeValues = {
     ":game_id": parseInt(threadId)
   }
-
+  console.log checkGame
   result = docClient.query(checkGame).promise()
 
 # Check if thread came from is an active or past game.
