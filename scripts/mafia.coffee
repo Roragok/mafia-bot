@@ -160,7 +160,7 @@ module.exports = (robot) ->
           # If no days create day 1
       if data.Count is 0
         parent = getGame(parentId)
-        parent.then (gameData) ->      
+        parent.then (gameData) ->
           if gameData.Count is 1
             for item in gameData.Items
               if host is item.host
@@ -353,8 +353,8 @@ startGame = (host, title, threadId, players, parent) ->
   dt = new Date();
   timestamp = dt.getTime()
   votes = []
-  console.log players
-  for player in players
+  console.log players.values
+  for player in players.values
     console.log player + "\n"
     votes[player] = {
       vote: null,
@@ -388,7 +388,7 @@ startDay = (host,title,threadID, parent, data) ->
   alive_players = data.alive_players
   for killedPlayer in data.kills
     index = null
-    index = alive_players.indexOf(user)
+    index = alive_players.indexOf(killedPlayer)
     if index or index is 0
       alive_players.splice(index, 1)
 
