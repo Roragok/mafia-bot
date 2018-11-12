@@ -44,14 +44,13 @@ module.exports = (robot) ->
 
     voter =  res.envelope.user.username
     lynch = res.match[1]
-    day_id = res.message.room
-    if voter isnt lynch
-      result = getDay(day_id)
-      result.then (data) ->
-        if (data.Count > 0 )
-          valid = isLynch(data.Items , voter, lynch)
-          if (valid)
-            updateLynch(day_id, voter, lynch)
+    threadId = res.message.room
+    result = getDay(day_id)
+    result.then (data) ->
+      if (data.Count > 0 )
+        valid = isLynch(data.Items , voter, lynch)
+        if (valid)
+          updateLynch(threadId, voter, lynch)
 
   # VOTE COUNT COMMAND
   robot.respond /votecount/i, (res) ->
@@ -103,6 +102,21 @@ module.exports = (robot) ->
         for item in data.Items
           # Add User to Signup
           signGame(res.envelope.user.username, res.message.room, item.signed_players)
+
+  # Sign to Game Game
+  robot.respond /kill (.*)/i, (res) ->
+
+    host =  res.envelope.user.username
+    target = res.match[1]
+    threadId = res.message.room
+
+    result = getGame(res.message.room)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          if host is item.host
+            killPlayer(threadId, item.kills, target)
 
   # Sign to Game Game
   robot.respond /\.s/i, (res) ->
@@ -327,7 +341,6 @@ unSignGame = (user, threadId, players) ->
   index = null
   index = players.indexOf(user)
   if index or index is 0
-    console.log players
     players.splice(index, 1)
 
   # Build new Query
@@ -347,6 +360,29 @@ unSignGame = (user, threadId, players) ->
     else
       console.log data
 
+killPlayer = (threadId, kills, target) ->
+  if kills
+    if target not in players
+      kills.push target
+  else
+    kills = []
+    kills.push target
+  # Build new Query
+  query = {}
+  query.TableName = "mafia-game"
+  query.Key = {
+    "game_id": threadId
+  }
+  query.UpdateExpression = "set kills = :p"
+  query.ExpressionAttributeValues = {
+    ":p":kills,
+  }
+
+  docClient.update query, (err, data) ->
+    if err
+      console.log err
+    else
+      console.log data
 
 
 
