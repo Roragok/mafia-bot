@@ -352,7 +352,7 @@ startGame = (host, title, threadId, players, parent) ->
 
   dt = new Date();
   timestamp = dt.getTime()
-  votes = []
+  votes = {}
   console.log players
   for player in players
     console.log player + "\n"
