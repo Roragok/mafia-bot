@@ -353,14 +353,16 @@ startGame = (host, title, threadId, players, parent) ->
   dt = new Date();
   timestamp = dt.getTime()
   votes = []
-  console.log players.values
-  for player in players.values
+  console.log players
+  for player in players
     console.log player + "\n"
     votes[player] = {
       vote: null,
       voter:player,
       vote_time: timestamp
     }
+    console.log votes[player]
+
   query = {}
   query.TableName = "mafia-day"
   query.Item = {
