@@ -157,9 +157,9 @@ module.exports = (robot) ->
 
     result = getDaysOfParent(parentId)
     result.then (data) ->
-      console.log data
-      # If no days create day 1
+          # If no days create day 1
       if data.Count is 0
+        console.log "AYYYYY"
         parent = getGame(parentId)
         parent.then (gameData) ->
           console.log gameData
@@ -246,21 +246,23 @@ getGame = (threadId) ->
   checkGame.ExpressionAttributeValues = {
     ":game_id": threadId
   }
+
+  console.log checkGame
   result = docClient.query(checkGame).promise()
 
 # Check if thread came from is an active or past game.
 getDaysOfParent = (threadId) ->
 
   # Build Query
-  checkGame = {}
-  checkGame.TableName = "mafia-day"
-  checkGame.IndexName = "parent_id-index"
-  checkGame.KeyConditionExpression = "parent_id = :parent_id"
-  checkGame.ExpressionAttributeValues = {
+  getParent = {}
+  getParent.TableName = "mafia-day"
+  getParent.IndexName = "parent_id-index"
+  getParent.KeyConditionExpression = "parent_id = :parent_id"
+  getParent.ExpressionAttributeValues = {
     ":parent_id": threadId
   }
 
-  result = docClient.query(checkGame).promise()
+  result = docClient.query(getParent).promise()
 
 isLynch = (game, user, target) ->
 
