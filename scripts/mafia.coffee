@@ -254,7 +254,7 @@ getDaysOfParent = (threadId) ->
   checkGame.IndexName = "parent_id-index"
   checkGame.KeyConditionExpression = "parent_id = :parent_id"
   checkGame.ExpressionAttributeValues = {
-    ":parent_id": threadId
+    ":parent_id": parseInt(threadId)
   }
 
   result = docClient.query(checkGame).promise()
