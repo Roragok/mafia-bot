@@ -110,7 +110,7 @@ module.exports = (robot) ->
     target = res.match[1]
     threadId = res.message.room
 
-    result = getGame(res.message.room)
+    result = getDay(res.message.room)
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
@@ -167,8 +167,12 @@ module.exports = (robot) ->
                 startGame(host, title, threadId, item.signed_players, parentId)
       # Else get last day and create new day
       else
-        if host is data.Items[data.Count -1].host
-          startDay(host,title,threadID, parentId, data.Items[data.Count -1])
+        console.log data.Count
+        index = data.Count
+        index -= 1
+        console.log index
+        # if host is data.Items[index].host
+        #   startDay(host,title,threadID, parentId, data.Items[])
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
@@ -475,20 +479,20 @@ unSignGame = (user, threadId, players) ->
 
 killPlayer = (threadId, kills, target) ->
   if kills
-    if target not in players
+    if target not in kills
       kills.push target
   else
     kills = []
     kills.push target
   # Build new Query
   query = {}
-  query.TableName = "mafia-game"
+  query.TableName = "mafia-day"
   query.Key = {
-    "game_id": threadId
+    "day_id": threadId
   }
-  query.UpdateExpression = "set kills = :p"
+  query.UpdateExpression = "set kills = :k"
   query.ExpressionAttributeValues = {
-    ":p":kills,
+    ":k":kills,
   }
 
   docClient.update query, (err, data) ->
