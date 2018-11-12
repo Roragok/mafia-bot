@@ -172,8 +172,8 @@ module.exports = (robot) ->
         index -= 1
         console.log index
         console.log data.Items[index]
-         if host is data.Items[index].host
-          startDay(host,title,threadID, parentId, data.Items[index])
+       if host is data.Items[index].host
+        startDay(host,title,threadID, parentId, data.Items[index])
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
