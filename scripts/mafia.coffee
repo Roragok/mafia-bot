@@ -171,8 +171,9 @@ module.exports = (robot) ->
         index = data.Count
         index -= 1
         console.log index
-        # if host is data.Items[index].host
-        #   startDay(host,title,threadID, parentId, data.Items[])
+        console.log data.Items[index]
+         if host is data.Items[index].host
+          startDay(host,title,threadID, parentId, data.Items[index])
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
@@ -357,15 +358,12 @@ startGame = (host, title, threadId, players, parent) ->
   dt = new Date();
   timestamp = dt.getTime()
   votes = {}
-  console.log players
   for player in players
-    console.log player + "\n"
     votes[player] = {
       vote: null,
       voter:player,
       vote_time: timestamp
     }
-    console.log votes[player]
 
   query = {}
   query.TableName = "mafia-day"
@@ -400,8 +398,7 @@ startDay = (host,title,threadID, parent, data) ->
 
   dt = new Date();
   timestamp = dt.getTime()
-  votes = []
-
+  votes = {}
   for player in alive_players
     votes[player] = {
       vote: null,
