@@ -243,7 +243,7 @@ getGame = (threadId) ->
   checkGame.TableName = "mafia-game"
   checkGame.KeyConditionExpression = "game_id = :game_id"
   checkGame.ExpressionAttributeValues = {
-    ":game_id": praseInt threadId
+    ":game_id": parseInt threadId
   }
   result = docClient.query(checkGame).promise()
 
