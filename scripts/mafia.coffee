@@ -156,11 +156,9 @@ module.exports = (robot) ->
     result = getDaysOfParent(parentId)
     result.then (data) ->
       # If no days create day 1
-      console.log data
       if data.Count is 0
         parent = getGame(parentId)
         parent.then (gameData) ->
-          console.log gameData
           if gameData.Count > 0
             startGame(host, title, threadId, gameData.signed_players, parentId)
       # Else get last day and create new day
@@ -353,8 +351,9 @@ startGame = (host, title, threadId, players, parent) ->
   dt = new Date();
   timestamp = dt.getTime()
   votes = []
-
+  console.log players
   for player in players
+    console.log player + "\n"
     votes[player] = {
       vote: null,
       voter:player,
@@ -374,6 +373,8 @@ startGame = (host, title, threadId, players, parent) ->
          day: 1,
          parent_id: parent
   }
+
+  console.log query
   docClient.put query, (err, data) ->
     if err
       console.log err
