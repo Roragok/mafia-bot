@@ -156,15 +156,18 @@ module.exports = (robot) ->
     result = getDaysOfParent(parent)
     result.then (data) ->
       # If no days create day 1
-      console.log data
-      if data.Count is 0
+      games = null
+      for item in data.Items
+        if item.parent_id is parent
+          games.push item
+      if not games
         parent = getGame(parent)
         parent.then (gameData) ->
           if gameData.Count > 0
             startGame(host, title, threadId, gameData.signed_players, parent)
       # Else get last day and create new day
       else
-        startDay(host,title,threadID,parent, data.Items[data.Count -1])
+        startDay(host,title,threadID,parent, games.Items[games.length -1])
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
@@ -251,12 +254,7 @@ getDaysOfParent = (threadId) ->
   # Build Query
   checkGame = {}
   checkGame.TableName = "mafia-day"
-  checkGame.KeyConditionExpression = "parent_id = :parent_id"
-  checkGame.ExpressionAttributeValues = {
-    ":parent_id": threadId
-  }
-
-  result = docClient.query(checkGame).promise()
+  result = docClient.scan(checkGame).promise()
 
 isLynch = (game, user, target) ->
 
