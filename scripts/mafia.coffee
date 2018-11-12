@@ -161,14 +161,9 @@ module.exports = (robot) ->
       if data.Count is 0
         parent = getGame(parentId)
         parent.then (gameData) ->
-          console.log "HOW BOUT HERE?"
           if gameData.Count is 1
-            console.log gameData
-            for item in gameData
-              console.log item
-              console.log host
-              if host is item.host
-                console.log "NOT HERE THO"
+            for item in gameData.Items
+              if host is item.host    
                 startGame(host, title, threadId, item.signed_players, parentId)
       # Else get last day and create new day
       else
