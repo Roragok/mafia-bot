@@ -242,7 +242,7 @@ getGame = (threadId) ->
   checkGame.TableName = "mafia-game"
   checkGame.KeyConditionExpression = "game_id = :game_id"
   checkGame.ExpressionAttributeValues = {
-    ":game_id": parseInt(threadId)
+    ":game_id": threadId
   }
   result = docClient.query(checkGame).promise()
 
@@ -255,7 +255,7 @@ getDaysOfParent = (threadId) ->
   checkGame.IndexName = "parent_id-index"
   checkGame.KeyConditionExpression = "parent_id = :parent_id"
   checkGame.ExpressionAttributeValues = {
-    ":parent_id": parseInt(threadId)
+    ":parent_id": threadId
   }
 
   result = docClient.query(checkGame).promise()
