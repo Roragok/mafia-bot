@@ -251,6 +251,7 @@ getDaysOfParent = (threadId) ->
   # Build Query
   checkGame = {}
   checkGame.TableName = "mafia-day"
+  checkGame.IndexName = "parent_id-index"
   checkGame.KeyConditionExpression = "parent_id = :parent_id"
   checkGame.ExpressionAttributeValues = {
     ":parent_id": threadId
