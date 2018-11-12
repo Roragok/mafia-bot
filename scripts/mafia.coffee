@@ -153,9 +153,10 @@ module.exports = (robot) ->
     title = res.message.title
     threadId = res.message.room
 
-    result = getDaysOfParent(day)
+    result = getDaysOfParent(parent)
     result.then (data) ->
       # If no days create day 1
+      console.log data
       if data.Count is 0
         parent = getGame(parent)
         parent.then (gameData) ->
