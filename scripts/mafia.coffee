@@ -165,7 +165,7 @@ module.exports = (robot) ->
             startGame(host, title, threadId, gameData.signed_players, parentId)
       # Else get last day and create new day
       else
-        startDay(host,title,threadID,parent, data.Items[data.Count -1])
+        startDay(host,title,threadID, parentId, data.Items[data.Count -1])
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
