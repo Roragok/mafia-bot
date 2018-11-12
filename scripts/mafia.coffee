@@ -30,14 +30,14 @@ module.exports = (robot) ->
   # UNLYNCH COMMAND
   robot.respond /unlynch/i, (res) ->
     voter =  res.envelope.user.username
-    day_id = res.message.room
+    threadId = res.message.room
 
-    result = getDay(day_id)
+    result = getDay(threadId)
     result.then (data) ->
       if (data.Count > 0 )
         valid = isUnLynch(data.Items, voter)
         if (valid)
-          unLynch(day_id, voter)
+          unLynch(threadId, voter)
 
   # LYNCH COMMAND
   robot.respond /lynch (.*)/i, (res) ->
@@ -94,7 +94,7 @@ module.exports = (robot) ->
         #Add Game if no matching #ID
         hostGame(res.envelope.user.username, res.message.title, res.message.room)
 
-  # Sign to Game Game
+  # Sign Game
   robot.respond /sign/i, (res) ->
     result = getGame(res.message.room)
     result.then (data) ->
@@ -103,22 +103,7 @@ module.exports = (robot) ->
           # Add User to Signup
           signGame(res.envelope.user.username, res.message.room, item.signed_players)
 
-  # Sign to Game Game
-  robot.respond /kill (.*)/i, (res) ->
-
-    host =  res.envelope.user.username
-    target = res.match[1]
-    threadId = res.message.room
-
-    result = getDay(res.message.room)
-    result.then (data) ->
-      if data.Count is 1
-        for item in data.Items
-          # Add User to Signup
-          if host is item.host
-            killPlayer(threadId, item.kills, target)
-
-  # Sign to Game Game
+  # Sign Game
   robot.respond /\.s/i, (res) ->
     result = getGame(res.message.room)
     result.then (data) ->
@@ -127,7 +112,7 @@ module.exports = (robot) ->
           # Add User to Signup
           signGame(res.envelope.user.username, res.message.room, item.signed_players)
 
-  # Sign to Game Game
+  # UnSign Game
   robot.respond /unsign/i, (res) ->
     result = getGame(res.message.room)
     result.then (data) ->
@@ -147,6 +132,7 @@ module.exports = (robot) ->
             res.send(printSignedPlayers(item.signed_players))
           else
             res.send(printSignedPlayers("Sign the Fuck up you cucks"))
+
   # Start Day
   robot.respond /startday (.*)/i, (res) ->
     #Get Days
@@ -174,6 +160,21 @@ module.exports = (robot) ->
         console.log data.Items[index]
        if host is data.Items[index].host
         startDay(host, title, threadId, parentId, data.Items[index])
+
+  # Host Kills a player in the current Day
+  robot.respond /kill (.*)/i, (res) ->
+
+    host =  res.envelope.user.username
+    target = res.match[1]
+    threadId = res.message.room
+
+    result = getDay(res.message.room)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          if host is item.host
+            killPlayer(threadId, item.kills, target)
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
