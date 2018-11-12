@@ -143,8 +143,10 @@ module.exports = (robot) ->
       if data.Count is 1
         for item in data.Items
           # Add User to Signup
-          res.send(printSignedPlayers(item.signed_players))
-
+          if is item.signed_players
+            res.send(printSignedPlayers(item.signed_players))
+          else
+            res.send(printSignedPlayers("Sign the Fuck up you cucks"))
   # Start Day
   robot.respond /startday (.*)/i, (res) ->
     #Get Days
@@ -159,8 +161,9 @@ module.exports = (robot) ->
       if data.Count is 0
         parent = getGame(parentId)
         parent.then (gameData) ->
-          if gameData.Count > 0
-            startGame(host, title, threadId, gameData.Items[0].signed_players, parentId)
+          if gameData.Count is 1
+            for item in gameData
+              startGame(host, title, threadId, item.signed_players, parentId)
       # Else get last day and create new day
       else
         startDay(host,title,threadID, parentId, data.Items[data.Count -1])
@@ -189,10 +192,8 @@ printSignedPlayers = (signed) ->
 
   response = "#  Signed Players"
   response += "\n --- \n"
-
   for player in signed
-    response += player + "|\n"
-
+    response += player + "\n"
   response += "\n --- \n"
   response += uuidv1()
 
@@ -239,7 +240,7 @@ getGame = (threadId) ->
   checkGame.TableName = "mafia-game"
   checkGame.KeyConditionExpression = "game_id = :game_id"
   checkGame.ExpressionAttributeValues = {
-    ":game_id": threadId
+    ":game_id": parseInt(threadId)
   }
   result = docClient.query(checkGame).promise()
 
