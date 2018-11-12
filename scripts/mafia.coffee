@@ -145,6 +145,26 @@ module.exports = (robot) ->
           # Add User to Signup
           res.send(printSignedPlayers(item.signed_players))
 
+  # Start Day
+  robot.respons /startday (.*)/i, (res) ->
+    #Get Days
+    parent = res.match[1]
+    host =  res.envelope.user.username
+    title = res.message.title
+    threadId = res.message.room
+
+    result = getDaysOfParent(day)
+    result.then (data) ->
+      # If no days create day 1
+      if data.Count is 0
+        parent = getGame(parent)
+        parent.then (gameData) ->
+          if gameData.Count > 0
+            startGame(host, title, threadId, gameData.signed_players, parent)
+      # Else get last day and create new day
+      else
+        startDay(host,title,threadID,parent, data.Items[data.Count -1])
+
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
     res.send(getZeused(res.match[1]))
@@ -220,6 +240,19 @@ getGame = (threadId) ->
   checkGame.KeyConditionExpression = "game_id = :game_id"
   checkGame.ExpressionAttributeValues = {
     ":game_id": threadId
+  }
+
+  result = docClient.query(checkGame).promise()
+
+# Check if thread came from is an active or past game.
+getDaysOfParent = (threadId) ->
+
+  # Build Query
+  checkGame = {}
+  checkGame.TableName = "mafia-day"
+  checkGame.KeyConditionExpression = "parent_id = :parent_id"
+  checkGame.ExpressionAttributeValues = {
+    ":parent_id": threadId
   }
 
   result = docClient.query(checkGame).promise()
@@ -312,6 +345,78 @@ hostGame = (host, title, threadId) ->
     else
       console.log data
 
+startGame = (host, title, threadId, players, parent) ->
+
+  dt = new Date();
+  timestamp = dt.getTime()
+  votes = []
+
+  for player in players
+    votes[player] = {
+      vote: null,
+      voter:player,
+      vote_time: timestamp
+    }
+  query = {}
+  query.TableName = "mafia-day"
+  query.Item = {
+         day_id: threadId,
+         day_start: timestamp,
+         day_url: "https://namafia.com/t/" + title + "/" + threadId,
+         status: false,
+         day_title: title,
+         host: host,
+         votes: votes,
+         alive_players: players,
+         day: 1,
+         parent_id: parent
+  }
+  docClient.put query, (err, data) ->
+    if err
+      console.log err
+    else
+      console.log data
+
+startDay = (host,title,threadID, parent, data) ->
+  # Subject Kills from Alive Players
+  alive_players = data.alive_players
+  for killedPlayer in data.kills
+    index = null
+    index = alive_players.indexOf(user)
+    if index or index is 0
+      alive_players.splice(index, 1)
+
+  dt = new Date();
+  timestamp = dt.getTime()
+  votes = []
+
+  for player in alive_players
+    votes[player] = {
+      vote: null,
+      voter:player,
+      vote_time: timestamp
+    }
+
+  query = {}
+  query.TableName = "mafia-day"
+  query.Item = {
+         day_id: threadId,
+         alive_players: alive_players,
+         day_start: timestamp,
+         day_url: "https://namafia.com/t/" + title + "/" + threadId,
+         status: false,
+         day_title: title,
+         host: host,
+         votes: votes,
+         day: data.Count,
+         parent_id: parent,
+  }
+  docClient.put query, (err, data) ->
+    if err
+      console.log err
+    else
+      console.log data
+
 signGame = (user, threadId, players) ->
 
   if players
@@ -383,15 +488,3 @@ killPlayer = (threadId, kills, target) ->
       console.log err
     else
       console.log data
-
-
-
-# Check if thread came from is an active or past game.
-# getVotes = (threadId) ->
-#   votes = {}
-#   votes.TableName = "mafia-day"
-#   result = docClient.scan(votes).promise()
-
-# Check if the person who sent the command is a host or moderator.
-isHost = (threadID) ->
-  return true
