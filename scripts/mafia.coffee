@@ -148,7 +148,7 @@ module.exports = (robot) ->
   # Start Day
   robot.respond /startday (.*)/i, (res) ->
     #Get Days
-    parent = res.match[1]
+    parentId = res.match[1]
     host =  res.envelope.user.username
     title = res.message.title
     threadId = res.message.room
@@ -158,10 +158,11 @@ module.exports = (robot) ->
       # If no days create day 1
       console.log data
       if data.Count is 0
-        parent = getGame(parent)
+        parent = getGame(parentId)
+        console.log parent
         parent.then (gameData) ->
           if gameData.Count > 0
-            startGame(host, title, threadId, gameData.signed_players, parent)
+            startGame(host, title, threadId, gameData.signed_players, parentId)
       # Else get last day and create new day
       else
         startDay(host,title,threadID,parent, data.Items[data.Count -1])
@@ -240,7 +241,7 @@ getGame = (threadId) ->
   checkGame.TableName = "mafia-game"
   checkGame.KeyConditionExpression = "game_id = :game_id"
   checkGame.ExpressionAttributeValues = {
-    ":game_id": threadId
+    ":game_id": parseInt(threadId)
   }
 
   result = docClient.query(checkGame).promise()
