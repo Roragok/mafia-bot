@@ -163,7 +163,7 @@ module.exports = (robot) ->
         parent.then (gameData) ->
           if gameData.Count is 1
             for item in gameData.Items
-              if host is item.host    
+              if host is item.host
                 startGame(host, title, threadId, item.signed_players, parentId)
       # Else get last day and create new day
       else
@@ -194,7 +194,10 @@ printSignedPlayers = (signed) ->
 
   response = "#  Signed Players"
   response += "\n --- \n"
-  for player in signed
+  if (typeIsArray  signed)
+    for player in signed
+      response += player + "\n"
+  else
     response += player + "\n"
   response += "\n --- \n"
   response += uuidv1()
