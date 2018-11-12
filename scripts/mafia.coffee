@@ -160,8 +160,7 @@ module.exports = (robot) ->
         parent = getGame(parentId)
         parent.then (gameData) ->
           if gameData.Count > 0
-            console.log data.Items
-            startGame(host, title, threadId, data.Items[0].signed_players, parentId)
+            startGame(host, title, threadId, gameData.Items[0].signed_players, parentId)
       # Else get last day and create new day
       else
         startDay(host,title,threadID, parentId, data.Items[data.Count -1])
@@ -240,7 +239,7 @@ getGame = (threadId) ->
   checkGame.TableName = "mafia-game"
   checkGame.KeyConditionExpression = "game_id = :game_id"
   checkGame.ExpressionAttributeValues = {
-    ":game_id": parseInt(threadId)
+    ":game_id": threadId
   }
   result = docClient.query(checkGame).promise()
 
