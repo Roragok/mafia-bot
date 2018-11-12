@@ -194,11 +194,8 @@ printSignedPlayers = (signed) ->
 
   response = "#  Signed Players"
   response += "\n --- \n"
-  if (typeIsArray  signed)
-    for player in signed
+  for player in signed
       response += player + "\n"
-  else
-    response += player + "\n"
   response += "\n --- \n"
   response += uuidv1()
 
