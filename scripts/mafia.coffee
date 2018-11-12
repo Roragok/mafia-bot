@@ -160,8 +160,7 @@ module.exports = (robot) ->
           # If no days create day 1
       if data.Count is 0
         parent = getGame(parentId)
-        parent.then (gameData) ->
-          console.log gameData
+        parent.then (gameData) ->      
           if gameData.Count is 1
             for item in gameData.Items
               if host is item.host
