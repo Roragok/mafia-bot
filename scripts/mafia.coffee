@@ -45,7 +45,7 @@ module.exports = (robot) ->
     voter =  res.envelope.user.username
     lynch = res.match[1]
     threadId = res.message.room
-    result = getDay(day_id)
+    result = getDay(threadId)
     result.then (data) ->
       if (data.Count > 0 )
         valid = isLynch(data.Items , voter, lynch)
