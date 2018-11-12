@@ -143,7 +143,7 @@ module.exports = (robot) ->
       if data.Count is 1
         for item in data.Items
           # Add User to Signup
-          if is item.signed_players
+          if item.signed_players
             res.send(printSignedPlayers(item.signed_players))
           else
             res.send(printSignedPlayers("Sign the Fuck up you cucks"))
@@ -163,10 +163,12 @@ module.exports = (robot) ->
         parent.then (gameData) ->
           if gameData.Count is 1
             for item in gameData
-              startGame(host, title, threadId, item.signed_players, parentId)
+              if host is item.host
+                startGame(host, title, threadId, item.signed_players, parentId)
       # Else get last day and create new day
       else
-        startDay(host,title,threadID, parentId, data.Items[data.Count -1])
+        if host is data.Items[data.Count -1].host
+          startDay(host,title,threadID, parentId, data.Items[data.Count -1])
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
