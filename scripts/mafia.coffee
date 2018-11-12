@@ -173,7 +173,7 @@ module.exports = (robot) ->
         console.log index
         console.log data.Items[index]
        if host is data.Items[index].host
-        startDay(host,title,threadID, parentId, data.Items[index])
+        startDay(host, title, threadId, parentId, data.Items[index])
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
@@ -387,7 +387,7 @@ startGame = (host, title, threadId, players, parent) ->
     else
       console.log data
 
-startDay = (host,title,threadID, parent, data) ->
+startDay = (host,title,threadId, parent, data) ->
   # Subject Kills from Alive Players
   alive_players = data.alive_players
   for killedPlayer in data.kills
