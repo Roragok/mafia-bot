@@ -58,16 +58,17 @@ module.exports = (robot) ->
     notVoting = ''
     result = getDay(res.message.room)
     result.then (data) ->
-      for item in data.Items
-        for player in item.alive_players
-          if item["votes"][player]
-            if item["votes"][player]['vote'] is null
-              notVoting += player + "\n"
+      if data.Count > 0
+        for item in data.Items
+          for player in item.alive_players
+            if item["votes"][player]
+              if item["votes"][player]['vote'] is null
+                notVoting += player + "\n"
+              else
+                response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
-              response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
-          else
-            notVoting += player + "\n"
-      res.send(printVote(response, notVoting))
+              notVoting += player + "\n"
+        res.send(printVote(response, notVoting))
 
   # VOTE COUNT ALIAS
   robot.respond /vc/i, (res) ->
@@ -75,16 +76,17 @@ module.exports = (robot) ->
     notVoting = ''
     result = getDay(res.message.room)
     result.then (data) ->
-      for item in data.Items
-        for player in item.alive_players
-          if item["votes"][player]
-            if item["votes"][player]['vote'] is null
-              notVoting += player + "\n"
+      if data.Count > 0
+        for item in data.Items
+          for player in item.alive_players
+            if item["votes"][player]
+              if item["votes"][player]['vote'] is null
+                notVoting += player + "\n"
+              else
+                response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
-              response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
-          else
-            notVoting += player + "\n"
-      res.send(printVote(response, notVoting))
+              notVoting += player + "\n"
+        res.send(printVote(response, notVoting))
 
   # Host Game
   robot.respond /host/i, (res) ->
