@@ -153,11 +153,8 @@ module.exports = (robot) ->
                 startGame(host, title, threadId, item.signed_players, parentId)
       # Else get last day and create new day
       else
-        console.log data.Count
         index = data.Count
         index -= 1
-        console.log index
-        console.log data.Items[index]
        if host is data.Items[index].host
         startDay(host, title, threadId, parentId, data.Items[index])
 
@@ -178,7 +175,18 @@ module.exports = (robot) ->
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
-    res.send(getZeused(res.match[1]))
+    host =  res.envelope.user.username
+    target = res.match[1]
+    threadId = res.message.room
+
+    result = getDay(res.message.room)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          if host is item.host
+            res.send(getZeused(target)
+
 
 # Functions
 
