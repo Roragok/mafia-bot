@@ -187,7 +187,7 @@ module.exports = (robot) ->
         for item in data.Items
           # Add User to Signup
           if host is item.host
-            res.send(getZeused(target)
+            res.send(getZeused(target))
 
 
 # Functions
