@@ -43,7 +43,7 @@ module.exports = (robot) ->
   robot.respond /lynch (.*)/i, (res) ->
 
     voter =  res.envelope.user.username
-    lynch = res.match[1]
+    lynch = res.match[1]  . replace '@', ''
     threadId = res.message.room
     result = getDay(threadId)
     result.then (data) ->
@@ -164,7 +164,7 @@ module.exports = (robot) ->
   robot.respond /kill (.*)/i, (res) ->
 
     host =  res.envelope.user.username
-    target = res.match[1]
+    target = res.match[1] . replace '@', ''
     threadId = res.message.room
 
     result = getDay(res.message.room)
@@ -178,7 +178,7 @@ module.exports = (robot) ->
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.respond /zeus (.*)/i, (res) ->
     host =  res.envelope.user.username
-    target = res.match[1]
+    target = res.match[1]  . replace '@', ''
     threadId = res.message.room
 
     result = getDay(res.message.room)
