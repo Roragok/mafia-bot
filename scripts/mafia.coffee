@@ -133,7 +133,7 @@ module.exports = (robot) ->
           if item.signed_players
             res.send(printSignedPlayers(item.signed_players))
           else
-            res.send(printSignedPlayers("Sign the Fuck up you cucks"))
+            res.send(("# Signed Players \n --- \n Sign the Fuck up you cucks \n"))
 
   # Start Day
   robot.respond /startday (.*)/i, (res) ->
