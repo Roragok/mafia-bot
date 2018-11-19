@@ -283,6 +283,8 @@ isLynch = (game, user, target) ->
     # Then we check if user and target are both alive players
     if user and target in game[0].alive_players
       return true
+    else if (user in game[0].alive_players) and (target is "nolynch")
+      return true
     else
       return false
   else
