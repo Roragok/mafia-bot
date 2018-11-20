@@ -28,7 +28,7 @@ module.exports = (robot) ->
   #   res.send "I will reply hello privately!"
 
   # UNLYNCH COMMAND
-  robot.respond /unlynch/i, (res) ->
+  robot.hear /@mafiabot unlynch/i, (res) ->
     voter =  res.envelope.user.username
     threadId = res.message.room
 
@@ -40,8 +40,21 @@ module.exports = (robot) ->
           unLynch(threadId, voter)
 
   # LYNCH COMMAND
-  robot.respond /lynch (.*)/i, (res) ->
+  robot.hear /@mafiabot lynch (.*)/i, (res) ->
+    console.log res.message
+    voter =  res.envelope.user.username
+    lynch = res.match[1]  . replace '@', ''
+    threadId = res.message.room
+    result = getDay(threadId)
+    result.then (data) ->
+      if (data.Count > 0 )
+        valid = isLynch(data.Items , voter, lynch)
+        if (valid)
+          updateLynch(threadId, voter, lynch)
 
+  # LYNCH ALIAS
+  robot.hear /@mafiabot vote (.*)/i, (res) ->
+    console.log res
     voter =  res.envelope.user.username
     lynch = res.match[1]  . replace '@', ''
     threadId = res.message.room
@@ -53,7 +66,7 @@ module.exports = (robot) ->
           updateLynch(threadId, voter, lynch)
 
   # VOTE COUNT COMMAND
-  robot.respond /votecount/i, (res) ->
+  robot.hear /@mafiabot votecount/i, (res) ->
     response = ''
     notVoting = ''
     result = getDay(res.message.room)
@@ -71,7 +84,7 @@ module.exports = (robot) ->
         res.send(printVote(response, notVoting))
 
   # VOTE COUNT ALIAS
-  robot.respond /vc/i, (res) ->
+  robot.hear /@mafiabot vc/i, (res) ->
     response = ''
     notVoting = ''
     result = getDay(res.message.room)
@@ -89,7 +102,7 @@ module.exports = (robot) ->
         res.send(printVote(response, notVoting))
 
   # Host Game
-  robot.respond /host/i, (res) ->
+  robot.hear /@mafiabot host/i, (res) ->
     result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 0
@@ -97,7 +110,7 @@ module.exports = (robot) ->
         hostGame(res.envelope.user.username, res.message.title, res.message.room)
 
   # Sign Game
-  robot.respond /sign/i, (res) ->
+  robot.hear /@mafiabot sign/i, (res) ->
     result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
@@ -106,7 +119,7 @@ module.exports = (robot) ->
           signGame(res.envelope.user.username, res.message.room, item.signed_players)
 
   # Sign Game
-  robot.respond /\.s/i, (res) ->
+  robot.hear /@mafiabot \.s/i, (res) ->
     result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
@@ -115,7 +128,7 @@ module.exports = (robot) ->
           signGame(res.envelope.user.username, res.message.room, item.signed_players)
 
   # UnSign Game
-  robot.respond /unsign/i, (res) ->
+  robot.hear /@mafiabot unsign/i, (res) ->
     result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
@@ -124,7 +137,7 @@ module.exports = (robot) ->
           unSignGame(res.envelope.user.username, res.message.room, item.signed_players)
 
   # Show Signed Players
-  robot.respond /slist/i, (res) ->
+  robot.hear /@mafiabot slist/i, (res) ->
     result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
@@ -136,7 +149,7 @@ module.exports = (robot) ->
             res.send(("# Signed Players \n --- \n Sign the Fuck up you cucks \n"))
 
   # Start Day
-  robot.respond /startday (.*)/i, (res) ->
+  robot.hear /@mafiabot startday (.*)/i, (res) ->
     #Get Days
     parentId = res.match[1]
     host =  res.envelope.user.username
@@ -161,7 +174,7 @@ module.exports = (robot) ->
         startDay(host, title, threadId, parentId, data.Items[index])
 
   # Host Kills a player in the current Day
-  robot.respond /kill (.*)/i, (res) ->
+  robot.hear /@mafiabot kill (.*)/i, (res) ->
 
     host =  res.envelope.user.username
     target = res.match[1] . replace '@', ''
@@ -176,7 +189,7 @@ module.exports = (robot) ->
             killPlayer(threadId, item.kills, target)
 
   # ZEUS COMMAND - Will remove player from active list eventually
-  robot.respond /zeus (.*)/i, (res) ->
+  robot.hear /@mafiabot zeus (.*)/i, (res) ->
     host =  res.envelope.user.username
     target = res.match[1]  . replace '@', ''
     threadId = res.message.room
