@@ -41,7 +41,6 @@ module.exports = (robot) ->
 
   # LYNCH COMMAND
   robot.hear /@mafiabot lynch (.*)/i, (res) ->
-    console.log res.message
     voter =  res.envelope.user.username
     lynch = res.match[1]  . replace '@', ''
     threadId = res.message.room
@@ -53,8 +52,7 @@ module.exports = (robot) ->
           updateLynch(threadId, voter, lynch)
 
   # LYNCH ALIAS
-  robot.hear /@mafiabot vote (.*)/i, (res) ->
-    console.log res
+  robot.hear /@mafiabot vote (.*)/i, (res) ->    
     voter =  res.envelope.user.username
     lynch = res.match[1]  . replace '@', ''
     threadId = res.message.room
@@ -103,11 +101,12 @@ module.exports = (robot) ->
 
   # Host Game
   robot.hear /@mafiabot host/i, (res) ->
+    game_slug = res.message.slug
     result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 0
         #Add Game if no matching #ID
-        hostGame(res.envelope.user.username, res.message.title, res.message.room)
+        hostGame(res.envelope.user.username, res.message.title, res.message.room, game_slug)
 
   # Sign Game
   robot.hear /@mafiabot sign/i, (res) ->
@@ -155,6 +154,7 @@ module.exports = (robot) ->
     host =  res.envelope.user.username
     title = res.message.title
     threadId = res.message.room
+    game_slug = res.message.slug
 
     result = getDaysOfParent(parentId)
     result.then (data) ->
@@ -165,13 +165,13 @@ module.exports = (robot) ->
           if gameData.Count is 1
             for item in gameData.Items
               if host is item.host
-                startGame(host, title, threadId, item.signed_players, parentId)
+                startGame(host, title, threadId, item.signed_players, parentId, game_slug)
       # Else get last day and create new day
       else
         index = data.Count
         index -= 1
        if host is data.Items[index].host
-        startDay(host, title, threadId, parentId, data.Items[index])
+        startDay(host, title, threadId, parentId, data.Items[index], game_slug)
 
   # Host Kills a player in the current Day
   robot.hear /@mafiabot kill (.*)/i, (res) ->
@@ -361,14 +361,14 @@ unLynch = (day_id, voter) ->
     else
       console.log data
 
-hostGame = (host, title, threadId) ->
+hostGame = (host, title, threadId, game_slug) ->
   dt = new Date();
   query = {}
   query.TableName = "mafia-game"
   query.Item = {
          game_id: threadId,
          game_start: dt.getTime(),
-         game_url: "https://namafia.com/t/" + title + "/" + threadId,
+         game_url: game_slug,
          status: false,
          title: title,
          host: host
@@ -379,7 +379,7 @@ hostGame = (host, title, threadId) ->
     else
       console.log data
 
-startGame = (host, title, threadId, players, parent) ->
+startGame = (host, title, threadId, players, parent, game_slug) ->
 
   dt = new Date();
   timestamp = dt.getTime()
@@ -396,7 +396,7 @@ startGame = (host, title, threadId, players, parent) ->
   query.Item = {
          day_id: threadId,
          day_start: timestamp,
-         day_url: "https://namafia.com/t/" + title + "/" + threadId,
+         day_url: game_slug,
          status: false,
          day_title: title,
          host: host,
@@ -413,7 +413,7 @@ startGame = (host, title, threadId, players, parent) ->
     else
       console.log data
 
-startDay = (host,title,threadId, parent, data) ->
+startDay = (host,title,threadId, parent, data, game_slug) ->
   # Subject Kills from Alive Players
   alive_players = data.alive_players
   for killedPlayer in data.kills
@@ -438,7 +438,7 @@ startDay = (host,title,threadId, parent, data) ->
          day_id: threadId,
          alive_players: alive_players,
          day_start: timestamp,
-         day_url: "https://namafia.com/t/" + title + "/" + threadId,
+         day_url: game_slug,
          status: false,
          day_title: title,
          host: host,
