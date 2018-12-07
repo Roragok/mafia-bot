@@ -147,7 +147,7 @@ unSignGame = (user, threadId, players) ->
     else
       console.log data
 
-@getGame = (threadId) ->
+getGame = (threadId) ->
 
   # Build Query
   checkGame = {}
