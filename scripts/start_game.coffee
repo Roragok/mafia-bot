@@ -30,8 +30,8 @@ module.exports = (robot) ->
 
     result = getDaysOfParent(parentId)
     result.then (data) ->
-          # If no days create day 1
-          console.log data.Count
+      # If no days create day 1
+      console.log data.Count
       if data.Count is 0
         parent = getGame(parentId)
         parent.then (gameData) ->
