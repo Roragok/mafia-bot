@@ -42,13 +42,9 @@ module.exports = (robot) ->
       # Else get last day and create new day
       else
         index = data.Count
-        console.log index
-        console.log  data.Items[1]
-        console.log " BREAL AMD THINGS"
-        index -=1
-       if host is data.Items[index].host
+       if host is data.Items[0].host
         # host, thread_title, thread_id, parent_game_id, alive,players, kills, day
-        startDay(host, title, threadId, parentId, data.Items[index].alive_players, data.Items[index].kills, index, game_slug)
+        startDay(host, title, threadId, parentId, data.Items[0].alive_players, data.Items[0].kills, index+1, game_slug)
 
 
 startGame = (host, title, threadId, players, parent, game_slug) ->
@@ -78,7 +74,6 @@ startGame = (host, title, threadId, players, parent, game_slug) ->
          parent_id: parent
   }
 
-  console.log query
   docClient.put query, (err, data) ->
     if err
       console.log err
