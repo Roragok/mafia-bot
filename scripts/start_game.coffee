@@ -43,8 +43,9 @@ module.exports = (robot) ->
       else
         index = data.Count
         console.log index
-        console.log  data.Items[index].day_title
+        console.log  data.Items
         console.log " BREAL AMD THINGS"
+        index -=1
        if host is data.Items[index].host
         # host, thread_title, thread_id, parent_game_id, alive,players, kills, day
         startDay(host, title, threadId, parentId, data.Items[index].alive_players, data.Items[index].kills, index, game_slug)
