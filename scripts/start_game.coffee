@@ -31,6 +31,7 @@ module.exports = (robot) ->
     result = getDaysOfParent(parentId)
     result.then (data) ->
           # If no days create day 1
+          console.log data.Count
       if data.Count is 0
         parent = getGame(parentId)
         parent.then (gameData) ->
@@ -42,6 +43,9 @@ module.exports = (robot) ->
       else
         index = data.Count
         index -= 1
+        console.log index
+        console.log  data.Items[index].day_title
+        console.log " BREAL AMD THINGS"
        if host is data.Items[index].host
         startDay(host, title, threadId, parentId, data.Items[index], game_slug)
 
