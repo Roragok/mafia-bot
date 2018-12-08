@@ -43,7 +43,7 @@ module.exports = (robot) ->
       else
         index = data.Count
         console.log index
-        console.log  data.Items
+        console.log  data.Items[1]
         console.log " BREAL AMD THINGS"
         index -=1
        if host is data.Items[index].host
