@@ -42,12 +42,12 @@ module.exports = (robot) ->
       # Else get last day and create new day
       else
         index = data.Count
-        index -= 1
         console.log index
         console.log  data.Items[index].day_title
         console.log " BREAL AMD THINGS"
        if host is data.Items[index].host
-        startDay(host, title, threadId, parentId, data.Items[index], game_slug)
+        # host, thread_title, thread_id, parent_game_id, alive,players, kills, day
+        startDay(host, title, threadId, parentId, data.Items[index].alive_players, data.Items[index].kills, index, game_slug)
 
 
 startGame = (host, title, threadId, players, parent, game_slug) ->
@@ -84,10 +84,10 @@ startGame = (host, title, threadId, players, parent, game_slug) ->
     else
       console.log data
 
-startDay = (host,title,threadId, parent, data, game_slug) ->
+startDay = (host, title, threadId, parent, alive_players, kills, day, game_slug) ->
   # Subject Kills from Alive Players
-  alive_players = data.alive_players
-  for killedPlayer in data.kills
+
+  for killedPlayer in kills
     index = null
     index = alive_players.indexOf(killedPlayer)
     if index or index is 0
@@ -102,8 +102,6 @@ startDay = (host,title,threadId, parent, data, game_slug) ->
       voter:player,
       vote_time: timestamp
     }
-  count = data.Count
-  console.log count
   query = {}
   query.TableName = "mafia-day"
   query.Item = {
@@ -115,7 +113,7 @@ startDay = (host,title,threadId, parent, data, game_slug) ->
          day_title: title,
          host: host,
          votes: votes,
-         day: count,
+         day: day,
          parent_id: parent,
   }
   docClient.put query, (err, data) ->
