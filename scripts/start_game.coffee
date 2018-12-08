@@ -99,6 +99,7 @@ startDay = (host,title,threadId, parent, data, game_slug) ->
       vote_time: timestamp
     }
   count = data.Count
+  console.log count
   query = {}
   query.TableName = "mafia-day"
   query.Item = {
