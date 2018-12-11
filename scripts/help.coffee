@@ -5,25 +5,25 @@ module.exports = (robot) ->
 
   # General Help
   robot.hear /@mafiabot help (.*)/i, (res) ->
-    if res.match[1] . toLowerCase is "host"
+    if res.match[1].toLowerCase() is "host"
       res.send(hostHelp())
-    else if res.match[1] . toLowerCase is "player"
+    else if res.match[1].toLowerCase() is "player"
       res.send(playerHelp())
     else
       res.send(generalHelp())
 
   robot.hear /@mafiabot man (.*)/i, (res) ->
-    if res.match[1] . toLowerCase is "host"
+    if res.match[1].toLowerCase() is "host"
       res.send(hostHelp())
-    else if res.match[1] . toLowerCase is "player"
+    else if res.match[1].toLowerCase() is "player"
       res.send(playerHelp())
     else
       res.send(generalHelp())
 
   robot.hear /@mafiabot player (.*)/i, (res) ->
-    if res.match[1] . toLowerCase is "help"
+    if res.match[1].toLowerCase() is "help"
       res.send(playerHelp())
-    else if res.match[1] . toLowerCase is "man"
+    else if res.match[1].toLowerCase() is "man"
       res.send(playerHelp())
 
   generalHelp = () ->
