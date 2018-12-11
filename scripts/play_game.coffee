@@ -285,3 +285,10 @@ killPlayer = (threadId, kills, target) ->
       console.log err
     else
       console.log data
+      
+  hostHelp = () ->
+    response = "The host of a Mafia game can use the following commands\n"
+    response += "* `@mafiabot host` - This will take the current thread and create a signup\n"
+    response += "* `@mafiabot startday [THREAD_ID]`- This will start first or next day of your game.  [THREAD_ID] is very important and must be the ID of the game the `host` command was excuted from\n"
+    response += "* `@mafiabot kill playername`- This command must be excuted in the current day before you run the nextstartday command.  Must be excuted 1 time per player and is case sensitive.  This removes the player from the alive player list when the next `startday` command is excuted\n"
+    return response

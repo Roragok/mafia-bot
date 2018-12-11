@@ -20,13 +20,17 @@ docClient = new AWS.DynamoDB.DocumentClient();
 module.exports = (robot) ->
 
   # Host Game
-  robot.hear /@mafiabot host/i, (res) ->
+  robot.hear /@mafiabot host (.*)/i, (res) ->
     game_slug = res.message.slug
-    result = getGame(res.message.room)
-    result.then (data) ->
-      if data.Count is 0
-        #Add Game if no matching #ID
-        hostGame(res.envelope.user.username, res.message.title, res.message.room, game_slug)
+
+    if res.match[1] . toLowerCase not "help"
+      result = getGame(res.message.room)
+      result.then (data) ->
+        if data.Count is 0
+          #Add Game if no matching #ID
+          hostGame(res.envelope.user.username, res.message.title, res.message.room, game_slug)
+    else
+      res.send(hostHelp())
 
   # Sign Game
   robot.hear /@mafiabot sign/i, (res) ->
