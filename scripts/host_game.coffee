@@ -21,7 +21,7 @@ module.exports = (robot) ->
 
   # Host Game
   robot.hear /@mafiabot host (.*)/i, (res) ->
-    if res.match[1].toLowerCase() not "help"
+    if res.match[1].toString().toLowerCase() not "help"
       game_slug = res.message.slug
       result = getGame(res.message.room)
       result.then (data) ->
