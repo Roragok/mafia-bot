@@ -4,24 +4,27 @@
 module.exports = (robot) ->
 
   # General Help
-  robot.hear /@mafiabot help/i, (res) ->
-    console.log "TEST"
-    res.send(generalHelp())
+  robot.hear /@mafiabot help (.*)/i, (res) ->
+    if res.match[1] . toLowerCase is "host"
+      res.send(hostHelp())
+    else if res.match[1] . toLowerCase is "player"
+      res.send(playerHelp())
+    else
+      res.send(generalHelp())
 
-  robot.hear /@mafiabot man/i, (res) ->
-    res.send(generalHelp())
+  robot.hear /@mafiabot man (.*)/i, (res) ->
+    if res.match[1] . toLowerCase is "host"
+      res.send(hostHelp())
+    else if res.match[1] . toLowerCase is "player"
+      res.send(playerHelp())
+    else
+      res.send(generalHelp())
 
-  robot.hear /@mafiabot help host /i, (res) ->
-    res.send(hostHelp())
-
-  robot.hear /@mafiabot man host/i, (res) ->
-    res.send(hostHelp())
-
-  robot.hear /@mafiabot help player/i, (res) ->
-    res.send(playerHelp())
-
-  robot.hear /@mafiabot man player/i, (res) ->
-    res.send(playerHelp())
+  robot.hear /@mafiabot player (.*)/i, (res) ->
+    if res.match[1] . toLowerCase is "help"
+      res.send(playerHelp())
+    else if res.match[1] . toLowerCase is "man"
+      res.send(playerHelp())
 
   generalHelp = () ->
     response = "Please use the following commands to specfiy advanced help\n"
@@ -37,7 +40,7 @@ module.exports = (robot) ->
     response += "* `@mafiabot kill playername`- This command must be excuted in the current day before you run the nextstartday command.  Must be excuted 1 time per player and is case sensitive.  This removes the player from the alive player list when the next `startday` command is excuted\n"
     return response
 
-    
+
   playerHelp = () ->
     response = "Please use the following commands to specfiy advanced help\n"
     response += "* `@mafiabot host help` - Detailed Information about Hosting a game\n"
