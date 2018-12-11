@@ -22,8 +22,7 @@ module.exports = (robot) ->
   # Host Game
   robot.hear /@mafiabot host (.*)/i, (res) ->
     game_slug = res.message.slug
-
-    if res.match[1].toLowerCase() not "help"
+    if res.match[1].toString().toLowerCase() not "help"
       result = getGame(res.message.room)
       result.then (data) ->
         if data.Count is 0
