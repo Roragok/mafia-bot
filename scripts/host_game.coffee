@@ -21,7 +21,8 @@ module.exports = (robot) ->
 
   # Host Game
   robot.hear /@mafiabot host (.*)/i, (res) ->
-    console.log res.match
+    console.log res.match[0]
+    console.log res.match[1]
     if res.match[1] not "help"
       game_slug = res.message.slug
       result = getGame(res.message.room)
