@@ -21,8 +21,8 @@ module.exports = (robot) ->
 
   # Host Game
   robot.hear /@mafiabot host (.*)/i, (res) ->
-    game_slug = res.message.slug
-    if res.match[1].toString().toLowerCase() not "help"
+    if res.match[1].toLowerCase() not "help"
+      game_slug = res.message.slug
       result = getGame(res.message.room)
       result.then (data) ->
         if data.Count is 0
@@ -163,7 +163,7 @@ getGame = (threadId) ->
 
 hostHelp = () ->
   response = "The host of a Mafia game can use the following commands\n"
-  response += "* `@mafiabot host` - This will take the current thread and create a signup\n"
-  response += "* `@mafiabot startday [THREAD_ID]`- This will start first or next day of your game.  [THREAD_ID] is very important and must be the ID of the game the `host` command was excuted from\n"
-  response += "* `@mafiabot kill playername`- This command must be excuted in the current day before you run the nextstartday command.  Must be excuted 1 time per player and is case sensitive.  This removes the player from the alive player list when the next `startday` command is excuted\n"
+  response += "* `@mafiabot host` - Takes the current thread and create a signup\n"
+  response += "* `@mafiabot startday THREAD_ID`- Starts first or next day of your game.  `THREAD_ID` is very important and must be the ID of the game the `host` command was excuted from\n"
+  response += "* `@mafiabot kill playername`- Kills `playername` This command must be excuted in the current day before you run the nextstartday command.  Must be excuted 1 time per player and is case sensitive.  This removes the player from the alive player list when the next `startday` command is excuted\n"
   return response
