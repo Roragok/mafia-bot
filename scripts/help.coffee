@@ -28,8 +28,8 @@ module.exports = (robot) ->
 
   generalHelp = () ->
     response = "Please use the following commands to specfiy advanced help\n"
-    response += "* `@mafiabot host help` - Detailed Information about Hosting a game\n"
-    response += "* `@mafiabot player help`- Detailed Information about Playing a game\n"
+    response += "* `@mafiabot help host` - Detailed Information about Hosting a game\n"
+    response += "* `@mafiabot help player`- Detailed Information about Playing a game\n"
     response += "* `@mafiabot help`- This help command\n"
     return response
 
