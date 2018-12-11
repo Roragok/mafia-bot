@@ -192,10 +192,13 @@ isLynch = (game, user, target) ->
   # False means the day is not over.
   if game[0].status is false
     # Then we check if user and target are both alive players
-    if user and target in game[0].alive_players
+     if (user in game[0].alive_players) and (target is "nolynch")
+    #if user and target in game[0].alive_players
       return true
-    else if (user in game[0].alive_players) and (target is "nolynch")
-      return true
+    else if user in game[0].alive_players
+      for player in game[0].alive_players
+        if player.toLowerCase() is target.toLowerCase()
+          return true
     else
       return false
   else
@@ -284,4 +287,4 @@ killPlayer = (threadId, kills, target) ->
     if err
       console.log err
     else
-      console.log data     
+      console.log data
