@@ -31,7 +31,6 @@ module.exports = (robot) ->
     result = getDaysOfParent(parentId)
     result.then (data) ->
       # If no days create day 1
-      console.log data.Count
       if data.Count is 0
         parent = getGame(parentId)
         parent.then (gameData) ->
@@ -42,9 +41,12 @@ module.exports = (robot) ->
       # Else get last day and create new day
       else
         index = data.Count
-       if host is data.Items[0].host
-        # host, thread_title, thread_id, parent_game_id, alive,players, kills, day
-        startDay(host, title, threadId, parentId, data.Items[0].alive_players, data.Items[0].kills, index+1, game_slug)
+        if host is data.Items[0].host
+          for day in data.Items
+            if index is day.day
+              # host, thread_title, thread_id, parent_game_id, alive,players, kills, day
+              # startDay(host, title, threadId, parentId, data.Items[index].alive_players, data.Items[0].kills, index+1, game_slug)
+              startDay(host, title, threadId, parentId,day.alive_players,day.kills, index+1, game_slug)
 
 
 startGame = (host, title, threadId, players, parent, game_slug) ->
