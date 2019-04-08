@@ -162,6 +162,19 @@ getDaysOfParent = (threadId) ->
 
   result = docClient.query(getParent).promise()
 
+# Check if thread came from is an active or past game.
+getDay = (threadId) ->
+
+  # Build Query
+  checkGame = {}
+  checkGame.TableName = "mafia-day"
+  checkGame.KeyConditionExpression = "day_id = :day_id"
+  checkGame.ExpressionAttributeValues = {
+    ":day_id": threadId
+  }
+
+  result = docClient.query(checkGame).promise()
+
 # Set Previous Day status to true.
 closeDay = (day_id) ->
   query = {}
