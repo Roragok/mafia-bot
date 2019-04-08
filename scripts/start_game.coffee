@@ -47,6 +47,23 @@ module.exports = (robot) ->
               # host, thread_title, thread_id, parent_game_id, alive,players, kills, day
               # startDay(host, title, threadId, parentId, data.Items[index].alive_players, data.Items[0].kills, index+1, game_slug)
               startDay(host, title, threadId, parentId,day.alive_players,day.kills, index+1, game_slug)
+              #  Set Previous Day to status to true for complete.
+              closeDay(day.day_id)
+  # End Day
+  robot.hear /@mafiabot end (.*)/i, (res) ->
+    #Get Days
+    winner = res.match[1]
+    host =  res.envelope.user.username
+    threadId = res.message.room
+
+    result = getDay(threadId)
+    result.then (data) ->
+      index = data.Count
+      if host is data.Items[0].host
+        for day in data.Items
+          if index is day.day
+            # Update Game with Winning Faction and set status to true for completed game.
+            endGame(day.parent_id, winner)
 
 
 startGame = (host, title, threadId, players, parent, game_slug) ->
@@ -144,3 +161,48 @@ getDaysOfParent = (threadId) ->
   }
 
   result = docClient.query(getParent).promise()
+
+# Set Previous Day status to true.
+closeDay = (day_id) ->
+  query = {}
+  query.TableName = "mafia-day"
+  query.Key = {
+    "day_id": day_id
+  }
+  query.UpdateExpression = "set status = :s"
+  query.ExpressionAttributeValues = {
+    ":s": true,
+  }
+
+  docClient.update query, (err, data) ->
+    if err
+      console.log err
+    else
+      console.log data
+
+
+# End Game
+# Set Previous Day status to true.
+endGame = (parent_id,winner) ->
+
+  winner.toLowerCase()
+  winner = switch winner
+   when "mafia","werewolf","wolf" then "Mafia"
+   when "town","village" then "Town"
+   when "third" then "Third Party"
+
+  query = {}
+  query.TableName = "mafia-game"
+  query.Key = {
+    "game_id": parent_id
+  }
+  query.UpdateExpression = "set winner = :w"
+  query.ExpressionAttributeValues = {
+    ":w":winner,
+  }
+
+  docClient.update query, (err, data) ->
+    if err
+      console.log err
+    else
+      console.log data
