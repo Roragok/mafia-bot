@@ -51,18 +51,18 @@ module.exports = (robot) ->
               closeDay(day.day_id)
   # End Day
   robot.hear /@mafiabot end (.*)/i, (res) ->
-    #Get Days
+
     winner = res.match[1]
     host =  res.envelope.user.username
     threadId = res.message.room
 
     result = getDay(threadId)
     result.then (data) ->
-      index = data.Count
-      if host is data.Items[0].host
-        for day in data.Items
-          if index is day.day
+      if data.Count is 1
+        for item in data.Items
+          if host is item.host
             # Update Game with Winning Faction and set status to true for completed game.
+            closeDay(threadId)
             endGame(day.parent_id, winner)
 
 
