@@ -182,9 +182,12 @@ closeDay = (day_id) ->
   query.Key = {
     "day_id": day_id
   }
-  query.UpdateExpression = "set status = :s"
+  query.UpdateExpression = "set #status = :status"
+  query.ExpressionAttributeNames = {
+    "#status": "status",
+  }
   query.ExpressionAttributeValues = {
-    ":s": true,
+    ":status": true,
   }
 
   docClient.update query, (err, data) ->
