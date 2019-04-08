@@ -202,10 +202,14 @@ closeDay = (day_id) ->
 endGame = (parent_id,winner) ->
 
   winner.toLowerCase()
-  winner = switch winner
+  console.log "\N"
+  console.log winner
+  console.log "\N"
+  result = switch winner
    when "mafia","werewolf","wolf" then "Mafia"
    when "town","village" then "Town"
    when "third" then "Third Party"
+   else "unkown"
 
   query = {}
   query.TableName = "mafia-game"
@@ -214,7 +218,7 @@ endGame = (parent_id,winner) ->
   }
   query.UpdateExpression = "set winner = :w"
   query.ExpressionAttributeValues = {
-    ":w":winner,
+    ":w": result,
   }
 
   docClient.update query, (err, data) ->
