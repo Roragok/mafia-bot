@@ -21,39 +21,57 @@ module.exports = (robot) ->
 
   # Host Game
   robot.hear /@mafiabot host/i, (res) ->
+
+      # id of thread
+      threadId = res.message.room
+
+      # user who triggered command
+      user = res.envelope.user.username
+
+      # Thread Title
+      threadTitle=  res.message.title
+
+      # url of game
       game_slug = res.message.slug
+
       result = getGame(res.message.room)
       result.then (data) ->
         if data.Count is 0
           #Add Game if no matching #ID
-          hostGame(res.envelope.user.username, res.message.title, res.message.room, game_slug)
+          hostGame(user,threadTitle, threadId, game_slug)
 
   # Sign Game
   robot.hear /@mafiabot sign/i, (res) ->
+    threadId = res.message.room
+    user = res.envelope.user.username
     result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
           # Add User to Signup
-          signGame(res.envelope.user.username, res.message.room, item.signed_players)
+          signGame(user, threadId, item.signed_players)
 
   # Sign Game
   robot.hear /@mafiabot \.s/i, (res) ->
+    threadId = res.message.room
+    user = res.envelope.user.username
     result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
           # Add User to Signup
-          signGame(res.envelope.user.username, res.message.room, item.signed_players)
+          signGame(user, threadId, item.signed_players)
 
   # UnSign Game
   robot.hear /@mafiabot unsign/i, (res) ->
+    threadId = res.message.room
+    user = res.envelope.user.username
     result = getGame(res.message.room)
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
           # Add User to Signup
-          unSignGame(res.envelope.user.username, res.message.room, item.signed_players)
+          unSignGame(user, threadId, item.signed_players)
 
   # Show Signed Players
   robot.hear /@mafiabot slist/i, (res) ->
@@ -67,8 +85,36 @@ module.exports = (robot) ->
           else
             res.send(("# Signed Players \n --- \n Sign the Fuck up you cucks \n"))
 
+  # Add a Signed Players
+  robot.hear /@mafiabot add (.*)/i, (res) ->
+    host =  res.envelope.user.username
+    target = res.match[1] . replace '@', ''
+    threadId = res.message.room
+
+    result = getGame(threadId)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          if host is item.host
+            signGame(target, threadId, item.signed_players)
+
+  # Remove a Signed Players
+  robot.hear /@mafiabot remove (.*)/i, (res) ->
+    host =  res.envelope.user.username
+    target = res.match[1] . replace '@', ''
+    threadId = res.message.room
+
+    result = getGame(threadId)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          if host is item.host
+              signGame(target, threadId, item.signed_players)
 
 
+#  Prints the list of signed players
 printSignedPlayers = (signed) ->
 
   response = "#  Signed Players"
@@ -80,6 +126,13 @@ printSignedPlayers = (signed) ->
 
   return response
 
+
+#  Inserts a game entry into mafia-game Table
+#  @params -
+#  host- moderator of game
+#  title - thread title where game is created
+#  threadId - id of game created based on thread id of discourse
+#  game_slug - url of created game
 hostGame = (host, title, threadId, game_slug) ->
   dt = new Date();
   query = {}
@@ -98,7 +151,11 @@ hostGame = (host, title, threadId, game_slug) ->
     else
       console.log data
 
-
+#  Adds a player to the signed player list.
+#  @params -
+#  user - name of user signing game
+#  threadId - id of game created based on thread id of discourse
+#  players - string array of current signed players
 signGame = (user, threadId, players) ->
 
   if players
@@ -124,6 +181,11 @@ signGame = (user, threadId, players) ->
     else
       console.log data
 
+#  Removes a player to the signed player list.
+#  @params -
+#  user - name of user unsigning game
+#  threadId - id of game created based on thread id of discourse
+#  players - string array of current signed players
 unSignGame = (user, threadId, players) ->
   index = null
   index = players.indexOf(user)
@@ -147,6 +209,9 @@ unSignGame = (user, threadId, players) ->
     else
       console.log data
 
+#  Returns a Game from mafia-game table based on a threadId
+#  @params -
+#  user - Thrad ID of game to lookup
 getGame = (threadId) ->
 
   # Build Query
@@ -158,6 +223,8 @@ getGame = (threadId) ->
   }
   result = docClient.query(checkGame).promise()
 
+
+#  a help function that may or maynot work.
 hostHelp = () ->
   response = "The host of a Mafia game can use the following commands\n"
   response += "* `@mafiabot host` - Takes the current thread and create a signup\n"
