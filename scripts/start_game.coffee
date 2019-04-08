@@ -214,11 +214,16 @@ endGame = (parent_id,winner) ->
   query = {}
   query.TableName = "mafia-game"
   query.Key = {
-    "game_id": parent_id
+    "game_id": parseInt parent_id
   }
-  query.UpdateExpression = "set winner = :w"
+  query.UpdateExpression = "set #winner = :winner, #status = :status"
+  query.ExpressionAttributeNames = {
+    "#winner": "winner",
+    "#status": "status"
+  }
   query.ExpressionAttributeValues = {
-    ":w": result,
+    ":winner": result,
+    ":status": true,
   }
 
   docClient.update query, (err, data) ->
