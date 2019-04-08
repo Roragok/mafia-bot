@@ -63,7 +63,7 @@ module.exports = (robot) ->
           if host is item.host
             # Update Game with Winning Faction and set status to true for completed game.
             closeDay(threadId)
-            endGame(day.parent_id, winner)
+            endGame(item.parent_id, winner)
 
 
 startGame = (host, title, threadId, players, parent, game_slug) ->
