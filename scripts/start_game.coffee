@@ -201,11 +201,7 @@ closeDay = (day_id) ->
 # Set Previous Day status to true.
 endGame = (parent_id,winner) ->
 
-  winner.toLowerCase()
-  console.log "\N"
-  console.log winner
-  console.log "\N"
-  result = switch winner
+  result = switch winner.toLowerCase()
    when "mafia","werewolf","wolf" then "Mafia"
    when "town","village" then "Town"
    when "third" then "Third Party"
