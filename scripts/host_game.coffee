@@ -95,9 +95,9 @@ module.exports = (robot) ->
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
-          # Add User to Signup
+          # Remove User to Signup
           if host is item.host
-            signGame(target, threadId, item.signed_players)
+            unSignGame(target, threadId, item.signed_players)
 
   # Remove a Signed Players
   robot.hear /@mafiabot remove (.*)/i, (res) ->
