@@ -95,6 +95,7 @@ module.exports = (robot) ->
               notVoting += player + "\n"
         res.send(printVote(response, notVoting))
 
+  # HOST COMMANDS
 
   # Host Kills a player in the current Day
   robot.hear /@mafiabot kill (.*)/i, (res) ->
@@ -110,6 +111,26 @@ module.exports = (robot) ->
           # Add User to Signup
           if host is item.host
             killPlayer(threadId, item.kills, target)
+
+  # HOST Subs a player in the current Day
+
+  robot.hear /@mafiabot sub (.*)/i, (res) ->
+
+    host =  res.envelope.user.username
+    targets = res.match[1].replace '@', ''.split(" ")
+    threadId = res.message.room
+
+    result = getDay(res.message.room)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          if host is item.host
+            subPlayer(threadId, item.alive_players, targets)
+
+  # HOST ADDs a player to the Roster in current Day
+
+    #TBA
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.hear /@mafiabot zeus (.*)/i, (res) ->
@@ -288,3 +309,21 @@ killPlayer = (threadId, kills, target) ->
       console.log err
     else
       console.log data
+
+subPlayer = (threadId, alive_players, targets ) ->
+  if alive_players
+    if targets[0] in alive_players
+      alive_players[`#{targets[0]}`] = targets[1]
+  # Build New Query    
+  query = {}
+  query.TableName = "mafia-day"
+  query.Key = { "day_id": threadId }
+  query.UpdateExpression = "set alive_players = :ap"
+  query.ExpressionAttributeValues = {
+    ':ap':alive_players,
+  }
+  docClient.update query, (err, data) ->
+  if err
+    console.log err
+  else
+    console.log data
