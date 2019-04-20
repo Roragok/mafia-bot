@@ -145,11 +145,11 @@ module.exports = (robot) ->
     threadId = res.message.room
 
     result = getDay(threadId)
+    console.log result
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
           # Add User to Signup
-          console.log item
           if host is item.host
             subPlayer(threadId, item.alive_players, targets)
 
