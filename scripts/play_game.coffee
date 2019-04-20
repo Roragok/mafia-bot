@@ -144,14 +144,13 @@ module.exports = (robot) ->
     targets = res.match[1] . replace '@', ''
     threadId = res.message.room
 
-    console.log targets
-
-    result = getDay(res.message.room)
+    result = getDay(threadId)
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
           # Add User to Signup
           if host is item.host
+            console.log targets
             subPlayer(threadId, item.alive_players, targets)
 
   # ZEUS COMMAND - Will remove player from active list eventually
