@@ -63,29 +63,12 @@ module.exports = (robot) ->
   robot.hear /@mafiabot votecount/i, (res) ->
     votes = []
     notVoting = ''
+    count = 0;
     result = getDay(res.message.room)
     result.then (data) ->
       if data.Count > 0
         for item in data.Items
-          for player in item.alive_players
-            if item["votes"][player]
-              if item["votes"][player]['vote'] is null
-                notVoting +=  player + ", ";
-              else
-                votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
-                # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
-            else
-              notVoting += player + "\n"
-        res.send(printVote(votes, notVoting))
-
-  # VOTE COUNT ALIAS
-  robot.hear /@mafiabot vc/i, (res) ->
-    votes = []
-    notVoting = ''
-    result = getDay(res.message.room)
-    result.then (data) ->
-      if data.Count > 0
-        for item in data.Items
+          count = item.alive_players.length
           for player in item.alive_players
             if item["votes"][player]
               if item["votes"][player]['vote'] is null
@@ -100,12 +83,42 @@ module.exports = (robot) ->
                     vote.voters +=  item["votes"][player]['voter'] + ", "
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] }
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] ", " }
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting +=  player + ", ";
-        res.send(printVote(votes, notVoting))
+        res.send(printVote(votes, notVoting, count))
+
+  # VOTE COUNT ALIAS
+  robot.hear /@mafiabot vc/i, (res) ->
+    votes = []
+    notVoting = ''
+    count = 0;
+    result = getDay(res.message.room)
+    result.then (data) ->
+      if data.Count > 0
+        for item in data.Items
+          count = item.alive_players.length
+          for player in item.alive_players
+            if item["votes"][player]
+              if item["votes"][player]['vote'] is null
+                notVoting +=  player + ", ";
+              else
+                player_vote =  item["votes"][player]['vote'];
+                match = false
+                for vote in votes
+                  if vote.target is player_vote
+                    match = true
+                    vote.voters +=  item["votes"][player]['voter'] + ", "
+
+                if match is false
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] ", " }
+                  votes.push voted
+                # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
+            else
+              notVoting +=  player + ", ";
+        res.send(printVote(votes, notVoting, count))
 
   # HOST COMMANDS
 
@@ -158,18 +171,21 @@ module.exports = (robot) ->
 
 # Functions
 
-printVote = (votes, notVoting) ->
+printVote = (votes, notVoting, count) ->
   response = "# Vote Count"
   response += "\n --- \n"
-  response += "| Player  | Lynches  | \n"
+  response += "| Player  | Votes  | \n"
   response += "|---|---|\n"
   for vote in votes
-    response +=  "|" + vote.voters  + "| " + vote.target + "|\n"
+    response +=  "|" + vote.target  + "| " + vote.votes + "|\n"
   # response += votes
   response += "\n ##  Not Voting"
   response += "\n --- \n\n"
   response += notVoting . replace '/,\s*$/, ""'
-  response += "\n\n --- \n"
+  response += "\n\n --- \n\n"
+  response += "#### Alive Players - " + count + "\n"
+  response += "Majority Vote is - " + Math.round (count/2) + "\n"
+  response += "\n\n --- \n\n"
   response += uuidv1()
 
   return response
