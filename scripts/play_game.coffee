@@ -149,8 +149,8 @@ module.exports = (robot) ->
       if data.Count is 1
         for item in data.Items
           # Add User to Signup
+          console.log item
           if host is item.host
-            console.log targets
             subPlayer(threadId, item.alive_players, targets)
 
   # ZEUS COMMAND - Will remove player from active list eventually
