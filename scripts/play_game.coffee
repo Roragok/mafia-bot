@@ -80,10 +80,9 @@ module.exports = (robot) ->
                   if vote.target is player_vote
                     match = true
                     vote.voters +=  ", " + item["votes"][player]['voter']
-                    vote.count = vote.count + 1
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'], count: 1 }
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] }
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
@@ -110,18 +109,15 @@ module.exports = (robot) ->
                 for vote in votes
                   if vote.target is player_vote
                     match = true
-                    vote.voters +=  ", " + item["votes"][player]['voter']
-                    vote.count = vote.count + 1
+                    vote.voters +=  ", " + item["votes"][player]['voter']           
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'], count: 1 }
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter']}
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting +=  player + ", ";
         res.send(printVote(votes, notVoting, count))
-
-  # HOST COMMANDS
 
   # Host Kills a player in the current Day
   robot.hear /@mafiabot kill (.*)/i, (res) ->
