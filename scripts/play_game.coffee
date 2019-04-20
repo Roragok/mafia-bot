@@ -313,11 +313,10 @@ killPlayer = (threadId, kills, target) ->
     else
       console.log data
 
-subPlayer = (threadId, alive_players, targets ) ->
-
-  if alive_players
-    for targets[0], keyz in alive_players
-      alive_players[keyz] = targets[1]
+subPlayer = (threadId, alive_players, targets) ->
+  # if alive_players
+  #   for targets[0], keyz in alive_players
+  #     alive_players[keyz] = targets[1]
 
   # Build New Query
   query = {}
