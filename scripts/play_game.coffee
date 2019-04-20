@@ -337,6 +337,7 @@ killPlayer = (threadId, kills, target) ->
       console.log data
 
 subPlayer = (threadId, alive_players, targets) ->
+  console.log targets
   # if alive_players
   #   for targets[0], keyz in alive_players
   #     alive_players[keyz] = targets[1]
