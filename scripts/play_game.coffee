@@ -145,9 +145,8 @@ module.exports = (robot) ->
     threadId = res.message.room
 
     result = getDay(threadId)
-    console.log result
     result.then (data) ->
-      if data.Count is 1
+      if data.Count > 0
         for item in data.Items
           # Add User to Signup
           if host is item.host
