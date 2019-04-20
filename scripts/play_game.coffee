@@ -92,7 +92,7 @@ module.exports = (robot) ->
                 notVoting +=  player + ", ";
               else
                 console.log item["votes"][player]['vote'] + "\n"
-                votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
+                votes[0] += item["votes"][player]['voter'] + ", "
                 console.log votes + "\n"
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
@@ -144,6 +144,7 @@ module.exports = (robot) ->
         for item in data.Items
           # Add User to Signup
           if host is item.host
+            killPlayer(threadId, item.kills, target)
             res.send(getZeused(target))
 
 
@@ -312,22 +313,23 @@ killPlayer = (threadId, kills, target) ->
     else
       console.log data
 
-# subPlayer = (threadId, alive_players, targets ) ->
-#   if alive_players
-#     if targets[0] in alive_players
-#       for targets[0], keyz in alive_players
-#         alive_players[keyz] = targets[1]
-#
-#   # Build New Query
-#   query = {}
-#   query.TableName = "mafia-day"
-#   query.Key = { "day_id": threadId }
-#   query.UpdateExpression = "set alive_players = :ap"
-#   query.ExpressionAttributeValues = {
-#     ':ap':alive_players,
-#   }
-#   docClient.update query, (err, data) ->
-#   if err
-#     console.log err
-#   else
-#     console.log data
+subPlayer = (threadId, alive_players, targets ) ->
+
+  if alive_players
+    for targets[0], keyz in alive_players
+      alive_players[keyz] = targets[1]
+
+  # Build New Query
+  query = {}
+  query.TableName = "mafia-day"
+  query.Key = { "day_id": threadId }
+  query.UpdateExpression = "set alive_players = :ap"
+  query.ExpressionAttributeValues = {
+    ':ap':alive_players,
+  }
+
+  docClient.update query, (err, data) ->
+  if err
+    console.log err
+  else
+    console.log data
