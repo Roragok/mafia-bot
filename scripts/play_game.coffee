@@ -101,8 +101,6 @@ module.exports = (robot) ->
                 if match is false
                   voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] }
                   votes.push voted
-
-                console.log votes + "\n"
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting +=  player + ", ";
