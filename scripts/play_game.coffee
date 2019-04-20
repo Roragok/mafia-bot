@@ -91,8 +91,8 @@ module.exports = (robot) ->
               if item["votes"][player]['vote'] is null
                 notVoting +=  player + ", ";
               else
-                console.log item["votes"][player]['vote'] + "\n"
-                votes[0] += item["votes"][player]['voter'] + ", "
+                console.log item["votes"][player]['voter'] + "\n"
+                votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
                 console.log votes + "\n"
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
@@ -155,7 +155,7 @@ printVote = (votes, notVoting) ->
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
-  for target, voters in votes
+  for voters, target in votes
     response +=  "|" + target  + "| " + voters + "|\n"
   # response += votes
   response += "\n ##  Not Voting"
