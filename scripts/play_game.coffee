@@ -80,9 +80,10 @@ module.exports = (robot) ->
                   if vote.target is player_vote
                     match = true
                     vote.voters +=  ", " + item["votes"][player]['voter']
+                    vote.count += 1
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] }
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'], count : 1 }
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
@@ -176,14 +177,14 @@ printVote = (votes, notVoting, count) ->
   response += "| Player  | Votes  | \n"
   response += "|---|---|\n"
   for vote in votes
-    response +=  "|" + vote.target  + "| " + vote.voters + "|\n"
+    response +=  "|" + vote.target  + "| **"vote.count +"** - " + vote.voters + "|\n"
   # response += votes
   response += "\n ##  Not Voting"
   response += "\n --- \n\n"
   response += notVoting . replace '/,\s*$/, ""'
   response += "\n\n --- \n\n"
   response += "#### Alive Players - " + count + "\n"
-  response += "Majority Vote is - " + Math.round (count/2) + "\n"
+  response += "Majority Vote - " + Math.round (count/2) + "\n"
   response += "\n\n --- \n\n"
   response += uuidv1()
 
