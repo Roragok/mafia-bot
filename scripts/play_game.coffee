@@ -96,6 +96,8 @@ module.exports = (robot) ->
                 for vote in votes
                   if vote.target is player_vote
                     match = true
+                    console.log votes.target
+                    console.log votes.target.voters
                     votes.target.voters +=  item["votes"][player]['voter'] + ", "
 
                 if match is false
