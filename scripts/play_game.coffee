@@ -92,7 +92,8 @@ module.exports = (robot) ->
                 notVoting +=  player + ", ";
               else
                 console.log item["votes"][player]['voter'] + "\n"
-                votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
+                voted = item["votes"][player]['vote'];
+                votes.voted.push item["votes"][player]['voter']
                 console.log votes + "\n"
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
