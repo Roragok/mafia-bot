@@ -116,19 +116,19 @@ module.exports = (robot) ->
 
   # HOST Subs a player in the current Day
 
-  robot.hear /@mafiabot sub (.*)/i, (res) ->
-
-    host =  res.envelope.user.username
-    targets = res.match[1].replace '@', ''.split(" ")
-    threadId = res.message.room
-
-    result = getDay(res.message.room)
-    result.then (data) ->
-      if data.Count is 1
-        for item in data.Items
-          # Add User to Signup
-          if host is item.host
-            subPlayer(threadId, item.alive_players, targets)
+  # robot.hear /@mafiabot sub (.*)/i, (res) ->
+  #
+  #   host =  res.envelope.user.username
+  #   targets = res.match[1].replace '@', ''.split(" ")
+  #   threadId = res.message.room
+  #
+  #   result = getDay(res.message.room)
+  #   result.then (data) ->
+  #     if data.Count is 1
+  #       for item in data.Items
+  #         # Add User to Signup
+  #         if host is item.host
+  #           subPlayer(threadId, item.alive_players, targets)
 
   # HOST ADDs a player to the Roster in current Day
 
@@ -161,7 +161,7 @@ printVote = (votes, notVoting) ->
   # response += votes
   response += "\n ##  Not Voting"
   response += "\n --- \n"
-  response += notVoting 
+  response += notVoting
   response += "\n --- \n"
   response += uuidv1()
 
@@ -314,22 +314,22 @@ killPlayer = (threadId, kills, target) ->
     else
       console.log data
 
-subPlayer = (threadId, alive_players, targets ) ->
-  if alive_players
-    if targets[0] in alive_players
-      for targets[0], keyz in alive_players
-        alive_players[keyz] = targets[1]
-
-  # Build New Query
-  query = {}
-  query.TableName = "mafia-day"
-  query.Key = { "day_id": threadId }
-  query.UpdateExpression = "set alive_players = :ap"
-  query.ExpressionAttributeValues = {
-    ':ap':alive_players,
-  }
-  docClient.update query, (err, data) ->
-  if err
-    console.log err
-  else
-    console.log data
+# subPlayer = (threadId, alive_players, targets ) ->
+#   if alive_players
+#     if targets[0] in alive_players
+#       for targets[0], keyz in alive_players
+#         alive_players[keyz] = targets[1]
+#
+#   # Build New Query
+#   query = {}
+#   query.TableName = "mafia-day"
+#   query.Key = { "day_id": threadId }
+#   query.UpdateExpression = "set alive_players = :ap"
+#   query.ExpressionAttributeValues = {
+#     ':ap':alive_players,
+#   }
+#   docClient.update query, (err, data) ->
+#   if err
+#     console.log err
+#   else
+#     console.log data
