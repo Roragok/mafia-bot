@@ -141,7 +141,7 @@ module.exports = (robot) ->
   robot.hear /@mafiabot sub (.*)/i, (res) ->
 
     host =  res.envelope.user.username
-    targets = res.match[1] . replace '@', '' . split " "
+    targets = res.match[1] . replace '@', ''
     threadId = res.message.room
 
     result = getDay(res.message.room)
@@ -337,7 +337,9 @@ killPlayer = (threadId, kills, target) ->
       console.log data
 
 subPlayer = (threadId, alive_players, targets) ->
-  console.log targets
+  console.log targets . "\n"
+  targets = targets. split ' '
+  console.log targets . "\n"
   # if alive_players
   #   for targets[0], keyz in alive_players
   #     alive_players[keyz] = targets[1]
