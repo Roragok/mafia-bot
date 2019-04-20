@@ -80,10 +80,10 @@ module.exports = (robot) ->
                   if vote.target is player_vote
                     match = true
                     vote.voters +=  ", " + item["votes"][player]['voter']
-                    vote.count += 1
+                    vote.count = vote.count + 1
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] , count: "1" }
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'], count: 1 }
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
@@ -111,10 +111,10 @@ module.exports = (robot) ->
                   if vote.target is player_vote
                     match = true
                     vote.voters +=  ", " + item["votes"][player]['voter']
-                    vote.count += 1
+                    vote.count = vote.count + 1
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] , count: "1" }
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'], count: 1 }
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
