@@ -176,7 +176,7 @@ printVote = (votes, notVoting, count) ->
   response += "| Player  | Votes  | \n"
   response += "|---|---|\n"
   for vote in votes
-    response +=  "|" + vote.target  + "| " + vote.votes + "|\n"
+    response +=  "|" + vote.target  + "| " + vote.voters + "|\n"
   # response += votes
   response += "\n ##  Not Voting"
   response += "\n --- \n\n"
