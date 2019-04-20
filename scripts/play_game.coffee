@@ -315,10 +315,10 @@ killPlayer = (threadId, kills, target) ->
 
 subPlayer = (threadId, alive_players, targets ) ->
 
-  # if alive_players
-  #   for targets[0], keyz in alive_players
-  #     alive_players[keyz] = targets[1]
-  
+  if alive_players
+    for targets[0], keyz in alive_players
+      alive_players[keyz] = targets[1]
+
   # Build New Query
   query = {}
   query.TableName = "mafia-day"
@@ -329,7 +329,7 @@ subPlayer = (threadId, alive_players, targets ) ->
   }
 
   docClient.update query, (err, data) ->
-  if err
-    console.log err
-  else
-    console.log data
+    if err
+      console.log err
+    else
+      console.log data
