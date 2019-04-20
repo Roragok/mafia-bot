@@ -91,7 +91,9 @@ module.exports = (robot) ->
               if item["votes"][player]['vote'] is null
                 notVoting +=  player + ", ";
               else
+                console.log item["votes"][player]['vote'] + "\n"
                 votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
+                console.log votes + "\n"
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting += player + "\n"
@@ -116,23 +118,19 @@ module.exports = (robot) ->
 
   # HOST Subs a player in the current Day
 
-  # robot.hear /@mafiabot sub (.*)/i, (res) ->
-  #
-  #   host =  res.envelope.user.username
-  #   targets = res.match[1].replace '@', ''.split(" ")
-  #   threadId = res.message.room
-  #
-  #   result = getDay(res.message.room)
-  #   result.then (data) ->
-  #     if data.Count is 1
-  #       for item in data.Items
-  #         # Add User to Signup
-  #         if host is item.host
-  #           subPlayer(threadId, item.alive_players, targets)
+  robot.hear /@mafiabot sub (.*)/i, (res) ->
 
-  # HOST ADDs a player to the Roster in current Day
+    host =  res.envelope.user.username
+    targets = res.match[1] . replace '@', '' . split " "
+    threadId = res.message.room
 
-    #TBA
+    result = getDay(res.message.room)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          if host is item.host
+            subPlayer(threadId, item.alive_players, targets)
 
   # ZEUS COMMAND - Will remove player from active list eventually
   robot.hear /@mafiabot zeus (.*)/i, (res) ->
@@ -160,9 +158,9 @@ printVote = (votes, notVoting) ->
     response +=  "|" + target  + "| " + voters + "|\n"
   # response += votes
   response += "\n ##  Not Voting"
-  response += "\n --- \n"
+  response += "\n --- \n\n"
   response += notVoting
-  response += "\n --- \n"
+  response += "\n\n --- \n"
   response += uuidv1()
 
   return response

@@ -97,7 +97,7 @@ module.exports = (robot) ->
         for item in data.Items
           # Remove User to Signup
           if host is item.host
-            unSignGame(target, threadId, item.signed_players)
+            signGame(target, threadId, item.signed_players)
 
   # Remove a Signed Players
   robot.hear /@mafiabot remove (.*)/i, (res) ->
@@ -111,7 +111,7 @@ module.exports = (robot) ->
         for item in data.Items
           # Add User to Signup
           if host is item.host
-              signGame(target, threadId, item.signed_players)
+              unSignGame(target, threadId, item.signed_players)
 
 
 #  Prints the list of signed players
