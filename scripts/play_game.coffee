@@ -61,7 +61,7 @@ module.exports = (robot) ->
 
   # VOTE COUNT COMMAND
   robot.hear /@mafiabot votecount/i, (res) ->
-    response = ''
+    votes = []
     notVoting = ''
     result = getDay(res.message.room)
     result.then (data) ->
@@ -70,16 +70,17 @@ module.exports = (robot) ->
           for player in item.alive_players
             if item["votes"][player]
               if item["votes"][player]['vote'] is null
-                notVoting += player + "\n"
+                notVoting +=  player + ", ";
               else
-                response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
+                votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
+                # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting += player + "\n"
-        res.send(printVote(response, notVoting))
+        res.send(printVote(votes, notVoting))
 
   # VOTE COUNT ALIAS
   robot.hear /@mafiabot vc/i, (res) ->
-    response = ''
+    votes = []
     notVoting = ''
     result = getDay(res.message.room)
     result.then (data) ->
@@ -88,12 +89,13 @@ module.exports = (robot) ->
           for player in item.alive_players
             if item["votes"][player]
               if item["votes"][player]['vote'] is null
-                notVoting += player + "\n"
+                notVoting +=  player + ", ";
               else
-                response += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
+                votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
+                # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting += player + "\n"
-        res.send(printVote(response, notVoting))
+        res.send(printVote(votes, notVoting))
 
   # HOST COMMANDS
 
@@ -154,10 +156,12 @@ printVote = (votes, notVoting) ->
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
-  response += votes
+  for target, voters in votes
+    response +=  "|" + target  + "| " + voters . replace '/,\s*$/, ""' + "|\n"
+  # response += votes
   response += "\n ##  Not Voting"
   response += "\n --- \n"
-  response += notVoting
+  response += notVoting . replace '/,\s*$/, ""'
   response += "\n --- \n"
   response += uuidv1()
 
