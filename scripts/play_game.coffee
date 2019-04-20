@@ -317,8 +317,10 @@ killPlayer = (threadId, kills, target) ->
 subPlayer = (threadId, alive_players, targets ) ->
   if alive_players
     if targets[0] in alive_players
-      alive_players[`#{targets[0]}`] = targets[1]
-  # Build New Query    
+      for targets[0], index in alive_players
+        alive_players[index] = targets[1]
+        
+  # Build New Query
   query = {}
   query.TableName = "mafia-day"
   query.Key = { "day_id": threadId }
