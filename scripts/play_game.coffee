@@ -95,13 +95,13 @@ module.exports = (robot) ->
                 if target in votes
                     votes.target.votes +=  item["votes"][player]['voter'] + ", "
                 else
-                  voted = { target:  item["votes"][player]['vote', votes: item["votes"][player]['voter'] }
+                  voted = { target:  item["votes"][player]['vote'], votes: item["votes"][player]['voter'] }
                   votes.push voted
 
                 console.log votes + "\n"
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
-              notVoting += player + "\n"
+              notVoting +=  player + ", ";
         res.send(printVote(votes, notVoting))
 
   # HOST COMMANDS
@@ -165,7 +165,7 @@ printVote = (votes, notVoting) ->
   # response += votes
   response += "\n ##  Not Voting"
   response += "\n --- \n\n"
-  response += notVoting
+  response += notVoting . replace '/,\s*$/, ""'
   response += "\n\n --- \n"
   response += uuidv1()
 
