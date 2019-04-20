@@ -91,9 +91,13 @@ module.exports = (robot) ->
               if item["votes"][player]['vote'] is null
                 notVoting +=  player + ", ";
               else
-                console.log item["votes"][player]['voter'] + "\n"
-                voted = item["votes"][player]['vote']
-                votes['Friend'] += item["votes"][player]['voter'] + ", "
+                target =  item["votes"][player]['vote'];
+                if target in votes
+                    votes.target.votes +=  item["votes"][player]['voter'] + ", "
+                else
+                  voted = { target:  item["votes"][player]['vote', votes: item["votes"][player]['voter'] }
+                  votes.push voted
+
                 console.log votes + "\n"
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
