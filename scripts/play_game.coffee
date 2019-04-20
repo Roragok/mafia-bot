@@ -144,6 +144,8 @@ module.exports = (robot) ->
     targets = res.match[1] . replace '@', ''
     threadId = res.message.room
 
+    console.log targets
+
     result = getDay(res.message.room)
     result.then (data) ->
       if data.Count is 1
