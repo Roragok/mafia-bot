@@ -72,8 +72,7 @@ module.exports = (robot) ->
               if item["votes"][player]['vote'] is null
                 notVoting +=  player + ", ";
               else
-                console.log 'test';
-                # votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
+                votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting += player + "\n"
@@ -92,8 +91,7 @@ module.exports = (robot) ->
               if item["votes"][player]['vote'] is null
                 notVoting +=  player + ", ";
               else
-                console.log 'test';
-                # votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
+                votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting += player + "\n"
@@ -159,11 +157,11 @@ printVote = (votes, notVoting) ->
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
   for target, voters in votes
-    response +=  "|" + target  + "| " + voters . replace '/,\s*$/, ""' + "|\n"
+    response +=  "|" + target  + "| " + voters + "|\n"
   # response += votes
   response += "\n ##  Not Voting"
   response += "\n --- \n"
-  response += notVoting . replace '/,\s*$/, ""'
+  response += notVoting 
   response += "\n --- \n"
   response += uuidv1()
 
@@ -319,8 +317,8 @@ killPlayer = (threadId, kills, target) ->
 subPlayer = (threadId, alive_players, targets ) ->
   if alive_players
     if targets[0] in alive_players
-      for targets[0], index in alive_players
-        alive_players[index] = targets[1]
+      for targets[0], keyz in alive_players
+        alive_players[keyz] = targets[1]
 
   # Build New Query
   query = {}
