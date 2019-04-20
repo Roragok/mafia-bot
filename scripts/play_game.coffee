@@ -108,13 +108,13 @@ module.exports = (robot) ->
                 player_vote =  item["votes"][player]['vote'];
                 match = false
                 for vote in votes
-                  if vote.target is player_vote
+                  if vote.target.toLowerCase() is player_vote.toLowerCase()
                     match = true
                     vote.voters +=  ", " + item["votes"][player]['voter']
                     vote.count += 1
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'], count: 1 }
+                  voted = { target:  item["votes"][player]['vote'].toLowerCase(), voters: item["votes"][player]['voter'], count: 1 }
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
