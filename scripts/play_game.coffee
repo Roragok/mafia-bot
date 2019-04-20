@@ -72,7 +72,8 @@ module.exports = (robot) ->
               if item["votes"][player]['vote'] is null
                 notVoting +=  player + ", ";
               else
-                votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
+                console.log 'test';
+                # votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting += player + "\n"
@@ -91,7 +92,8 @@ module.exports = (robot) ->
               if item["votes"][player]['vote'] is null
                 notVoting +=  player + ", ";
               else
-                votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
+                console.log 'test';
+                # votes[item["votes"][player]['vote']] += item["votes"][player]['voter'] + ", "
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting += player + "\n"
@@ -319,7 +321,7 @@ subPlayer = (threadId, alive_players, targets ) ->
     if targets[0] in alive_players
       for targets[0], index in alive_players
         alive_players[index] = targets[1]
-        
+
   # Build New Query
   query = {}
   query.TableName = "mafia-day"
