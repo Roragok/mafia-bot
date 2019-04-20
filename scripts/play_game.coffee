@@ -79,11 +79,10 @@ module.exports = (robot) ->
                 for vote in votes
                   if vote.target is player_vote
                     match = true
-                    console.log vote
-                    vote.voters +=  item["votes"][player]['voter'] + ", "
+                    vote.voters +=  ", " + item["votes"][player]['voter']
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] ", " }
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] }
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
@@ -110,10 +109,10 @@ module.exports = (robot) ->
                 for vote in votes
                   if vote.target is player_vote
                     match = true
-                    vote.voters +=  item["votes"][player]['voter'] + ", "
+                    vote.voters +=  ", " + item["votes"][player]['voter']
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] ", " }
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] }
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
