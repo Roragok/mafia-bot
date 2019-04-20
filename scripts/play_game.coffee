@@ -80,9 +80,10 @@ module.exports = (robot) ->
                   if vote.target is player_vote
                     match = true
                     vote.voters +=  ", " + item["votes"][player]['voter']
+                    vote.count += 1
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] }
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'], count: 1 }
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
@@ -109,10 +110,11 @@ module.exports = (robot) ->
                 for vote in votes
                   if vote.target is player_vote
                     match = true
-                    vote.voters +=  ", " + item["votes"][player]['voter']           
+                    vote.voters +=  ", " + item["votes"][player]['voter']
+                    vote.count += 1
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter']}
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'], count: 1 }
                   votes.push voted
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
@@ -174,7 +176,7 @@ printVote = (votes, notVoting, count) ->
   response += "| Player  | Votes  | \n"
   response += "|---|---|\n"
   for vote in votes
-    response +=  "|" + vote.target  + "| **"vote.count +"** - " + vote.voters + "|\n"
+    response +=  "|" + vote.target  + "| **" + vote.count + "** - " + vote.voters + "|\n"
   # response += votes
   response += "\n ##  Not Voting"
   response += "\n --- \n\n"

@@ -12,6 +12,7 @@
     "hubot-discourse-adapter": "^1.1.1",
     "hubot-heroku-keepalive": "^1.0.3",
     "hubot-scripts": "^2.17.2",
+    "jslint": "^0.12.1",
     "uuid": "^3.3.2"
   },
   "engines": {}
