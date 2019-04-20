@@ -91,11 +91,15 @@ module.exports = (robot) ->
               if item["votes"][player]['vote'] is null
                 notVoting +=  player + ", ";
               else
-                target =  item["votes"][player]['vote'];
-                if target in votes
-                    votes.target.votes +=  item["votes"][player]['voter'] + ", "
-                else
-                  voted = { target:  item["votes"][player]['vote'], votes: item["votes"][player]['voter'] }
+                vote =  item["votes"][player]['vote'];
+                match = false
+                for vote in votes
+                  if vote.target is vote
+                    match = true
+                    votes.target.voters +=  item["votes"][player]['voter'] + ", "
+
+                if match is false
+                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'] }
                   votes.push voted
 
                 console.log votes + "\n"
@@ -160,8 +164,8 @@ printVote = (votes, notVoting) ->
   response += "\n --- \n"
   response += "| Player  | Lynches  | \n"
   response += "|---|---|\n"
-  for voters, target in votes
-    response +=  "|" + target  + "| " + voters + "|\n"
+  for vote in votes
+    response +=  "|" + vote.target  + "| " + vote.voters + "|\n"
   # response += votes
   response += "\n ##  Not Voting"
   response += "\n --- \n\n"
