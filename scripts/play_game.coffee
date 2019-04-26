@@ -183,7 +183,7 @@ printVote = (votes, notVoting, count) ->
   response += notVoting . replace '/,\s*$/, ""'
   response += "\n\n --- \n\n"
   response += "#### Alive Players - " + count + "\n"
-  response += "Majority Vote - " + Math.round (count/2) + "\n"
+  response += "Majority Vote - " + ((Math.floor (count/2)) + 1)  + "\n"
   response += "\n\n --- \n\n"
   response += uuidv1()
 
