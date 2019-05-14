@@ -173,10 +173,10 @@ module.exports = (robot) ->
 printVote = (votes, notVoting, count) ->
   response = "# Vote Count"
   response += "\n --- \n"
-  response += "| Player  | Votes  | \n"
-  response += "|---|---|\n"
+  response += "| Lynch  | Votes | Voters| \n"
+  response += "|---|---|---|\n"
   for vote in votes
-    response +=  "|" + vote.target  + "| **" + vote.count + "** - " + vote.voters + "|\n"
+    response +=  "|" + vote.target  + "| **" + vote.count + "** | " + vote.voters + "|\n"
   # response += votes
   response += "\n ##  Not Voting"
   response += "\n --- \n\n"
