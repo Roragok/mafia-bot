@@ -1,4 +1,4 @@
-#helpFunctions = require("./../src/helpers/help");
+# helpFunctions = require("./../src/helpers/help");
 
 
 module.exports = (robot) ->
