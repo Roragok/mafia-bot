@@ -88,7 +88,7 @@ module.exports = (robot) ->
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting +=  player + ", ";
-        res.send(printVote(votes, notVoting, count))
+        res.send(printVote(sortVotes(votes), notVoting, count))
 
   # VOTE COUNT ALIAS
   robot.hear /@mafiabot vc/i, (res) ->
@@ -119,7 +119,7 @@ module.exports = (robot) ->
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting +=  player + ", ";
-        res.send(printVote(votes, notVoting, count))
+        res.send(printVote(sortVotes(votes), notVoting, count))
 
   # Host Kills a player in the current Day
   robot.hear /@mafiabot kill (.*)/i, (res) ->
@@ -169,6 +169,47 @@ module.exports = (robot) ->
 
 
 # Functions
+
+sortVotes = (data) ->
+  defaultComparator = (a, b) ->
+    if a.count > b.count
+      return -1
+    if a.count < b.count
+      return 1
+    0
+
+  order = (data, comparator = defaultComparator) ->
+    sorted = []
+
+    recursiveSort = (i, j) ->
+      if j - i < 1
+        return
+      z = sorted[j]
+      y = i
+      x = i
+      while x < j
+        sort = comparator(sorted[x], z)
+        if sort == -1
+          if y != x
+            temp = sorted[y]
+            sorted[y] = sorted[x]
+            sorted[x] = temp
+          y++
+        x++
+      sorted[j] = sorted[y]
+      sorted[y] = z
+      recursiveSort i, y - 1
+      recursiveSort y + 1, j
+      return
+
+    x = 0
+    while x < data.length
+      sorted.push data[x]
+      x++
+    recursiveSort 0, data.length - 1
+    sorted
+
+  return order(data)
 
 printVote = (votes, notVoting, count) ->
   response = "# Vote Count"
