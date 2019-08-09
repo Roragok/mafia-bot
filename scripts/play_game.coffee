@@ -88,7 +88,7 @@ module.exports = (robot) ->
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting +=  player + ", ";
-        res.send(printVote(votes, notVoting, count))
+        res.send(printVote(sortVotes(votes), notVoting, count))
 
   # VOTE COUNT ALIAS
   robot.hear /@mafiabot vc/i, (res) ->
@@ -119,7 +119,7 @@ module.exports = (robot) ->
                 # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
               notVoting +=  player + ", ";
-        res.send(printVote(votes, notVoting, count))
+        res.send(printVote(sortVotes(votes), notVoting, count))
 
   # Host Kills a player in the current Day
   robot.hear /@mafiabot kill (.*)/i, (res) ->
@@ -169,6 +169,52 @@ module.exports = (robot) ->
 
 
 # Functions
+
+# sort votes for output in order of highest votecount descending
+sortVotes = (data) ->
+  # creates conditional comparator
+  defaultComparator = (a, b) ->
+    if a.count > b.count
+      return -1
+    if a.count < b.count
+      return 1
+    0
+
+  order = (data, comparator = defaultComparator) ->
+    sorted = []
+
+    recursiveSort = (first, last) ->
+      if last - first < 1 # when list is length 0
+        return # exit the recursion
+      pivot = sorted[last] # pick an arbitrary entry around which to sort
+      split = first # location of the insert. We'll place it here for now
+      iterator = first # coffeescript's version of a for loop
+      while iterator < last
+        sort = comparator(sorted[iterator], pivot) # returns 1, 0, -1 as above
+        if sort == -1 # sorted[i] is greater than pivot value
+          if split != iterator # iterating and sorting
+            temp = sorted[split]
+            sorted[split] = sorted[iterator]
+            sorted[iterator] = temp
+          split++
+        iterator++
+      sorted[last] = sorted[split]
+      sorted[split] = pivot # inserts pivot at the location of the sorted split
+      recursiveSort first, split - 1 # recurses on each side of the split
+      recursiveSort split + 1, last
+      return
+
+    push = (i) -> # populates modifiable array
+      if i < data.length
+        sorted.push data[i]
+        push i + 1
+      return
+
+    push 0
+    recursiveSort 0, data.length - 1 # calls the sort on the full list
+    sorted # returns the sorted list
+
+  return order(data)
 
 printVote = (votes, notVoting, count) ->
   response = "# Vote Count"
