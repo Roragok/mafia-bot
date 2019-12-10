@@ -1,5 +1,5 @@
 # Mafia Bot
-The goal of this project was to have a bot to help host and facilitate [Mafia Games](https://en.wikipedia.org/wiki/Mafia_(party_game). A light weight discourse integration of[hubot](https://hubot.github.com/).
+The goal of this project was to have a bot to help host and facilitate [Mafia Games](https://en.wikipedia.org/wiki/Mafia_(party_game)). A light weight discourse integration of[hubot](https://hubot.github.com/).
 
 Runs on [NAMafia](https://namafia.com).
 
