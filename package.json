@@ -5,15 +5,15 @@
   "author": "PhiL aka 'Roragok'",
   "description": "Mafia Bot",
   "dependencies": {
-    "aws-sdk": "^2.351.0",
-    "body-parser": "^1.18.3",
-    "hubot": "^3.1.1",
+    "aws-sdk": "^2.609.0",
+    "body-parser": "^1.19.0",
+    "hubot": "^3.3.2",
     "hubot-diagnostics": "^1.0.0",
     "hubot-discourse-adapter": "^1.1.1",
     "hubot-heroku-keepalive": "^1.0.3",
     "hubot-scripts": "^2.17.2",
     "jslint": "^0.12.1",
-    "uuid": "^3.3.2"
+    "uuid": "^3.4.0"
   },
   "engines": {}
 }
