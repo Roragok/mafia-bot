@@ -9,7 +9,7 @@
     "body-parser": "^1.19.0",
     "hubot": "^3.3.2",
     "hubot-diagnostics": "^1.0.0",
-    "hubot-discourse-adapter": "^1.1.1",
+    "hubot-discourse-adapter": "^3.0.4",
     "hubot-heroku-keepalive": "^1.0.3",
     "hubot-scripts": "^2.17.2",
     "jslint": "^0.12.1",
