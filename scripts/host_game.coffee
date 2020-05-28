@@ -120,7 +120,7 @@ module.exports = (robot) ->
     threadId = res.message.room
     # user who triggered command
     host = res.envelope.user.username
-    result = getGame(rthreadId)
+    result = getGame(threadId)
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
