@@ -109,9 +109,32 @@ module.exports = (robot) ->
     result.then (data) ->
       if data.Count is 1
         for item in data.Items
-          # Add User to Signup
+          # Remove User to Signup
           if host is item.host
               unSignGame(target, threadId, item.signed_players)
+  # Enable/Disable Autolocking
+  # Game threads will inheirt the master thread, but can be individually disabled
+  robot.hear /@mafiabot autolock/i, (res) ->
+    # id of thread
+    threadId = res.message.room
+    # user who triggered command
+    host = res.envelope.user.username
+    result = getGame(rthreadId)
+      result.then (data) ->
+        if data.Count is 1
+          for item in data.Items
+            # Remove User to Signup
+            if host is item.host
+              autolockGame(threadId,item.autolock)
+        else
+          result = getDay(threadId)
+            result.then (data) ->
+              if data.Count is 1
+                for item in data.Items
+                  # Remove User to Signup
+                  if host is item.host
+                    autolockDay(threadId,item.autolock)
+
 
 
 #  Prints the list of signed players
@@ -143,7 +166,8 @@ hostGame = (host, title, threadId, game_slug) ->
          game_url: game_slug,
          status: false,
          title: title,
-         host: host
+         host: host,
+         autolock: true
   }
   docClient.put query, (err, data) ->
     if err
@@ -231,3 +255,72 @@ hostHelp = () ->
   response += "* `@mafiabot startday THREAD_ID`- Starts first or next day of your game.  `THREAD_ID` is very important and must be the ID of the game the `host` command was excuted from\n"
   response += "* `@mafiabot kill playername`- Kills `playername` This command must be excuted in the current day before you run the nextstartday command.  Must be excuted 1 time per player and is case sensitive.  This removes the player from the alive player list when the next `startday` command is excuted\n"
   return response
+
+# Check if thread came from is an active or past game.
+getDay = (threadId) ->
+
+  # Build Query
+  checkGame = {}
+  checkGame.TableName = "mafia-day"
+  checkGame.KeyConditionExpression = "day_id = :day_id"
+  checkGame.ExpressionAttributeValues = {
+    ":day_id": threadId
+  }
+
+  result = docClient.query(checkGame).promise()
+
+#  Changes boolean on autolock of thread
+#  @params -
+#  threadId - id of game created based on thread id of discourse
+#  autolock - current autolock status
+autolockGame = (threadId,autolock) ->
+
+  if autolock
+    autolock = false;
+  else
+    autolock = true;
+
+  # Build new Query
+  query = {}
+  query.TableName = "mafia-game"
+  query.Key = {
+    "game_id": threadId
+  }
+  query.UpdateExpression = "set autolock = :p"
+  query.ExpressionAttributeValues = {
+    ":p":autolock,
+  }
+
+  docClient.update query, (err, data) ->
+    if err
+      console.log err
+    else
+      console.log data
+
+#  Changes boolean on autolock of thread
+#  @params -
+#  threadId - id of game created based on thread id of discourse
+#  autolock - current autolock status
+autolockDay = (threadId,autolock) ->
+
+  if autolock
+    autolock = false;
+  else
+    autolock = true;
+
+  # Build new Query
+  query = {}
+  query.TableName = "mafia-day"
+  query.Key = {
+    "game_id": threadId
+  }
+  query.UpdateExpression = "set autolock = :p"
+  query.ExpressionAttributeValues = {
+    ":p":autolock,
+  }
+
+  docClient.update query, (err, data) ->
+    if err
+      console.log err
+    else
+      console.log data
