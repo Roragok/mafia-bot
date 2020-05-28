@@ -12,33 +12,32 @@ AWS = require 'aws-sdk'
 AWS.config.update({
   region: "us-east-1",
   endpoint: "https://dynamodb.us-east-1.amazonaws.com"
-});
+})
 
-docClient = new AWS.DynamoDB.DocumentClient();
+docClient = new AWS.DynamoDB.DocumentClient()
 
 
 module.exports = (robot) ->
 
   # Host Game
   robot.hear /@mafiabot host/i, (res) ->
+    # id of thread
+    threadId = res.message.room
 
-      # id of thread
-      threadId = res.message.room
+    # user who triggered command
+    user = res.envelope.user.username
 
-      # user who triggered command
-      user = res.envelope.user.username
+    # Thread Title
+    threadTitle=  res.message.title
 
-      # Thread Title
-      threadTitle=  res.message.title
+    # url of game
+    game_slug = res.message.slug
 
-      # url of game
-      game_slug = res.message.slug
-
-      result = getGame(res.message.room)
-      result.then (data) ->
-        if data.Count is 0
-          #Add Game if no matching #ID
-          hostGame(user,threadTitle, threadId, game_slug)
+    result = getGame(res.message.room)
+    result.then (data) ->
+      if data.Count is 0
+        #Add Game if no matching #ID
+        hostGame(user,threadTitle, threadId, game_slug)
 
   # Sign Game
   robot.hear /@mafiabot sign/i, (res) ->
@@ -83,7 +82,8 @@ module.exports = (robot) ->
           if item.signed_players
             res.send(printSignedPlayers(item.signed_players))
           else
-            res.send(("# Signed Players \n --- \n Sign the Fuck up you cucks \n"))
+            res.send(("# Signed Players \n ---
+            \n Sign the Fuck up you cucks \n"))
 
   # Add a Signed Players
   robot.hear /@mafiabot add (.*)/i, (res) ->
@@ -111,29 +111,30 @@ module.exports = (robot) ->
         for item in data.Items
           # Remove User to Signup
           if host is item.host
-              unSignGame(target, threadId, item.signed_players)
+            unSignGame(target, threadId, item.signed_players)
   # Enable/Disable Autolocking
-  # Game threads will inheirt the master thread, but can be individually disabled
+  # Game threads will inheirt the master thread,
+  # but can be individually disabled
   robot.hear /@mafiabot autolock/i, (res) ->
     # id of thread
     threadId = res.message.room
     # user who triggered command
     host = res.envelope.user.username
     result = getGame(rthreadId)
-      result.then (data) ->
-        if data.Count is 1
-          for item in data.Items
-            # Remove User to Signup
-            if host is item.host
-              autolockGame(threadId,item.autolock)
-        else
-          result = getDay(threadId)
-            result.then (data) ->
-              if data.Count is 1
-                for item in data.Items
-                  # Remove User to Signup
-                  if host is item.host
-                    autolockDay(threadId,item.autolock)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Remove User to Signup
+          if host is item.host
+            autolockGame(threadId,item.autolock)
+      else
+        result = getDay(threadId)
+        result.then (data) ->
+          if data.Count is 1
+            for item in data.Items
+              # Remove User to Signup
+              if host is item.host
+                autolockDay(threadId,item.autolock)
 
 
 
@@ -143,7 +144,7 @@ printSignedPlayers = (signed) ->
   response = "#  Signed Players"
   response += "\n --- \n"
   for player in signed
-      response += player + "\n"
+    response += player + "\n"
   response += "\n --- \n"
   response += uuidv1()
 
@@ -157,17 +158,17 @@ printSignedPlayers = (signed) ->
 #  threadId - id of game created based on thread id of discourse
 #  game_slug - url of created game
 hostGame = (host, title, threadId, game_slug) ->
-  dt = new Date();
+  dt = new Date()
   query = {}
   query.TableName = "mafia-game"
   query.Item = {
-         game_id: threadId,
-         game_start: dt.getTime(),
-         game_url: game_slug,
-         status: false,
-         title: title,
-         host: host,
-         autolock: true
+   game_id: threadId,
+   game_start: dt.getTime(),
+   game_url: game_slug,
+   status: false,
+   title: title,
+   host: host,
+   autolock: true
   }
   docClient.put query, (err, data) ->
     if err
@@ -251,9 +252,16 @@ getGame = (threadId) ->
 #  a help function that may or maynot work.
 hostHelp = () ->
   response = "The host of a Mafia game can use the following commands\n"
-  response += "* `@mafiabot host` - Takes the current thread and create a signup\n"
-  response += "* `@mafiabot startday THREAD_ID`- Starts first or next day of your game.  `THREAD_ID` is very important and must be the ID of the game the `host` command was excuted from\n"
-  response += "* `@mafiabot kill playername`- Kills `playername` This command must be excuted in the current day before you run the nextstartday command.  Must be excuted 1 time per player and is case sensitive.  This removes the player from the alive player list when the next `startday` command is excuted\n"
+  response += "* `@mafiabot host` - Takes the current thread and create a
+  signup\n"
+  response += "* `@mafiabot startday THREAD_ID`- Starts first or next day of
+  your game.  `THREAD_ID` is very important and must be the ID of the game
+  the `host` command was excuted from\n"
+  response += "* `@mafiabot kill playername`- Kills `playername` This command
+  must be excuted in the current day before you run the nextstartday command.
+  Must be excuted 1 time per player and is case sensitive.  This removes the
+  player from the alive player list when the next `startday` command is
+  excuted\n"
   return response
 
 # Check if thread came from is an active or past game.
@@ -276,9 +284,9 @@ getDay = (threadId) ->
 autolockGame = (threadId,autolock) ->
 
   if autolock
-    autolock = false;
+    autolock = false
   else
-    autolock = true;
+    autolock = true
 
   # Build new Query
   query = {}
@@ -304,9 +312,9 @@ autolockGame = (threadId,autolock) ->
 autolockDay = (threadId,autolock) ->
 
   if autolock
-    autolock = false;
+    autolock = false
   else
-    autolock = true;
+    autolock = true
 
   # Build new Query
   query = {}
