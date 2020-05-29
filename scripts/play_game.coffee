@@ -263,7 +263,7 @@ printVote = (votes, notVoting, count) ->
   response += "Majority Vote - " + ((Math.floor (count/2)) + 1)  + "\n"
   response += "\n\n --- \n\n"
   response += uuidv1()
-
+  data = {}
   data.response = response
   data.lock = lockthread
 
@@ -446,7 +446,7 @@ subPlayer = (threadId, alive_players, targets) ->
       console.log err
     else
       console.log data
-      
+
 lockThread = (threadId,status) ->
   data = JSON.stringify({
     "status": status,
