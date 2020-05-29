@@ -454,8 +454,8 @@ subPlayer = (threadId, alive_players, targets) ->
 lockThread = (threadId,status) ->
   options = {
     hostname: 'namafia.com',
-    path: '/notifications.json',
-    method: 'GET',
+    path: '/t/'+threadId+"/status?status=closed&status="+status,
+    method: 'PUT',
     headers: {
       'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
       'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
