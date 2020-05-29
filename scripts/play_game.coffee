@@ -456,7 +456,7 @@ lockThread = (threadId,status) ->
   })
 
   options = {}
-  options.hostname = 'namafia.com'
+  options.hostname = 'https://namafia.com'
   options.path = '/t/'+threadId+'/status'
   options.method = 'PUT'
   options.header = {
