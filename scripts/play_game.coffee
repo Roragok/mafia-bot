@@ -465,15 +465,9 @@ lockThread = (threadId,status) ->
     "PUT",
     'https://namafia.com/t/'+threadId+'/status?status="closed"&enabled='+status,
     true)
-  xhr.setRequestHeader('Content-type','application/json; charset=utf-8')
+  xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8')
   xhr.setRequestHeader("Api-Key", process.env.HUBOT_DISCOURSE_KEY)
   xhr.setRequestHeader("Api-Username", process.env.HUBOT_DISCOURSE_USERNAME)
-  xhr.onload = () ->
-    response = xhr.responseText
-    if (xhr.readyState == 4 && xhr.status == "200")
-      console.table(response)
-    else
-      console.error(response)
-
   xhr.send(json)
+  console.log xhr
   console.log xhr.status
