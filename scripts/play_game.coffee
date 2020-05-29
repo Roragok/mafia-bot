@@ -453,12 +453,14 @@ subPlayer = (threadId, alive_players, targets) ->
       console.log data
 
 lockThread = (threadId,status) ->
-  p({
-    hostname: 'namafia.com',
-    path: '/notifications.json',
-    method: 'GET',
-    headers: {
-      'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
-      'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
+  res = await p({
+    url: 'https://namafia.com/t/'+threadId+'/status?status=closed&enabled='+status,
+    method: 'PUT',
+    core: {
+      headers: {
+        'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
+        'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
+      }
     }
   })
+  console.log(res.body)
