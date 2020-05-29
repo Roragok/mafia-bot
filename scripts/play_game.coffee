@@ -452,13 +452,22 @@ subPlayer = (threadId, alive_players, targets) ->
     else
       console.log data
 
-aysnc lockThread = (threadId,status) ->
-  res = await p({
-    url: 'https://namafia.com/t/'+threadId+'/status?status=closed&enabled='+status,
-    method: 'PUT',
+lockThread = (threadId,status) ->
+  options = {
+    hostname: 'namafia.com',
+    path: '/notifications.json',
+    method: 'GET',
     headers: {
       'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
       'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
     }
-  })
-  console.log(res.body)
+  }
+  req = https.request options, (res) ->
+    console.log("StatusCode:", res.statusCode)
+    console.log("Headers:", res.headers)
+  req.on 'data', (d) ->
+    process.stdout.write(d)
+    console.log d
+  req.on 'error', (e) ->
+    console.error e
+  req.end()
