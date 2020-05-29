@@ -456,12 +456,13 @@ lockThread = (threadId,status) ->
     status: status,
     enabled: true
   }
-  
+
   options = {}
   options.hostname = 'namafia.com'
   options.path = "/t/5316/status"
   options.method = 'PUT'
   options.header = {
+    'Content-Type': 'multipart/form-data;',
     'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
     'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
   }
