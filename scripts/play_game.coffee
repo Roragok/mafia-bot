@@ -67,50 +67,14 @@ module.exports = (robot) ->
     notVoting = ''
     count = 0
     threadId = res.message.room
+    autolock = true
     result = getDay(threadId)
     result.then (data) ->
       if data.Count > 0
         for item in data.Items
           count = item.alive_players.length
-          for player in item.alive_players
-            if item["votes"][player]
-              if item["votes"][player]['vote'] is null
-                notVoting +=  player + ", "
-              else
-                player_vote =  item["votes"][player]['vote']
-                match = false
-                for vote in votes
-                  if vote.target is player_vote
-                    match = true
-                    vote.voters +=  ", " + item["votes"][player]['voter']
-                    vote.count += 1
-
-                if match is false
-                  voted = {
-                    target:  item["votes"][player]['vote'],
-                    voters: item["votes"][player]['voter'],
-                    count: 1
-                  }
-                  votes.push voted
-            else
-              notVoting +=  player + ", "
-        response = printVote(sortVotes(votes), notVoting, count)
-        res.send(response.response)
-        if response.lock
-          lockThread(threadId, true)
-
-
-  # VOTE COUNT ALIAS
-  robot.hear /@mafiabot vc/i, (res) ->
-    votes = []
-    notVoting = ''
-    count = 0
-    threadId = res.message.room
-    result = getDay(threadId)
-    result.then (data) ->
-      if data.Count > 0
-        for item in data.Items
-          count = item.alive_players.length
+          if item.autolock
+            autolock = item.autolock
           for player in item.alive_players
             if item["votes"][player]
               if item["votes"][player]['vote'] is null
@@ -135,7 +99,49 @@ module.exports = (robot) ->
               notVoting +=  player + ", "
         response = printVote(sortVotes(votes), notVoting, count)
         res.send(response.response)
-        if response.lock
+        if response.lock and autolock
+          lockThread(threadId, true)
+
+
+  # VOTE COUNT ALIAS
+  robot.hear /@mafiabot vc/i, (res) ->
+    votes = []
+    notVoting = ''
+    count = 0
+    threadId = res.message.room
+    autolock = true
+    result = getDay(threadId)
+    result.then (data) ->
+      if data.Count > 0
+        for item in data.Items
+          count = item.alive_players.length
+          if item.autolock
+            autolock = item.autolock
+          for player in item.alive_players
+            if item["votes"][player]
+              if item["votes"][player]['vote'] is null
+                notVoting +=  player + ", "
+              else
+                player_vote =  item["votes"][player]['vote']
+                match = false
+                for vote in votes
+                  if vote.target.toLowerCase() is player_vote.toLowerCase()
+                    match = true
+                    vote.voters +=  ", " + item["votes"][player]['voter']
+                    vote.count += 1
+
+                if match is false
+                  voted = {
+                    target:  item["votes"][player]['vote'].toLowerCase(),
+                    voters: item["votes"][player]['voter'],
+                    count: 1
+                  }
+                  votes.push voted
+            else
+              notVoting +=  player + ", "
+        response = printVote(sortVotes(votes), notVoting, count)
+        res.send(response.response)
+        if response.lock and autolock
           lockThread(threadId, true)
 
   # Unlock Thread
