@@ -12,6 +12,7 @@
 uuidv1 = require 'uuid/v1'
 AWS = require 'aws-sdk'
 https = require 'https'
+querystring = require 'querystring'
 
 AWS.config.update({
   region: "us-east-1",
@@ -452,18 +453,18 @@ lockThread = (threadId,status) ->
 
   status = "closed"
 
-  data = {
+  data = querystring.stringify({
     status: status,
     enabled: true
-  }
-  data = JSON.stringify data
+  })
 
   options = {}
   options.hostname = 'namafia.com'
   options.path = "/t/5316/status"
   options.method = 'PUT'
   options.header = {
-    'Content-Type': 'multipart/form-data;',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Length': data.length
     'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
     'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
   }

@@ -14,6 +14,7 @@
     "hubot-heroku-keepalive": "^1.0.3",
     "hubot-scripts": "^2.17.2",
     "jslint": "^0.12.1",
+    "querystring": "^0.2.0",
     "uuid": "^7.0.0"
   },
   "engines": {}
