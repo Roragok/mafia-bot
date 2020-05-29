@@ -456,8 +456,9 @@ lockThread = (threadId,status) ->
   })
 
   options = {}
-  options.hostname = 'https://namafia.com'
-  options.path = '/t/'+threadId+'/status'
+  options.hostname = 'namafia.com'
+  options.port = '443'
+  options.path = "/t/"+threadId+"/status"
   options.method = 'PUT'
   options.header = {
     'Content-Type': 'application/json',
