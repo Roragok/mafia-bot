@@ -310,7 +310,7 @@ autolockGame = (threadId,autolock) ->
 #  threadId - id of game created based on thread id of discourse
 #  autolock - current autolock status
 autolockDay = (threadId,autolock) ->
-
+  console.log(threadId);
   if autolock
     autolock = false
   else

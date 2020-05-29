@@ -449,7 +449,7 @@ subPlayer = (threadId, alive_players, targets) ->
       console.log data
 
 lockThread = (threadId,status) ->
-  
+
   data = JSON.stringify({
     "status": status,
     "enabled": true
@@ -464,7 +464,7 @@ lockThread = (threadId,status) ->
     'Content-Type': 'application/json',
     'Content-Length': data.length
   }
-
+  console.log 'test'
   req = https.request options, (res) ->
     res.on 'data', (d) ->
       process.stdout.write d
