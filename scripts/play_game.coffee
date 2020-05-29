@@ -197,6 +197,9 @@ module.exports = (robot) ->
             killPlayer(threadId, item.kills, target)
             res.send(getZeused(target))
 
+  robot.hear /@mafiabot lock/i, (res) ->
+    lockThread(res.message.room,"closed")
+
 
 # Functions
 
