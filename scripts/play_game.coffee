@@ -469,7 +469,6 @@ lockThread = (threadId,status) ->
     console.log('statusCode:', res.statusCode)
     console.log('headers:', res.headers)
     res.setEncoding('utf8')
-    res.setHeader('Content-Type', 'application/json')
     res.on 'data', (d) ->
       console.log d
 
