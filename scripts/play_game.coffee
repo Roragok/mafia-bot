@@ -469,7 +469,7 @@ lockThread = (threadId,status) ->
   xhr.setRequestHeader("Api-Key", process.env.HUBOT_DISCOURSE_KEY)
   xhr.setRequestHeader("Api-Username", process.env.HUBOT_DISCOURSE_USERNAME)
   xhr.onload = () ->
-    response = JSON.parse(xhr.responseText)
+    response = xhr.responseText
     if (xhr.readyState == 4 && xhr.status == "200")
       console.table(response)
     else
