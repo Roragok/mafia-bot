@@ -460,11 +460,15 @@ lockThread = (threadId,status) ->
   }
   options = {
     hostname: "namafia.com",
-    path: "/t/"+threadId+"/status?status=closed&enabled=true",
+    path: "/t/"+threadId+"/status",
     method: "PUT",
     header: {
+      'Content-Type': 'multipart/form-data;',
       'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
       'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
+    formData : {
+        status : "closed",
+        enabled: true
     }
   }
 
