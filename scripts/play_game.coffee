@@ -6,17 +6,19 @@
 #   wouldn't be useful and amusing enough for day to day huboting.
 #   Uncomment the ones you want to try and experiment with.
 #
-#   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
+#   These are from the scripting documentation:
+#   https://github.com/github/hubot/blob/master/docs/scripting.md
 
 uuidv1 = require 'uuid/v1'
 AWS = require 'aws-sdk'
+https = require 'https'
 
 AWS.config.update({
   region: "us-east-1",
   endpoint: "https://dynamodb.us-east-1.amazonaws.com"
-});
+})
 
-docClient = new AWS.DynamoDB.DocumentClient();
+docClient = new AWS.DynamoDB.DocumentClient()
 
 module.exports = (robot) ->
   # robot.hear /private hello/i, (res) ->
@@ -63,8 +65,9 @@ module.exports = (robot) ->
   robot.hear /@mafiabot votecount/i, (res) ->
     votes = []
     notVoting = ''
-    count = 0;
-    result = getDay(res.message.room)
+    count = 0
+    threadId = res.message.room
+    result = getDay(threadId)
     result.then (data) ->
       if data.Count > 0
         for item in data.Items
@@ -72,9 +75,9 @@ module.exports = (robot) ->
           for player in item.alive_players
             if item["votes"][player]
               if item["votes"][player]['vote'] is null
-                notVoting +=  player + ", ";
+                notVoting +=  player + ", "
               else
-                player_vote =  item["votes"][player]['vote'];
+                player_vote =  item["votes"][player]['vote']
                 match = false
                 for vote in votes
                   if vote.target is player_vote
@@ -83,18 +86,25 @@ module.exports = (robot) ->
                     vote.count += 1
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'], voters: item["votes"][player]['voter'], count: 1 }
+                  voted = {
+                    target:  item["votes"][player]['vote'],
+                    voters: item["votes"][player]['voter'],
+                    count: 1
+                  }
                   votes.push voted
-                # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
-              notVoting +=  player + ", ";
-        res.send(printVote(sortVotes(votes), notVoting, count))
+              notVoting +=  player + ", "
+        response = printVote(sortVotes(votes), notVoting, count)
+        res.send(response.response)
+        if response.lock
+          lockThread(threadId, "closed")
+
 
   # VOTE COUNT ALIAS
   robot.hear /@mafiabot vc/i, (res) ->
     votes = []
     notVoting = ''
-    count = 0;
+    count = 0
     result = getDay(res.message.room)
     result.then (data) ->
       if data.Count > 0
@@ -103,9 +113,9 @@ module.exports = (robot) ->
           for player in item.alive_players
             if item["votes"][player]
               if item["votes"][player]['vote'] is null
-                notVoting +=  player + ", ";
+                notVoting +=  player + ", "
               else
-                player_vote =  item["votes"][player]['vote'];
+                player_vote =  item["votes"][player]['vote']
                 match = false
                 for vote in votes
                   if vote.target.toLowerCase() is player_vote.toLowerCase()
@@ -114,12 +124,31 @@ module.exports = (robot) ->
                     vote.count += 1
 
                 if match is false
-                  voted = { target:  item["votes"][player]['vote'].toLowerCase(), voters: item["votes"][player]['voter'], count: 1 }
+                  voted = {
+                    target:  item["votes"][player]['vote'].toLowerCase(),
+                    voters: item["votes"][player]['voter'],
+                    count: 1
+                  }
                   votes.push voted
-                # votes += "|" + item["votes"][player]['voter'] + "| " + item["votes"][player]['vote'] + "|\n"
             else
-              notVoting +=  player + ", ";
-        res.send(printVote(sortVotes(votes), notVoting, count))
+              notVoting +=  player + ", "
+        response = printVote(sortVotes(votes), notVoting, count)
+        res.send(response.response)
+        if response.lock
+          lockThread(threadId, "closed")
+
+  # Unlock Thread
+  robot.hear /@mafiabot unlock (.*)/i, (res) ->
+    host =  res.envelope.user.username
+    target = parseInt res.match[1]
+
+    result = getDay(target)
+    result.then (data) ->
+      if data.Count is 1
+        for item in data.Items
+          # Add User to Signup
+          if host is item.host
+            lockThread(target, "visible")
 
   # Host Kills a player in the current Day
   robot.hear /@mafiabot kill (.*)/i, (res) ->
@@ -137,7 +166,6 @@ module.exports = (robot) ->
             killPlayer(threadId, item.kills, target)
 
   # HOST Subs a player in the current Day
-
   robot.hear /@mafiabot sub (.*)/i, (res) ->
 
     host =  res.envelope.user.username
@@ -217,13 +245,16 @@ sortVotes = (data) ->
   return order(data)
 
 printVote = (votes, notVoting, count) ->
+  lockthread = false
   response = "# Vote Count"
   response += "\n --- \n"
   response += "| Lynch  | Votes | Voters| \n"
   response += "|---|---|---|\n"
   for vote in votes
-    response +=  "|" + vote.target  + "| **" + vote.count + "** | " + vote.voters + "|\n"
-  # response += votes
+    response +=  "|" + vote.target  + "| **" +
+      vote.count + "** | " + vote.voters + "|\n"
+    if vote.count >=  ((Math.floor (count/2)) + 1)
+      lockthread = true
   response += "\n ##  Not Voting"
   response += "\n --- \n\n"
   response += notVoting . replace '/,\s*$/, ""'
@@ -233,25 +264,35 @@ printVote = (votes, notVoting, count) ->
   response += "\n\n --- \n\n"
   response += uuidv1()
 
-  return response
+  data.response = response
+  data.lock = lockthread
+
+  return data
 
 printSignedPlayers = (signed) ->
 
   response = "#  Signed Players"
   response += "\n --- \n"
   for player in signed
-      response += player + "\n"
+    response += player + "\n"
   response += "\n --- \n"
   response += uuidv1()
 
   return response
 
 getZeused = (playerName) ->
-  response = ":zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus:\n"
-  response += "\-\(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\)\n
-       \(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\_\)\n
-      \(\-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\-\-\)\n
-      &nbsp;\(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\-\-\-\-\-\)\n
+  response = ":zeus::zeus::zeus::zeus::zeus::zeus:
+    :zeus::zeus::zeus::zeus::zeus:\n"
+  response += "\-\(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\)\n
+       \(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\_\)\n
+      \(\-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;\-\-\)\n
+      &nbsp;\(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\-\-\-\-\-\)\n
       &nbsp;&nbsp;&nbsp;&nbsp;\(\-\-\-\-\-\-\-\-\-\)\-\-\-\-\'\n
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\-\/&nbsp;&nbsp;\/\n
       &nbsp;&nbsp;&nbsp;&nbsp;\/&nbsp;&nbsp;&nbsp;\-\/\n
@@ -263,7 +304,8 @@ getZeused = (playerName) ->
     \/\'\n"
   response += playerName + " is struck down by his god\n"
 
-  response+= ':zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus::zeus:'
+  response+= ':zeus::zeus::zeus::zeus::zeus::zeus:
+    :zeus::zeus::zeus::zeus::zeus:'
 
   return response
 
@@ -295,10 +337,9 @@ isLynch = (game, user, target) ->
     else
       return false
   else
-   return false
+    return false
 
 isUnLynch = (game, user) ->
-
   # False means the day is not over.
   if game[0].status is false
     # Then we check if user and target are both alive players
@@ -307,12 +348,11 @@ isUnLynch = (game, user) ->
     else
       return false
   else
-   return false
+    return false
 
 updateLynch = (day_id, voter, lynch) ->
-
   # Get timestamp of Vote
-  dt = new Date();
+  dt = new Date()
 
   # Build new Query
   query = {}
@@ -320,7 +360,8 @@ updateLynch = (day_id, voter, lynch) ->
   query.Key = {
     "day_id": day_id
   }
-  query.UpdateExpression = "set votes."+voter+".vote = :l, votes."+voter+".vote_time = :t"
+  query.UpdateExpression = "set votes."+voter+".vote = :l,
+    votes."+voter+".vote_time = :t"
   query.ExpressionAttributeValues = {
     ":l":lynch,
     ":t":dt.getTime()
@@ -335,7 +376,7 @@ updateLynch = (day_id, voter, lynch) ->
 unLynch = (day_id, voter) ->
 
   # Get timestamp of Vote
-  dt = new Date();
+  dt = new Date()
 
   # Build new Query
   query = {}
@@ -343,7 +384,8 @@ unLynch = (day_id, voter) ->
   query.Key = {
     "day_id": day_id
   }
-  query.UpdateExpression = "set votes."+voter+".vote = :l, votes."+voter+".vote_time = :t"
+  query.UpdateExpression = "set votes."+voter+".vote = :l,
+    votes."+voter+".vote_time = :t"
   query.ExpressionAttributeValues = {
     ":l": null,
     ":t":dt.getTime()
@@ -404,3 +446,29 @@ subPlayer = (threadId, alive_players, targets) ->
       console.log err
     else
       console.log data
+      
+lockThread = (threadId,status) ->
+  data = JSON.stringify({
+    "status": status,
+    "enabled": true
+  })
+  options.hostname = 'namafia.com'
+  options.port = '443'
+  options.path = '/t/'+threadId+'/status'
+  options.method = 'PUT'
+  options.header = {
+    'Content-Type': 'application/json',
+    'Content-Length': data.length
+  }
+
+
+
+  req = https.request options, (res) ->
+    res.on 'data', (d) ->
+      process.stdout.write d
+
+  req.on 'error', (error) ->
+    console.error error
+
+  req.write data
+  req.end()

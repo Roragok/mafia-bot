@@ -7,6 +7,7 @@
   "dependencies": {
     "aws-sdk": "^2.655.0",
     "body-parser": "^1.19.0",
+    "https": "^1.0.0",
     "hubot": "^3.3.2",
     "hubot-diagnostics": "^1.0.0",
     "hubot-discourse-adapter": "^4.0.0",

@@ -6,7 +6,8 @@
 #   wouldn't be useful and amusing enough for day to day huboting.
 #   Uncomment the ones you want to try and experiment with.
 #
-#   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
+#   These are from the scripting documentation:
+#   https://github.com/github/hubot/blob/master/docs/scripting.md
 
 uuidv1 = require 'uuid/v1'
 AWS = require 'aws-sdk'
@@ -14,9 +15,9 @@ AWS = require 'aws-sdk'
 AWS.config.update({
   region: "us-east-1",
   endpoint: "https://dynamodb.us-east-1.amazonaws.com"
-});
+})
 
-docClient = new AWS.DynamoDB.DocumentClient();
+docClient = new AWS.DynamoDB.DocumentClient()
 
 module.exports = (robot) ->
   # Start Day
@@ -27,6 +28,10 @@ module.exports = (robot) ->
     title = res.message.title
     threadId = res.message.room
     game_slug = res.message.slug
+    gameValues.host = host
+    gameValues.title = title
+    gameValues.threadId = threadId
+    gameValues.game_slug = game_slug
 
     result = getDaysOfParent(parentId)
     result.then (data) ->
@@ -37,16 +42,16 @@ module.exports = (robot) ->
           if gameData.Count is 1
             for item in gameData.Items
               if host is item.host
-                startGame(host, title, threadId, item.signed_players, parentId, game_slug)
+                startGame(gameValues, item.signed_players,parentId,
+                  item.autolock)
       # Else get last day and create new day
       else
         index = data.Count
         if host is data.Items[0].host
           for day in data.Items
             if index is day.day
-              # host, thread_title, thread_id, parent_game_id, alive,players, kills, day
-              # startDay(host, title, threadId, parentId, data.Items[index].alive_players, data.Items[0].kills, index+1, game_slug)
-              startDay(host, title, threadId, parentId,day.alive_players,day.kills, index+1, game_slug)
+              startDay(gameValues, parentId,day.alive_players,
+                day.kills, index+1, game_slug, day.autolock)
               #  Set Previous Day to status to true for complete.
               closeDay(day.day_id)
   # End Day
@@ -61,14 +66,14 @@ module.exports = (robot) ->
       if data.Count is 1
         for item in data.Items
           if host is item.host
-            # Update Game with Winning Faction and set status to true for completed game.
+            # Update Game with Winning Faction and
+            # set status to true for completed game.
             closeDay(threadId)
             endGame(item.parent_id, winner)
 
 
-startGame = (host, title, threadId, players, parent, game_slug) ->
-
-  dt = new Date();
+startGame = (gameValues, players, parent, autolock) ->
+  dt = new Date()
   timestamp = dt.getTime()
   votes = {}
   for player in players
@@ -81,16 +86,17 @@ startGame = (host, title, threadId, players, parent, game_slug) ->
   query = {}
   query.TableName = "mafia-day"
   query.Item = {
-         day_id: threadId,
-         day_start: timestamp,
-         day_url: game_slug,
-         status: false,
-         day_title: title,
-         host: host,
-         votes: votes,
-         alive_players: players,
-         day: 1,
-         parent_id: parent
+    day_id: gameValues.threadId,
+    day_start: timestamp,
+    day_url: gameValues.game_slug,
+    status: false,
+    day_title: gameValues.title,
+    host: gameValues.host,
+    votes: votes,
+    alive_players: players,
+    day: 1,
+    parent_id: parent,
+    autolock: autolock
   }
 
   docClient.put query, (err, data) ->
@@ -99,16 +105,16 @@ startGame = (host, title, threadId, players, parent, game_slug) ->
     else
       console.log data
 
-startDay = (host, title, threadId, parent, alive_players, kills, day, game_slug) ->
-  # Subject Kills from Alive Players
+startDay = (gameValues, parent, alive_players, kills, day, autolock) ->
 
+  # Subject Kills from Alive Players
   for killedPlayer in kills
     index = null
     index = alive_players.indexOf(killedPlayer)
     if index or index is 0
       alive_players.splice(index, 1)
 
-  dt = new Date();
+  dt = new Date()
   timestamp = dt.getTime()
   votes = {}
   for player in alive_players
@@ -120,17 +126,19 @@ startDay = (host, title, threadId, parent, alive_players, kills, day, game_slug)
   query = {}
   query.TableName = "mafia-day"
   query.Item = {
-         day_id: threadId,
-         alive_players: alive_players,
-         day_start: timestamp,
-         day_url: game_slug,
-         status: false,
-         day_title: title,
-         host: host,
-         votes: votes,
-         day: day,
-         parent_id: parent,
+    day_id: gameValues.threadId,
+    alive_players: alive_players,
+    day_start: timestamp,
+    day_url: gameValues.game_slug,
+    status: false,
+    day_title: gameValues.title,
+    host: gameValues.host,
+    votes: votes,
+    day: day,
+    parent_id: parent,
+    autolock: autolock
   }
+  
   docClient.put query, (err, data) ->
     if err
       console.log err
@@ -202,10 +210,10 @@ closeDay = (day_id) ->
 endGame = (parent_id,winner) ->
 
   result = switch winner.toLowerCase()
-   when "mafia","werewolf","wolf" then "Mafia"
-   when "town","village" then "Town"
-   when "third" then "Third Party"
-   else "unkown"
+    when "mafia","werewolf","wolf" then "Mafia"
+    when "town","village" then "Town"
+    when "third" then "Third Party"
+    else "unknown"
 
   query = {}
   query.TableName = "mafia-game"
