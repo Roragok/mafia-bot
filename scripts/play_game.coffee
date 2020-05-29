@@ -466,9 +466,10 @@ lockThread = (threadId,status) ->
       'Content-Type': 'multipart/form-data;',
       'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
       'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
+    }
     formData : {
-        status : "closed",
-        enabled: true
+      status : "closed",
+      enabled: true
     }
   }
 
