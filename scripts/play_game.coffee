@@ -456,7 +456,7 @@ lockThread = (threadId,status) ->
     status: status,
     enabled: true
   }
-  data = JSON.stringify(data);
+  data = JSON.stringify(data)
 
   options = {}
   options.hostname = 'namafia.com'
@@ -468,7 +468,9 @@ lockThread = (threadId,status) ->
     'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
     'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
   }
+  console.log options
   req = https.request options, (res) ->
+    console.log res
     console.log('statusCode:', res.statusCode)
     console.log('headers:', res.headers)
     res.on 'data', (d) ->
