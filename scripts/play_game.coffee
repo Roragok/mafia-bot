@@ -458,7 +458,7 @@ lockThread = (threadId,status) ->
   options = {}
   options.hostname = 'namafia.com'
   options.port = '443'
-  options.path = "/t/"+threadId+"/status"
+  options.path = "/t/5316/status"
   options.method = 'PUT'
   options.header = {
     'Content-Type': 'application/json',
@@ -469,11 +469,13 @@ lockThread = (threadId,status) ->
     console.log('statusCode:', res.statusCode);
     console.log('headers:', res.headers);
     res.on 'data', (d) ->
+      console.log 'test23'
       process.stdout.write d
       console.log d
       console.log options
 
   req.on 'error', (error) ->
+    console.log 'error'
     console.error error
 
   req.write data
