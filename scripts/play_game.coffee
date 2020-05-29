@@ -468,14 +468,11 @@ lockThread = (threadId,status) ->
   req = https.request options, (res) ->
     console.log('statusCode:', res.statusCode);
     console.log('headers:', res.headers);
+    res.setEncoding('utf8');
     res.on 'data', (d) ->
-      console.log 'test23'
-      process.stdout.write d
       console.log d
-      console.log options
 
   req.on 'error', (error) ->
-    console.log 'error'
     console.error error
 
   req.write data
