@@ -196,12 +196,7 @@ module.exports = (robot) ->
             killPlayer(threadId, item.kills, target)
             res.send(getZeused(target))
 
-  robot.hear /@mafiabot lock/i, (res) ->
-    lockThread(res.message.room,true)
-
-
 # Functions
-
 # sort votes for output in order of highest votecount descending
 sortVotes = (data) ->
   # creates conditional comparator
