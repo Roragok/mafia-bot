@@ -472,5 +472,5 @@ lockThread = (threadId,status) ->
     else
       console.error(response)
 
-  xhr.send(data)
+  xhr.send(json)
   console.log xhr.status
