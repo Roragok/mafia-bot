@@ -13,6 +13,7 @@ uuidv1 = require 'uuid/v1'
 AWS = require 'aws-sdk'
 https = require 'https'
 querystring = require 'querystring'
+xmlhttprequest = require "xmlhttprequest";
 
 AWS.config.update({
   region: "us-east-1",
@@ -453,31 +454,13 @@ subPlayer = (threadId, alive_players, targets) ->
       console.log data
 
 lockThread = (threadId,status) ->
-
-  data = {
-    status: "closed",
-    enabled: status
-  }
-  options = {
-    hostname: "namafia.com",
-    path: "/t/"+threadId+"/status",
-    method: "PUT",
-    header: {
-      'Content-Type': 'multipart/form-data;',
-      'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
-      'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
-    }
-    formData : {
-      status : "closed",
-      enabled: true
-    }
-  }
-
-  req = https.request options, (res) ->
-    console.log('statusCode:', res.statusCode)
-    console.log('headers:', res.headers)
-    console.log options
-  req.on 'error', (error) ->
-    console.error error
-
-  req.end()
+  xhr = new xmlhttprequest().XMLHttpRequest
+  xhr.open(
+    "PUT",
+    'https://namafia.com/t/'+threadId+'/status&status=closed&enabled=true',
+    true)
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+  xhr.setRequestHeader("Api-Key", process.env.HUBOT_DISCOURSE_KEY)
+  xhr.setRequestHeader("Api-Username", process.env.HUBOT_DISCOURSE_USERNAME)
+  xhr.send()
+  console.log xhr.status
