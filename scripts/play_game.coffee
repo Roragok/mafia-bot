@@ -105,7 +105,8 @@ module.exports = (robot) ->
     votes = []
     notVoting = ''
     count = 0
-    result = getDay(res.message.room)
+    threadId = res.message.room
+    result = getDay(threadId)
     result.then (data) ->
       if data.Count > 0
         for item in data.Items
@@ -448,10 +449,13 @@ subPlayer = (threadId, alive_players, targets) ->
       console.log data
 
 lockThread = (threadId,status) ->
+  
   data = JSON.stringify({
     "status": status,
     "enabled": true
   })
+
+  options = {}
   options.hostname = 'namafia.com'
   options.port = '443'
   options.path = '/t/'+threadId+'/status'
@@ -460,8 +464,6 @@ lockThread = (threadId,status) ->
     'Content-Type': 'application/json',
     'Content-Length': data.length
   }
-
-
 
   req = https.request options, (res) ->
     res.on 'data', (d) ->
