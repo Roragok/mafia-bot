@@ -455,7 +455,7 @@ lockThread = (threadId,status) ->
   options = {
     hostname: 'namafia.com',
     path: '/notifications.json',
-    method: 'GET'.
+    method: 'GET',
     headers: {
       'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
       'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
