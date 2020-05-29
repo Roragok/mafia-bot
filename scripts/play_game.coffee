@@ -12,8 +12,6 @@
 uuidv1 = require 'uuid/v1'
 AWS = require 'aws-sdk'
 https = require 'https'
-querystring = require 'querystring'
-xmlhttprequest = require "xmlhttprequest"
 
 AWS.config.update({
   region: "us-east-1",
@@ -454,20 +452,22 @@ subPlayer = (threadId, alive_players, targets) ->
       console.log data
 
 lockThread = (threadId,status) ->
-  data = {
-    status: "closed",
-    enabled: true
+  options = {
+    hostname: 'namafia.com',
+    path: '/notifications.json',
+    method: 'GET'.
+    headers: {
+      'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
+      'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
+    }
   }
-  json = JSON.stringify(data)
 
-  xhr = new xmlhttprequest.XMLHttpRequest()
-  xhr.open(
-    "PUT",
-    'https://namafia.com/t/'+threadId+'/status?status="closed"&enabled='+status,
-    true)
-  xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8')
-  xhr.setRequestHeader("Api-Key", process.env.HUBOT_DISCOURSE_KEY)
-  xhr.setRequestHeader("Api-Username", process.env.HUBOT_DISCOURSE_USERNAME)
-  xhr.send(json)
-  console.log xhr
-  console.log xhr.status
+  req = https.request options, (res) ->
+    console.log("StatusCode:", res.statusCode)
+    console.log("Headers:", res.headers)
+  req.on 'data', (d) ->
+    process.stdout.write(d)
+    console.log d
+  req.on 'error', (e) ->
+    console.error e
+  req.end()
