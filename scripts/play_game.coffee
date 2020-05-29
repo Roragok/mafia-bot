@@ -466,9 +466,10 @@ lockThread = (threadId,status) ->
     'Api-Key': process.env.HUBOT_DISCOURSE_KEY
   }
   req = https.request options, (res) ->
-    console.log('statusCode:', res.statusCode);
-    console.log('headers:', res.headers);
-    res.setEncoding('utf8');
+    console.log('statusCode:', res.statusCode)
+    console.log('headers:', res.headers)
+    res.setEncoding('utf8')
+    request.setHeader('Content-Type', 'application/json')
     res.on 'data', (d) ->
       console.log d
 
