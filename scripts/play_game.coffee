@@ -135,8 +135,8 @@ module.exports = (robot) ->
               notVoting +=  player + ", "
         response = printVote(sortVotes(votes), notVoting, count)
         res.send(response.response)
-        if response.lock
-          lockThread(threadId, "closed")
+    if response.lock
+      lockThread(threadId, "closed")
 
   # Unlock Thread
   robot.hear /@mafiabot unlock (.*)/i, (res) ->
