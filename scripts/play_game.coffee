@@ -450,25 +450,27 @@ subPlayer = (threadId, alive_players, targets) ->
 
 lockThread = (threadId,status) ->
 
-  data = JSON.stringify({
-    "status": status,
-    "enabled": true
-  })
+  status = "closed"
+
+  data = {
+    status: status,
+    enabled: true
+  }
+  data = JSON.stringify(data);
 
   options = {}
   options.hostname = 'namafia.com'
-  options.port = '443'
   options.path = "/t/5316/status"
   options.method = 'PUT'
   options.header = {
     'Content-Type': 'application/json',
-    'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME,
-    'Api-Key': process.env.HUBOT_DISCOURSE_KEY
+    'Content-Length': data.length,
+    'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
+    'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
   }
   req = https.request options, (res) ->
     console.log('statusCode:', res.statusCode)
     console.log('headers:', res.headers)
-    res.setEncoding('utf8')
     res.on 'data', (d) ->
       console.log d
 
