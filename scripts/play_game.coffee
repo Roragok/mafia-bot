@@ -12,6 +12,7 @@
 uuidv1 = require 'uuid/v1'
 AWS = require 'aws-sdk'
 https = require 'https'
+p = require 'phin'
 
 AWS.config.update({
   region: "us-east-1",
@@ -452,7 +453,7 @@ subPlayer = (threadId, alive_players, targets) ->
       console.log data
 
 lockThread = (threadId,status) ->
-  options = {
+  await p({
     hostname: 'namafia.com',
     path: '/notifications.json',
     method: 'GET',
@@ -460,14 +461,4 @@ lockThread = (threadId,status) ->
       'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
       'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
     }
-  }
-
-  req = https.request options, (res) ->
-    console.log("StatusCode:", res.statusCode)
-    console.log("Headers:", res.headers)
-  req.on 'data', (d) ->
-    process.stdout.write(d)
-    console.log d
-  req.on 'error', (e) ->
-    console.error e
-  req.end()
+  })
