@@ -453,7 +453,7 @@ subPlayer = (threadId, alive_players, targets) ->
       console.log data
 
 lockThread = (threadId,status) ->
-  await p({
+  p({
     hostname: 'namafia.com',
     path: '/notifications.json',
     method: 'GET',
