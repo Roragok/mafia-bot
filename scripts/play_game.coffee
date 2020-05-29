@@ -461,7 +461,10 @@ lockThread = (threadId,status) ->
   json = JSON.stringify(data)
 
   xhr = new xmlhttprequest.XMLHttpRequest()
-  xhr.open("PUT",'https://namafia.com/t/'+threadId+'/status',true)
+  xhr.open(
+    "PUT",
+    'https://namafia.com/t/'+threadId+'/status?status="closed"&enabled='+status,
+    true)
   xhr.setRequestHeader('Content-type','application/json; charset=utf-8')
   xhr.setRequestHeader("Api-Key", process.env.HUBOT_DISCOURSE_KEY)
   xhr.setRequestHeader("Api-Username", process.env.HUBOT_DISCOURSE_USERNAME)
