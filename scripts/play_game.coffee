@@ -98,7 +98,7 @@ module.exports = (robot) ->
         response = printVote(sortVotes(votes), notVoting, count)
         res.send(response.response)
         if response.lock
-          lockThread(threadId, "closed")
+          lockThread(threadId, true)
 
 
   # VOTE COUNT ALIAS
@@ -137,7 +137,7 @@ module.exports = (robot) ->
         response = printVote(sortVotes(votes), notVoting, count)
         res.send(response.response)
         if response.lock
-          lockThread(threadId, "closed")
+          lockThread(threadId, true)
 
   # Unlock Thread
   robot.hear /@mafiabot unlock (.*)/i, (res) ->
@@ -150,7 +150,7 @@ module.exports = (robot) ->
         for item in data.Items
           # Add User to Signup
           if host is item.host
-            lockThread(target, "visible")
+            lockThread(target, false)
 
   # Host Kills a player in the current Day
   robot.hear /@mafiabot kill (.*)/i, (res) ->
@@ -198,7 +198,7 @@ module.exports = (robot) ->
             res.send(getZeused(target))
 
   robot.hear /@mafiabot lock/i, (res) ->
-    lockThread(res.message.room,"closed")
+    lockThread(res.message.room,true)
 
 
 # Functions
@@ -454,27 +454,24 @@ subPlayer = (threadId, alive_players, targets) ->
 
 lockThread = (threadId,status) ->
 
-  status = "closed"
   data = {
-    status: status,
-    enabled: true
+    status: "closed",
+    enabled: status
   }
-  options = {}
-  options.hostname = 'namafia.com'
-  # options.path = "/t/"+threadId+"/status"
-  options.path = "/notifications.json"
-  options.method = 'GET'
-  options.header = {
-    'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
-    'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
+  thread = querystring.stringify(data);
+  options = {
+    hostname: "namafia.com",
+    path: "/t/"+threadId+"/status",
+    method: "PUT",
+    header: {
+      'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
+      'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
+    }
   }
-  console.log options
   req = https.request options, (res) ->
     console.log('statusCode:', res.statusCode)
     console.log('headers:', res.headers)
+    console.log options
 
-  req.on 'error', (error) ->
-    console.error error
-
-  #req.write(data)
+  req.write(thread)
   req.end()
