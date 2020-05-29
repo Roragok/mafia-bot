@@ -457,16 +457,16 @@ lockThread = (threadId,status) ->
 
   options = {}
   options.hostname = 'namafia.com'
-  options.port = '443'
   options.path = '/t/'+threadId+'/status'
   options.method = 'PUT'
   options.header = {
     'Content-Type': 'application/json',
-    'Content-Length': data.length,
     'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME,
     'Api-Key': process.env.HUBOT_DISCOURSE_KEY
   }
   req = https.request options, (res) ->
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
     res.on 'data', (d) ->
       process.stdout.write d
       console.log d
