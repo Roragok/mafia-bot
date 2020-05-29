@@ -458,20 +458,21 @@ lockThread = (threadId,status) ->
     status: "closed",
     enabled: status
   }
-  thread = querystring.stringify(data);
   options = {
     hostname: "namafia.com",
-    path: "/t/"+threadId+"/status",
+    path: "/t/"+threadId+"/status?status=closed&enabled=true",
     method: "PUT",
     header: {
       'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
       'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
     }
   }
+
   req = https.request options, (res) ->
     console.log('statusCode:', res.statusCode)
     console.log('headers:', res.headers)
     console.log options
+  req.on 'error', (error) ->
+    console.error error
 
-  req.write(thread)
   req.end()
