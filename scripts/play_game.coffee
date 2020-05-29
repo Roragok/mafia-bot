@@ -452,25 +452,17 @@ subPlayer = (threadId, alive_players, targets) ->
 lockThread = (threadId,status) ->
 
   status = "closed"
-
-  data = querystring.stringify({
-    status: status,
-    enabled: true
-  })
-
   options = {}
   options.hostname = 'namafia.com'
-  options.path = "/t/5316/status"
+  options.path = "/t/"+threadId+"/status?status="+status+"&enabled="+true
   options.method = 'PUT'
   options.header = {
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Content-Length': data.length
     'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
     'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
   }
   console.log options
   req = https.request options, (res) ->
-    console.log res
     console.log('statusCode:', res.statusCode)
     console.log('headers:', res.headers)
     res.on 'data', (d) ->
@@ -479,5 +471,4 @@ lockThread = (threadId,status) ->
   req.on 'error', (error) ->
     console.error error
 
-  req.write data
   req.end()
