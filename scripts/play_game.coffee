@@ -456,15 +456,12 @@ lockThread = (threadId,status) ->
     status: status,
     enabled: true
   }
-  data = JSON.stringify(data)
-
+  
   options = {}
   options.hostname = 'namafia.com'
   options.path = "/t/5316/status"
   options.method = 'PUT'
   options.header = {
-    'Content-Type': 'application/json',
-    'Content-Length': data.length,
     'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
     'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME
   }
