@@ -464,10 +464,11 @@ lockThread = (threadId,status) ->
     'Content-Type': 'application/json',
     'Content-Length': data.length
   }
-  console.log 'test'
   req = https.request options, (res) ->
     res.on 'data', (d) ->
       process.stdout.write d
+      console.log d
+      console.log options
 
   req.on 'error', (error) ->
     console.error error

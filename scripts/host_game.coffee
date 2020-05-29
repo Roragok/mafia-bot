@@ -310,7 +310,6 @@ autolockGame = (threadId,autolock) ->
 #  threadId - id of game created based on thread id of discourse
 #  autolock - current autolock status
 autolockDay = (threadId,autolock) ->
-  console.log(threadId);
   if autolock
     autolock = false
   else
@@ -320,7 +319,7 @@ autolockDay = (threadId,autolock) ->
   query = {}
   query.TableName = "mafia-day"
   query.Key = {
-    "game_id": threadId
+    "game_id": parseInt hreadId
   }
   query.UpdateExpression = "set autolock = :p"
   query.ExpressionAttributeValues = {
