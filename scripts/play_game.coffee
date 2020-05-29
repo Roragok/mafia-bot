@@ -462,7 +462,7 @@ lockThread = (threadId,status) ->
   options = {}
   options.hostname = 'namafia.com'
   # options.path = "/t/"+threadId+"/status"
-  options.path = "/admin/users/list/active.json"
+  options.path = "notifications.json"
   options.method = 'GET'
   options.header = {
     'Api-Key': process.env.HUBOT_DISCOURSE_KEY,
