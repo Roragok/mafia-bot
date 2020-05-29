@@ -12,7 +12,6 @@
 uuidv1 = require 'uuid/v1'
 AWS = require 'aws-sdk'
 https = require 'https'
-p = require 'phin'
 
 AWS.config.update({
   region: "us-east-1",
