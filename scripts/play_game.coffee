@@ -472,9 +472,6 @@ lockThread = (threadId,status) ->
   req = https.request options, (res) ->
     console.log('statusCode:', res.statusCode)
     console.log('headers:', res.headers)
-    console.log res
-    res.on 'data', (d) ->
-      console.log d
 
   req.on 'error', (error) ->
     console.error error
