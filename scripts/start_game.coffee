@@ -28,6 +28,7 @@ module.exports = (robot) ->
     title = res.message.title
     threadId = res.message.room
     game_slug = res.message.slug
+    gameValues = {}
     gameValues.host = host
     gameValues.title = title
     gameValues.threadId = threadId
@@ -138,7 +139,7 @@ startDay = (gameValues, parent, alive_players, kills, day, autolock) ->
     parent_id: parent,
     autolock: autolock
   }
-  
+
   docClient.put query, (err, data) ->
     if err
       console.log err
