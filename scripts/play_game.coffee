@@ -462,7 +462,9 @@ lockThread = (threadId,status) ->
   options.method = 'PUT'
   options.header = {
     'Content-Type': 'application/json',
-    'Content-Length': data.length
+    'Content-Length': data.length,
+    'Api-Username': process.env.HUBOT_DISCOURSE_USERNAME,
+    'Api-Key': process.env.HUBOT_DISCOURSE_KEY
   }
   req = https.request options, (res) ->
     res.on 'data', (d) ->

@@ -319,7 +319,7 @@ autolockDay = (threadId,autolock) ->
   query = {}
   query.TableName = "mafia-day"
   query.Key = {
-    "game_id": parseInt hreadId
+    "game_id": parseInt threadId
   }
   query.UpdateExpression = "set autolock = :p"
   query.ExpressionAttributeValues = {
