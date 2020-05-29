@@ -13,7 +13,7 @@ uuidv1 = require 'uuid/v1'
 AWS = require 'aws-sdk'
 https = require 'https'
 querystring = require 'querystring'
-xmlhttprequest = require "xmlhttprequest";
+xmlhttprequest = require "xmlhttprequest"
 
 AWS.config.update({
   region: "us-east-1",
@@ -454,7 +454,7 @@ subPlayer = (threadId, alive_players, targets) ->
       console.log data
 
 lockThread = (threadId,status) ->
-  xhr = new xmlhttprequest().XMLHttpRequest
+  xhr = new xmlhttprequest.XMLHttpRequest()
   xhr.open(
     "PUT",
     'https://namafia.com/t/'+threadId+'/status&status=closed&enabled=true',
