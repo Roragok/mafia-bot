@@ -57,6 +57,8 @@ module.exports = (robot) ->
             lock = checkMajority(lynch,votes)
             if lock
               lockThread(threadId, true)
+              res.send(voter+ " has dropped the hammer on " + lynch)
+
 
   # LYNCH ALIAS
   robot.hear /@mafiabot vote (.*)/i, (res) ->
@@ -78,6 +80,7 @@ module.exports = (robot) ->
             lock = checkMajority(lynch,votes)
             if lock
               lockThread(threadId, true)
+              res.send(voter+ " has dropped the hammer on " + lynch)
 
   # VOTE COUNT COMMAND
   robot.hear /@mafiabot votecount/i, (res) ->
@@ -475,11 +478,9 @@ checkMajority = (lynch, votes) ->
   majority = ((Math.floor (Object.keys(votes).length/2)) + 1)
   count = 0
   for voters in Object.keys(votes)
-    console.log votes[voters]['vote']
-    if lynch.toLowerCase() is votes[voters]['vote'].toLowerCase()
-      console.log 'match'
-      console.log count
-      count += 1
+    if votes[voters]['vote']
+      if lynch.toLowerCase() is votes[voters]['vote'].toLowerCase()
+        count += 1
   if count >= majority
     return true
   return false
