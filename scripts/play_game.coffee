@@ -66,7 +66,6 @@ module.exports = (robot) ->
     result = getDay(threadId)
     lock = false
     autolock = false
-    votes = {}
     result.then (data) ->
       if (data.Count > 0 )
         valid = isLynch(data.Items , voter, lynch)
@@ -437,12 +436,7 @@ killPlayer = (threadId, kills, target) ->
       console.log data
 
 subPlayer = (threadId, alive_players, targets) ->
-  console.log targets + "\n"
   targets = targets . split ' '
-  console.log targets + "\n"
-  # if alive_players
-  #   for targets[0], keyz in alive_players
-  #     alive_players[keyz] = targets[1]
 
   # Build New Query
   query = {}
@@ -470,11 +464,9 @@ lockThread = (threadId,status) ->
     }
   }
   req = https.request options, (res) ->
-    console.log("StatusCode:", res.statusCode)
-    console.log("Headers:", res.headers)
+
   req.on 'data', (d) ->
     process.stdout.write(d)
-    console.log d
   req.on 'error', (e) ->
     console.error e
   req.end()
