@@ -482,8 +482,11 @@ lockThread = (threadId,status) ->
 checkMajority = (lynch, votes) ->
   majority = ((Math.floor (Object.keys(votes).length/2)) + 1)
   count = 0
-  console.log lynch
-  console.log majority
+  console.log votes
+
+  for (let [key, value] of Object.entries(votes))
+    console.log(key + " " + value
+
   for vote in votes
     console.log vote
     if lynch.toLowerCase() is vote.vote.toLowerCase()
