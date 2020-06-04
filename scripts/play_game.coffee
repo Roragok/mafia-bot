@@ -485,11 +485,11 @@ checkMajority = (lynch, votes) ->
   console.log votes
 
   for key, value of Object.entries(votes)
-    console.log key + " " + value.vote.toLowerCase()
+    console.log key + " " + value.vote
 
-  for vote in votes
+  for key, vote of Object.entries(votes)
     console.log vote
-    if lynch.toLowerCase() is vote.vote.toLowerCase()
+    if lynch.toLowerCase() is vote.vote
       console.log "test\n\n\n"
       count += 1
   if count >= majority
