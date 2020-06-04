@@ -45,7 +45,6 @@ module.exports = (robot) ->
     result = getDay(threadId)
     lock = false
     autolock = false
-    votes = {}
     result.then (data) ->
       if (data.Count > 0 )
         valid = isLynch(data.Items , voter, lynch)
@@ -481,7 +480,7 @@ lockThread = (threadId,status) ->
   req.end()
 
 checkMajority = (lynch, votes) ->
-  console.log votes.size
+  console.log votes
   majority = ((Math.floor (votes.size/2)) + 1)
   count = 0
   for vote in votes
