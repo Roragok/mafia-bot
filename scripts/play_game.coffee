@@ -43,11 +43,21 @@ module.exports = (robot) ->
     lynch = res.match[1]  . replace '@', ''
     threadId = res.message.room
     result = getDay(threadId)
+    lock = false
+    autolock = false
+    votes = {}
     result.then (data) ->
       if (data.Count > 0 )
         valid = isLynch(data.Items , voter, lynch)
         if (valid)
           updateLynch(threadId, voter, lynch)
+          for item in data.Items
+            autolock = item.autolock
+            votes = item.votes
+          if autolock
+            lock = checkMajority(lynch,votes)
+            if lock
+              lockThread(threadId, true)
 
   # LYNCH ALIAS
   robot.hear /@mafiabot vote (.*)/i, (res) ->
@@ -55,11 +65,21 @@ module.exports = (robot) ->
     lynch = res.match[1]  . replace '@', ''
     threadId = res.message.room
     result = getDay(threadId)
+    lock = false
+    autolock = false
+    votes = {}
     result.then (data) ->
       if (data.Count > 0 )
         valid = isLynch(data.Items , voter, lynch)
         if (valid)
           updateLynch(threadId, voter, lynch)
+          for item in data.Items
+            autolock = item.autolock
+            votes = item.votes
+          if autolock
+            lock = checkMajority(lynch,votes)
+            if lock
+              lockThread(threadId, true)
 
   # VOTE COUNT COMMAND
   robot.hear /@mafiabot votecount/i, (res) ->
@@ -67,14 +87,11 @@ module.exports = (robot) ->
     notVoting = ''
     count = 0
     threadId = res.message.room
-    autolock = true
     result = getDay(threadId)
     result.then (data) ->
       if data.Count > 0
         for item in data.Items
           count = item.alive_players.length
-          if item.autolock
-            autolock = item.autolock
           for player in item.alive_players
             if item["votes"][player]
               if item["votes"][player]['vote'] is null
@@ -99,8 +116,7 @@ module.exports = (robot) ->
               notVoting +=  player + ", "
         response = printVote(sortVotes(votes), notVoting, count)
         res.send(response.response)
-        if response.lock and autolock
-          lockThread(threadId, true)
+
 
 
   # VOTE COUNT ALIAS
@@ -109,14 +125,11 @@ module.exports = (robot) ->
     notVoting = ''
     count = 0
     threadId = res.message.room
-    autolock = true
     result = getDay(threadId)
     result.then (data) ->
       if data.Count > 0
         for item in data.Items
           count = item.alive_players.length
-          if item.autolock
-            autolock = item.autolock
           for player in item.alive_players
             if item["votes"][player]
               if item["votes"][player]['vote'] is null
@@ -141,8 +154,7 @@ module.exports = (robot) ->
               notVoting +=  player + ", "
         response = printVote(sortVotes(votes), notVoting, count)
         res.send(response.response)
-        if response.lock and autolock
-          lockThread(threadId, true)
+
 
   # Unlock Thread
   robot.hear /@mafiabot unlock (.*)/i, (res) ->
@@ -250,7 +262,6 @@ sortVotes = (data) ->
   return order(data)
 
 printVote = (votes, notVoting, count) ->
-  lockthread = false
   response = "# Vote Count"
   response += "\n --- \n"
   response += "| Lynch  | Votes | Voters| \n"
@@ -258,8 +269,6 @@ printVote = (votes, notVoting, count) ->
   for vote in votes
     response +=  "|" + vote.target  + "| **" +
       vote.count + "** | " + vote.voters + "|\n"
-    if vote.count >=  ((Math.floor (count/2)) + 1)
-      lockthread = true
   response += "\n ##  Not Voting"
   response += "\n --- \n\n"
   response += notVoting . replace '/,\s*$/, ""'
@@ -270,7 +279,6 @@ printVote = (votes, notVoting, count) ->
   response += uuidv1()
   data = {}
   data.response = response
-  data.lock = lockthread
 
   return data
 
@@ -471,3 +479,14 @@ lockThread = (threadId,status) ->
   req.on 'error', (e) ->
     console.error e
   req.end()
+
+checkMajority = (lynch, votes) ->
+  console.log votes.length
+  majority = ((Math.floor (votes.length/2)) + 1)
+  count = 0
+  for vote in votes
+    if lynch.toLowerCase() is vote.vote.toLowerCase()
+      count += 1
+  if count >= majority
+    return true
+  return false
