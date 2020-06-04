@@ -480,7 +480,7 @@ lockThread = (threadId,status) ->
   req.end()
 
 checkMajority = (lynch, votes) ->
-  console.log votes
+  console.log Object.keys(votes).length
   majority = ((Math.floor (votes.size/2)) + 1)
   count = 0
   for vote in votes
