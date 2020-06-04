@@ -485,7 +485,7 @@ checkMajority = (lynch, votes) ->
   console.log votes
 
   for key, value of Object.entries(votes)
-    console.log key + " " + value
+    console.log key + " " + value.vote.toLowerCase()
 
   for vote in votes
     console.log vote
