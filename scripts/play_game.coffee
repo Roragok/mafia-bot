@@ -484,8 +484,8 @@ checkMajority = (lynch, votes) ->
   count = 0
   console.log votes
 
-  for (key, value of Object.entries(votes))
-    console.log(key + " " + value
+  for key, value of Object.entries(votes)
+    console.log key + " " + value
 
   for vote in votes
     console.log vote
