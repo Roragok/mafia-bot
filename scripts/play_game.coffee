@@ -481,8 +481,8 @@ lockThread = (threadId,status) ->
   req.end()
 
 checkMajority = (lynch, votes) ->
-  console.log votes.length
-  majority = ((Math.floor (votes.length/2)) + 1)
+  console.log votes.size
+  majority = ((Math.floor (votes.size/2)) + 1)
   count = 0
   for vote in votes
     if lynch.toLowerCase() is vote.vote.toLowerCase()
