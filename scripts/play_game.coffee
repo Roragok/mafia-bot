@@ -62,7 +62,7 @@ module.exports = (robot) ->
               results = voteCount(data.Items)
               response = printVote(sortVotes(results.votes), results.notVoting, results.count)
               res.send(voter+ " has dropped the hammer on " + lynch +
-              "\n --- \n" + response.response)
+              "\n\n --- \n" + response.response)
 
 
   # LYNCH ALIAS
@@ -90,7 +90,7 @@ module.exports = (robot) ->
               results = voteCount(data.Items)
               response = printVote(sortVotes(results.votes), results.notVoting, results.count)
               res.send(voter+ " has dropped the hammer on " + lynch +
-              "\n --- \n" + response.response)
+              "\n\n --- \n" + response.response)
 
   # VOTE COUNT COMMAND
   robot.hear /@mafiabot votecount/i, (res) ->
