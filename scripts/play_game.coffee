@@ -84,76 +84,24 @@ module.exports = (robot) ->
 
   # VOTE COUNT COMMAND
   robot.hear /@mafiabot votecount/i, (res) ->
-    votes = []
-    notVoting = ''
-    count = 0
     threadId = res.message.room
     result = getDay(threadId)
     result.then (data) ->
       if data.Count > 0
-        for item in data.Items
-          count = item.alive_players.length
-          for player in item.alive_players
-            if item["votes"][player]
-              if item["votes"][player]['vote'] is null
-                notVoting +=  player + ", "
-              else
-                player_vote =  item["votes"][player]['vote']
-                match = false
-                for vote in votes
-                  if vote.target.toLowerCase() is player_vote.toLowerCase()
-                    match = true
-                    vote.voters +=  ", " + item["votes"][player]['voter']
-                    vote.count += 1
-
-                if match is false
-                  voted = {
-                    target:  item["votes"][player]['vote'].toLowerCase(),
-                    voters: item["votes"][player]['voter'],
-                    count: 1
-                  }
-                  votes.push voted
-            else
-              notVoting +=  player + ", "
-        response = printVote(sortVotes(votes), notVoting, count)
+        results = voteCount(data.Items)
+        response = printVote(sortVotes(results.votes), results.notVoting, results.count)
         res.send(response.response)
 
 
 
   # VOTE COUNT ALIAS
   robot.hear /@mafiabot vc/i, (res) ->
-    votes = []
-    notVoting = ''
-    count = 0
     threadId = res.message.room
     result = getDay(threadId)
     result.then (data) ->
       if data.Count > 0
-        for item in data.Items
-          count = item.alive_players.length
-          for player in item.alive_players
-            if item["votes"][player]
-              if item["votes"][player]['vote'] is null
-                notVoting +=  player + ", "
-              else
-                player_vote =  item["votes"][player]['vote']
-                match = false
-                for vote in votes
-                  if vote.target.toLowerCase() is player_vote.toLowerCase()
-                    match = true
-                    vote.voters +=  ", " + item["votes"][player]['voter']
-                    vote.count += 1
-
-                if match is false
-                  voted = {
-                    target:  item["votes"][player]['vote'].toLowerCase(),
-                    voters: item["votes"][player]['voter'],
-                    count: 1
-                  }
-                  votes.push voted
-            else
-              notVoting +=  player + ", "
-        response = printVote(sortVotes(votes), notVoting, count)
+        results = voteCount(data.Items)
+        response = printVote(sortVotes(results.votes), results.notVoting, results.count)
         res.send(response.response)
 
 
@@ -484,3 +432,38 @@ checkMajority = (lynch, votes) ->
   if count >= majority
     return true
   return false
+
+voteCount = (items) ->
+  results = {}
+  votes = []
+  notVoting = ''
+  count = 0
+  for item in items
+    count = item.alive_players.length
+    for player in item.alive_players
+      if item["votes"][player]
+        if item["votes"][player]['vote'] is null
+          notVoting +=  player + ", "
+        else
+          player_vote =  item["votes"][player]['vote']
+          match = false
+          for vote in votes
+            if vote.target.toLowerCase() is player_vote.toLowerCase()
+              match = true
+              vote.voters +=  ", " + item["votes"][player]['voter']
+              vote.count += 1
+
+          if match is false
+            voted = {
+              target:  item["votes"][player]['vote'].toLowerCase(),
+              voters: item["votes"][player]['voter'],
+              count: 1
+            }
+            votes.push voted
+      else
+        notVoting +=  player + ", "
+
+    results.votes = votes
+    results.notVoting = notVoting
+    results.count = count
+    return results
