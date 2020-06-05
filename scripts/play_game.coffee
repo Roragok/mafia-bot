@@ -80,7 +80,8 @@ module.exports = (robot) ->
           for item in data.Items
             autolock = item.autolock
             item.votes[voter]['vote'] = lynch.toLowerCase()
-            console.log data.Items
+            data.Items[0].votes[voter]['vote'] = 'test123123'
+            console.log data.Items[0].votes[voter]
             votes = item.votes
           if autolock
             lock = checkMajority(lynch,votes)
