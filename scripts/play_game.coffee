@@ -52,12 +52,16 @@ module.exports = (robot) ->
           updateLynch(threadId, voter, lynch)
           for item in data.Items
             autolock = item.autolock
+            item.votes[voter]['vote'] = lynch.toLowerCase()
             votes = item.votes
           if autolock
             lock = checkMajority(lynch,votes)
             if lock
               lockThread(threadId, true)
-              res.send(voter+ " has dropped the hammer on " + lynch)
+              results = voteCount(data.Items)
+              response = printVote(sortVotes(results.votes), results.notVoting, results.count)
+              res.send(voter+ " has dropped the hammer on " + lynch +
+              "\n --- \n" + response.response)
 
 
   # LYNCH ALIAS
@@ -75,12 +79,17 @@ module.exports = (robot) ->
           updateLynch(threadId, voter, lynch)
           for item in data.Items
             autolock = item.autolock
+            item.votes[voter]['vote'] = lynch.toLowerCase()
+            console.log data.Items
             votes = item.votes
           if autolock
             lock = checkMajority(lynch,votes)
             if lock
               lockThread(threadId, true)
-              res.send(voter+ " has dropped the hammer on " + lynch)
+              results = voteCount(data.Items)
+              response = printVote(sortVotes(results.votes), results.notVoting, results.count)
+              res.send(voter+ " has dropped the hammer on " + lynch +
+              "\n --- \n" + response.response)
 
   # VOTE COUNT COMMAND
   robot.hear /@mafiabot votecount/i, (res) ->
