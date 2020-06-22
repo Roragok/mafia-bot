@@ -108,13 +108,13 @@ startGame = (gameValues, players, parent, autolock) ->
 
 startDay = (gameValues, parent, alive_players, kills, day, autolock) ->
 
-  upperCaseNames = alive_players.map (value) ->
+  lowerCasePlayers = alive_players.map (value) ->
     return value.toLowerCase()
 
   # Remove Kills from Alive Players
   for killedPlayer in kills
     index = null
-    index = upperCaseNames.indexOf(killedPlayer)
+    index = lowerCasePlayers.indexOf(killedPlayer)
     if index or index is 0
       alive_players.splice(index, 1)
 
