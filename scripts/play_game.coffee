@@ -60,7 +60,8 @@ module.exports = (robot) ->
             if lock
               lockThread(threadId, true)
               results = voteCount(data.Items)
-              response = printVote(sortVotes(results.votes), results.notVoting, results.count)
+              response = printVote(sortVotes(results.votes), results.notVoting,
+              results.count)
               res.send(voter+ " has dropped the hammer on " + lynch +
               "\n\n --- \n" + response.response)
 
@@ -88,7 +89,8 @@ module.exports = (robot) ->
             if lock
               lockThread(threadId, true)
               results = voteCount(data.Items)
-              response = printVote(sortVotes(results.votes), results.notVoting, results.count)
+              response = printVote(sortVotes(results.votes), results.notVoting,
+              results.count)
               res.send(voter+ " has dropped the hammer on " + lynch +
               "\n\n --- \n" + response.response)
 
@@ -99,7 +101,8 @@ module.exports = (robot) ->
     result.then (data) ->
       if data.Count > 0
         results = voteCount(data.Items)
-        response = printVote(sortVotes(results.votes), results.notVoting, results.count)
+        response = printVote(sortVotes(results.votes), results.notVoting,
+        results.count)
         res.send(response.response)
 
 
@@ -111,7 +114,8 @@ module.exports = (robot) ->
     result.then (data) ->
       if data.Count > 0
         results = voteCount(data.Items)
-        response = printVote(sortVotes(results.votes), results.notVoting, results.count)
+        response = printVote(sortVotes(results.votes), results.notVoting,
+        results.count)
         res.send(response.response)
 
 
@@ -141,7 +145,7 @@ module.exports = (robot) ->
         for item in data.Items
           # Add User to Signup
           if host is item.host
-            killPlayer(threadId, item.kills, target)
+            killPlayer(threadId, item.kills, target.toLowerCase())
 
   # HOST Subs a player in the current Day
   robot.hear /@mafiabot sub (.*)/i, (res) ->
@@ -170,7 +174,7 @@ module.exports = (robot) ->
         for item in data.Items
           # Add User to Signup
           if host is item.host
-            killPlayer(threadId, item.kills, target)
+            killPlayer(threadId, item.kills, target.toLowerCase())
             res.send(getZeused(target))
 
 # Functions
