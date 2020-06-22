@@ -25,7 +25,6 @@ All commands must be prefaced by `@mafiabot`
 | end | `winning faction`| i.e (town, mafia, third). Allows a host to result a game.  Closes the game and display a winner internally.
 | kill | playername | Kills `playername` This command must be executed in the current day before you run the next startday command.  Must be excuted 1 time per player and is case sensitive.  This removes the player from the alive player list when the next `startday` command is executed.|
 | zeus| `playername` | Mimics kill but with flavor text ingame|
-| help | | A link to this readme |
 
 ### General Commands
 
