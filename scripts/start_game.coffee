@@ -51,8 +51,10 @@ module.exports = (robot) ->
         if host is data.Items[0].host
           for day in data.Items
             if index is day.day
+              console.log "\n  ==== Day Index === \n"
+              console.log index
               startDay(gameValues, parentId,day.alive_players,
-                day.kills, index+1, game_slug, day.autolock)
+                day.kills, index+1, day.autolock)
               #  Set Previous Day to status to true for complete.
               closeDay(day.day_id)
   # End Day
@@ -110,13 +112,22 @@ startDay = (gameValues, parent, alive_players, kills, day, autolock) ->
 
   lowerCasePlayers = alive_players.map (value) ->
     return value.toLowerCase()
+  console.log "\n  ==== lower Case Players === \n"
+  console.log lowerCasePlayers
+  console.log "\n  ==== Alive Players === \n"
+  console.log alive_players
+  console.log "\n  ==== Kills === \n"
+  console.log kills
+  console.log "\n  ==== Index to Kill === \n"
 
   # Remove Kills from Alive Players
   for killedPlayer in kills
     index = null
     index = lowerCasePlayers.indexOf(killedPlayer)
+    console.log index
     if index or index is 0
       alive_players.splice(index, 1)
+
 
   dt = new Date()
   timestamp = dt.getTime()
