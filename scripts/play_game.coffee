@@ -26,7 +26,7 @@ module.exports = (robot) ->
   #   res.send "I will reply hello privately!"
 
   # UNLYNCH COMMAND
-  robot.hear /@mafiabot unlynch/i, (res) ->
+  robot.hear /@mafiabot un(lynch|vote)/i, (res) ->
     voter =  res.envelope.user.username
     threadId = res.message.room
 
@@ -38,36 +38,7 @@ module.exports = (robot) ->
           unLynch(threadId, voter)
 
   # LYNCH COMMAND
-  robot.hear /@mafiabot lynch (.*)/i, (res) ->
-    voter =  res.envelope.user.username
-    lynch = res.match[1]  . replace '@', ''
-    threadId = res.message.room
-    result = getDay(threadId)
-    lock = false
-    autolock = false
-    result.then (data) ->
-      if (data.Count > 0 )
-        valid = isLynch(data.Items , voter, lynch)
-        if (valid)
-          updateLynch(threadId, voter, lynch)
-          for item in data.Items
-            autolock = item.autolock
-            item.votes[voter]['vote'] = lynch.toLowerCase()
-            data.Items[0].votes[voter]['vote'] = lynch.toLowerCase()
-            votes = item.votes
-          if autolock
-            lock = checkMajority(lynch,votes)
-            if lock
-              lockThread(threadId, true)
-              results = voteCount(data.Items)
-              response = printVote(sortVotes(results.votes), results.notVoting,
-              results.count)
-              res.send(voter+ " has dropped the hammer on " + lynch +
-              "\n\n --- \n" + response.response)
-
-
-  # LYNCH ALIAS
-  robot.hear /@mafiabot vote (.*)/i, (res) ->
+  robot.hear /@mafiabot (vote|lynch) (.*)/i, (res) ->
     voter =  res.envelope.user.username
     lynch = res.match[1]  . replace '@', ''
     threadId = res.message.room
@@ -95,7 +66,7 @@ module.exports = (robot) ->
               "\n\n --- \n" + response.response)
 
   # VOTE COUNT COMMAND
-  robot.hear /@mafiabot votecount/i, (res) ->
+  robot.hear /@mafiabot (votecount|vc)/i, (res) ->
     threadId = res.message.room
     result = getDay(threadId)
     result.then (data) ->
@@ -104,20 +75,6 @@ module.exports = (robot) ->
         response = printVote(sortVotes(results.votes), results.notVoting,
         results.count)
         res.send(response.response)
-
-
-
-  # VOTE COUNT ALIAS
-  robot.hear /@mafiabot vc/i, (res) ->
-    threadId = res.message.room
-    result = getDay(threadId)
-    result.then (data) ->
-      if data.Count > 0
-        results = voteCount(data.Items)
-        response = printVote(sortVotes(results.votes), results.notVoting,
-        results.count)
-        res.send(response.response)
-
 
   # Unlock Thread
   robot.hear /@mafiabot unlock (.*)/i, (res) ->
@@ -372,9 +329,6 @@ unLynch = (day_id, voter) ->
       console.log err
     else
       console.log data
-
-
-
 
 killPlayer = (threadId, kills, target) ->
   if kills

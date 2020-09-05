@@ -33,7 +33,7 @@ All commands must be prefaced by `@mafiabot`
 | slist | | Lists all signed players for a hosted game thread. |
 | sign | | Sign you up for a hosted game. alias `.s` |
 | unsign | | Unsigns you from a hosted game |
-| lynch | target | Casts your lynch vote on `target`. Where target is an alive player in the game.  Optionally you can set `target` to `noylnch` to vote for no lynch . alias `vote`|
-| unlynch | | Removes your current lynch target |
+| vote | target | Casts your lynch vote on `target`. Where target is an alive player in the game.  Optionally you can set `target` to `nolynch` to vote for no lynch . alias `lynch`|
+| unvote | | Removes your current lynch target. alias `unlynch` |
 | vc | | Shows the current count of votes. alias `votecount` |
 | help | | A link to this readme |

@@ -112,6 +112,7 @@ module.exports = (robot) ->
           # Remove User to Signup
           if host is item.host
             unSignGame(target, threadId, item.signed_players)
+
   # Enable/Disable Autolocking
   # Game threads will inheirt the master thread,
   # but can be individually disabled
@@ -247,22 +248,6 @@ getGame = (threadId) ->
     ":game_id": parseInt threadId
   }
   result = docClient.query(checkGame).promise()
-
-
-#  a help function that may or maynot work.
-hostHelp = () ->
-  response = "The host of a Mafia game can use the following commands\n"
-  response += "* `@mafiabot host` - Takes the current thread and create a
-  signup\n"
-  response += "* `@mafiabot startday THREAD_ID`- Starts first or next day of
-  your game.  `THREAD_ID` is very important and must be the ID of the game
-  the `host` command was excuted from\n"
-  response += "* `@mafiabot kill playername`- Kills `playername` This command
-  must be excuted in the current day before you run the nextstartday command.
-  Must be excuted 1 time per player and is case sensitive.  This removes the
-  player from the alive player list when the next `startday` command is
-  excuted\n"
-  return response
 
 # Check if thread came from is an active or past game.
 getDay = (threadId) ->

@@ -8,6 +8,6 @@ module.exports = (robot) ->
     res.send(help())
 
   help = () ->
-    response = "[Commands]https://github.com/Roragok/mafia-bot/blob/master/README.md#command--list)
+    response = "[Commands](https://github.com/Roragok/mafia-bot/blob/master/README.md#command--list)
     \n"
     return response
