@@ -40,7 +40,7 @@ module.exports = (robot) ->
   # LYNCH COMMAND
   robot.hear /@mafiabot (vote|lynch) (.*)/i, (res) ->
     voter =  res.envelope.user.username
-    lynch = res.match[1]  . replace '@', ''
+    lynch = res.match[2]  . replace '@', ''
     threadId = res.message.room
     result = getDay(threadId)
     lock = false
