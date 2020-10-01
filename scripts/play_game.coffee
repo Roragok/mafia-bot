@@ -42,6 +42,7 @@ module.exports = (robot) ->
     voter =  res.envelope.user.username
     lynch = res.match[2]  . replace '@', ''
     threadId = res.message.room
+    console.log(res.message)
     result = getDay(threadId)
     lock = false
     autolock = false
