@@ -42,7 +42,7 @@ module.exports = (robot) ->
     voter =  res.envelope.user.username
     lynch = res.match[2]  . replace '@', ''
     threadId = res.message.room
-    console.log(res.message)
+    postID = res.message.id
     result = getDay(threadId)
     lock = false
     autolock = false
@@ -50,7 +50,7 @@ module.exports = (robot) ->
       if (data.Count > 0 )
         valid = isLynch(data.Items , voter, lynch)
         if (valid)
-          updateLynch(threadId, voter, lynch)
+          updateLynch(threadId, voter, lynch, postID)
           for item in data.Items
             autolock = item.autolock
             item.votes[voter]['vote'] = lynch.toLowerCase()
@@ -284,7 +284,7 @@ isUnLynch = (game, user) ->
   else
     return false
 
-updateLynch = (day_id, voter, lynch) ->
+updateLynch = (day_id, voter, lynch, postID) ->
   # Get timestamp of Vote
   dt = new Date()
 
@@ -295,10 +295,11 @@ updateLynch = (day_id, voter, lynch) ->
     "day_id": day_id
   }
   query.UpdateExpression = "set votes."+voter+".vote = :l,
-    votes."+voter+".vote_time = :t"
+    votes."+voter+".vote_time = :t, votes."+voter+".vote_post = :p"
   query.ExpressionAttributeValues = {
     ":l":lynch,
-    ":t":dt.getTime()
+    ":t":dt.getTime(),
+    ":p":postID
   }
 
   docClient.update query, (err, data) ->

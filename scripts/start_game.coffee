@@ -81,7 +81,8 @@ startGame = (gameValues, players, parent, autolock) ->
     votes[player] = {
       vote: null,
       voter:player,
-      vote_time: timestamp
+      vote_time: timestamp,
+      vote_post: null
     }
 
   query = {}
