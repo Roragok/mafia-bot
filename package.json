@@ -5,7 +5,7 @@
   "author": "PhiL aka 'Roragok'",
   "description": "Mafia Bot",
   "dependencies": {
-    "aws-sdk": "^2.740.0",
+    "aws-sdk": "^2.1001.0",
     "body-parser": "^1.19.0",
     "https": "^1.0.0",
     "hubot": "^3.3.2",

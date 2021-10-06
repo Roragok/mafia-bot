@@ -114,10 +114,8 @@ startDay = (gameValues, parent, alive_players, kills, day, autolock) ->
 
   # Remove Kills from Alive Players
   for killedPlayer in kills
-    index = null
     index = lowerCasePlayers.indexOf(killedPlayer)
-    console.log index
-    if index or index is 0
+    if index > -1
       alive_players.splice(index, 1)
 
 
