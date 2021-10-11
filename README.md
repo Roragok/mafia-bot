@@ -5,7 +5,7 @@ Runs on [NAMafia](https://namafia.com).
 
 ## What does it do?
 
-It facilitates game creation and vote management.  A host can list a game for players (other forum memebers) to sign up.  The host can than start the game when he has enough players.  The bot will manage the game into phases broken down by "Day" or 1 interactive cycle.  The bot is unaware of the night phase and roles/actions each player performs.  It can only count votes at this juncture.
+It facilitates game creation and vote management.  A host can list a game for players (other forum members) to sign up.  The host can start the game when enough players have signed to play.  The bot will manage the game into phases broken down by "Day" or 1 interactive cycle.  The bot is unaware of the night phase and roles/actions each player performs.  It can only count votes at this juncture.
 
 ##  Command  List
 

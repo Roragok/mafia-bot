@@ -117,8 +117,8 @@ startDay = (gameValues, parent, alive_players, kills, day, autolock) ->
     index = lowerCasePlayers.indexOf(killedPlayer)
     if index > -1
       alive_players.splice(index, 1)
-
-
+      lowerCasePlayers.splice(index, 1)
+      
   dt = new Date()
   timestamp = dt.getTime()
   votes = {}
